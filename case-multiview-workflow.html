@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>多角度角色资产工作流 — 案例 · 许多</title>
+<meta name="description" content="保持角色多视角一致：正面 / 俯视 / 背面 / 侧面，统一脸型、发型、服装、体型与视觉风格，支撑影视与短剧角色资产生产。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多角度角色资产工作流 — 案例 · 许多">
+<meta property="og:description" content="保持角色多视角一致，支撑影视与短剧角色资产生产。">
+<meta property="og:image" content="https://558369ea0fad4eb58a86b706caa122fc.app.workbuddy.link/assets/multiview-workflow/multiview-cover-card.jpg">
+<meta property="og:url" content="https://558369ea0fad4eb58a86b706caa122fc.app.workbuddy.link/case-multiview-workflow.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="多角度角色资产工作流 — 案例 · 许多">
+<meta name="twitter:description" content="保持角色多视角一致，支撑影视与短剧角色资产生产。">
+<meta name="twitter:image" content="https://558369ea0fad4eb58a86b706caa122fc.app.workbuddy.link/assets/multiview-workflow/multiview-cover-card.jpg">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23100e0b'/><text x='50%25' y='62%25' font-size='22' font-family='serif' fill='%23e8a13a' text-anchor='middle' font-weight='700'>许</text></svg>">
+<meta name="theme-color" content="#101012">
+<link rel="stylesheet" href="assets/case-unified.css">
+<style>
+  :root{
+    --bg:#101012; --bg-2:#161310; --paper:#e9e2d2; --faint:#a59c87;
+    --muted:#b6ad99; --rule:rgba(233,226,210,.12);
+    --accent:#e8a13a; --accent-2:#7fb3a4;
+    --glow:rgba(150,140,200,.16);
+    --serif:'Noto Serif SC','Source Han Serif SC',Georgia,serif;
+    --sans:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+    --mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--paper);
+    font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.7}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;
+    background:
+      radial-gradient(125% 85% at 50% -12%, var(--glow) 0%, transparent 58%),
+      url('assets/multiview-workflow/mv-cover.jpg') center/cover no-repeat;
+    filter:blur(30px) brightness(.34) saturate(1.06);transform:scale(1.12);opacity:.58;pointer-events:none}
+  @media(min-width:721px){.cmedia .frame{max-width:760px;margin:0 auto}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">许<span class="dot">·</span>多</div>
+    <a class="back" href="index.html">返回作品集</a>
+  </div>
+</header>
+
+<div class="cwrap">
+
+  <section class="chero">
+    <div class="eyebrow">工作流 / WORKFLOW</div>
+    <h1>多角度角色资产<br>工作流</h1>
+    <p class="lead">保持角色多视角一致：正面 / 俯视 / 背面 / 侧面，统一脸型、发型、服装、体型与视觉风格。让一个角色能从任何角度进入影视与短剧的多镜头生产。</p>
+  </section>
+
+  <div class="cmedia reveal">
+    <div class="frame">
+      <span class="badge">工作流 · 节点总览</span>
+      <img src="assets/multiview-workflow/mv-cover.jpg" alt="多角度角色资产工作流总览" loading="lazy">
+    </div>
+  </div>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">01</span><h2 class="csec-title">项目概况</h2><span class="csec-en">PROJECT INFO</span></div>
+    <div class="cspec">
+      <div><div class="k">项目类型</div><div class="v">AI 工作流</div></div>
+      <div><div class="k">核心工具</div><div class="v">ComfyUI</div></div>
+      <div><div class="k">输出视角</div><div class="v">4 向</div></div>
+      <div><div class="k">应用场景</div><div class="v amber">角色资产</div></div>
+    </div>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">02</span><h2 class="csec-title">解决的问题</h2><span class="csec-en">PROBLEM</span></div>
+    <div class="cnote">
+      <h3>如何保持角色多视角一致</h3>
+      <p>AI 生成单张图容易，但同一个角色换角度就「变了一个人」——脸型、发型、服装、体型、风格全部漂移。影视与短剧需要角色在连续镜头里稳定，这是单图生成解决不了的。</p>
+    </div>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">03</span><h2 class="csec-title">解决方案</h2><span class="csec-en">SOLUTION</span></div>
+    <p>以<span class="hl">角色参考图锁定身份</span>，再用视角控制节点逐向生成，最后做一致性校验：脸型、发型、服装、体型、视觉风格五要素逐项对齐，确保四视图是「同一个人」。</p>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">04</span><h2 class="csec-title">制作流程</h2><span class="csec-en">PROCESS</span></div>
+    <div class="cflow">
+      <div class="step"><div class="sn">01</div><div class="st">角色参考</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="sn">02</div><div class="st">视角控制</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="sn">03</div><div class="st">一致性处理</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="sn">04</div><div class="st">多角度输出</div></div>
+    </div>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">05</span><h2 class="csec-title">多角度输出</h2><span class="csec-en">OUTPUT</span></div>
+    <p>同一角色的四向视图，脸型、发型、服装、体型与风格保持一致，可直接用于角色设定集与后续多镜头生产。</p>
+    <div class="cplate">
+      <div class="pc"><img src="assets/multiview-workflow/mv-front.jpg" alt="正面" loading="lazy"><div class="cap">正面</div></div>
+      <div class="pc"><img src="assets/multiview-workflow/mv-top.jpg" alt="俯视" loading="lazy"><div class="cap">俯视</div></div>
+      <div class="pc"><img src="assets/multiview-workflow/mv-back.jpg" alt="背面" loading="lazy"><div class="cap">背面</div></div>
+      <div class="pc"><img src="assets/multiview-workflow/mv-side.jpg" alt="侧面" loading="lazy"><div class="cap">侧面</div></div>
+    </div>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">06</span><h2 class="csec-title">实际应用</h2><span class="csec-en">APPLY</span></div>
+    <div class="crole">
+      <span class="ri">影视角色设定</span>
+      <span class="ri">短剧角色资产</span>
+      <span class="ri">多镜头连续拍摄</span>
+      <span class="ri">IP 视觉规范</span>
+    </div>
+  </section>
+
+  <div class="cnext">
+    <div>
+      <div class="nl">下一个项目 / NEXT</div>
+      <a href="case-mijia-luggage.html">米家 哑光黑硬壳行李箱</a>
+    </div>
+    <div class="thumb" style="background-image:url('assets/mijia-luggage/mijia-01-cover.jpg')"></div>
+  </div>
+
+</div>
+
+<div class="imprint">许多 · AIGC 视觉作品集 · ISSUE 01 · 2026</div>
+</body>
+</html>

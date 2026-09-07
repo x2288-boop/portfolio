@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>产品融图与打光工作流 — 案例 · 许多</title>
+<meta name="description" content="节点级产品场景合成：把白底产品融进真实场景，统一光影、补投影反射，覆盖汽车/家居/3C 三类场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="产品融图与打光工作流 — 案例 · 许多">
+<meta property="og:description" content="节点级产品场景合成：把白底产品融进真实场景，统一光影、补投影反射。">
+<meta property="og:image" content="https://558369ea0fad4eb58a86b706caa122fc.app.workbuddy.link/assets/comfy-ic-light/wf-coffee-workflow.png">
+<meta property="og:url" content="https://558369ea0fad4eb58a86b706caa122fc.app.workbuddy.link/case-comfy-ic-light.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="产品融图与打光工作流 — 案例 · 许多">
+<meta name="twitter:description" content="节点级产品场景合成：把白底产品融进真实场景。">
+<meta name="twitter:image" content="https://558369ea0fad4eb58a86b706caa122fc.app.workbuddy.link/assets/comfy-ic-light/wf-coffee-workflow.png">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23100e0b'/><text x='50%25' y='62%25' font-size='22' font-family='serif' fill='%23e8a13a' text-anchor='middle' font-weight='700'>许</text></svg>">
+<meta name="theme-color" content="#101012">
+<link rel="stylesheet" href="assets/case-unified.css">
+<style>
+  :root{
+    --bg:#101012; --bg-2:#161310; --paper:#e9e2d2; --faint:#a59c87;
+    --muted:#b6ad99; --rule:rgba(233,226,210,.12);
+    --accent:#e8a13a; --accent-2:#7fb3a4;
+    --glow:rgba(232,161,58,.16);
+    --serif:'Noto Serif SC','Source Han Serif SC',Georgia,serif;
+    --sans:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+    --mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--paper);
+    font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.7}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;
+    background:
+      radial-gradient(125% 85% at 50% -12%, var(--glow) 0%, transparent 58%),
+      url('assets/comfy-ic-light/wf-coffee-workflow.png') center/cover no-repeat;
+    filter:blur(30px) brightness(.34) saturate(1.06);transform:scale(1.12);opacity:.58;pointer-events:none}
+  @media(min-width:721px){.cmedia .frame{max-width:760px;margin:0 auto}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">许<span class="dot">·</span>多</div>
+    <a class="back" href="index.html">返回作品集</a>
+  </div>
+</header>
+
+<div class="cwrap">
+
+  <section class="chero">
+    <div class="eyebrow">工作流 / WORKFLOW</div>
+    <h1>产品融图与打光<br>工作流</h1>
+    <p class="lead">节点级产品场景合成：把白底产品「融」进真实场景，统一光影、补投影反射，让电商主图与品牌 KV 一次到位。覆盖汽车 / 家居 / 3C 三类场景。</p>
+  </section>
+
+  <div class="cmedia reveal">
+    <div class="frame">
+      <span class="badge">工作流 · 节点总览</span>
+      <img src="assets/comfy-ic-light/wf-coffee-workflow.png" alt="产品融图与打光工作流总览" loading="lazy">
+    </div>
+  </div>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">01</span><h2 class="csec-title">项目概况</h2><span class="csec-en">PROJECT INFO</span></div>
+    <div class="cspec">
+      <div><div class="k">项目类型</div><div class="v">AI 工作流</div></div>
+      <div><div class="k">核心工具</div><div class="v">ComfyUI</div></div>
+      <div><div class="k">覆盖场景</div><div class="v">3 类</div></div>
+      <div><div class="k">产出</div><div class="v amber">商业成片</div></div>
+    </div>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">02</span><h2 class="csec-title">解决的问题</h2><span class="csec-en">PROBLEM</span></div>
+    <div class="cnote">
+      <h3>白底产品无法自然进入真实场景</h3>
+      <p>白底产品直接放进场景后，常出现悬浮感、光影错位、边缘生硬——看起来像「贴图」而非「同一束光下的整体」。这正是电商主图与品牌 KV 最容易被一眼看穿的破绽。</p>
+    </div>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">03</span><h2 class="csec-title">解决方案</h2><span class="csec-en">SOLUTION</span></div>
+    <p>通过节点链路做<span class="hl">边缘重绘、阴影承接与反射匹配</span>，让产品与场景成为同一束光下的整体：构图重排、光影重建、材质呼应、环境融合，四步把「贴图感」转成「实拍感」。</p>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">04</span><h2 class="csec-title">制作流程</h2><span class="csec-en">PROCESS</span></div>
+    <div class="cflow">
+      <div class="step"><div class="sn">01</div><div class="st">加载图像</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="sn">02</div><div class="st">VAE 编码</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="sn">03</div><div class="st">Flux 引导</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="sn">04</div><div class="st">K 采样器</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="sn">05</div><div class="st">图像对比</div></div>
+    </div>
+  </section>
+
+  <section class="csec">
+    <div class="csec-head"><span class="csec-no">05</span><h2 class="csec-title">最终效果</h2><span class="csec-en">BEFORE / AFTER</span></div>
+    <p>同一套节点，换参考图即出不同品类的商业成片。下方为三类典型场景的融图前 / 融图后对比。</p>
+    <div class="cplate">
+      <div class="pc"><img src="assets/comfy-ic-light/before-car.jpg" alt="汽车 融图前" loading="lazy"><div class="cap">汽车 · 融图前</div></div>
+      <div class="pc"><img src="assets/comfy-ic-light/after-car.jpg" alt="汽车 融图后" loading="lazy"><div class="cap">汽车 · 融图后 — 湿地反射 + 车灯辉光</div></div>
+      <div class="pc"><img src="assets/comfy-ic-light/before-chair.jpg" alt="休闲椅 融图前" loading="lazy"><div class="cap">休闲椅 · 融图前</div></div>
+      <div class="pc"><img src="assets/comfy-ic-light/after-chair.jpg" alt="休闲椅 融图后" loading="lazy"><div class="cap">休闲椅 · 融图后 — 投影承接 + 材质呼应</div></div>
+      <div class="pc"><img src="assets/comfy-ic-light/before-coffee.jpg" alt="咖啡机 融图前" loading="lazy"><div class="cap">咖啡机 · 融图前</div></div>
+      <div class="pc"><img src="assets/comfy-ic-light/after-coffee.jpg" alt="咖啡机 融图后" loading="lazy"><div class="cap">咖啡机 · 融图后 — 环境光 + 金属高光</div></div>
+    </div>
+  </section>
+
+  <div class="cnext">
+    <div>
+      <div class="nl">下一个项目 / NEXT</div>
+      <a href="case-multiview-workflow.html">多角度角色资产工作流</a>
+    </div>
+    <div class="thumb" style="background-image:url('assets/multiview-workflow/multiview-cover-card.jpg')"></div>
+  </div>
+
+</div>
+
+<div class="imprint">许多 · AIGC 视觉作品集 · ISSUE 01 · 2026</div>
+</body>
+</html>

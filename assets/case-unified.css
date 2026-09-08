@@ -86,24 +86,6 @@
   border:1px solid var(--rule);border-radius:999px;padding:9px 16px;font-weight:300}
 .crole .ri .accent{color:var(--accent)}
 
-/* 制作流程：横向步骤 + 箭头 */
-.cflow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;
-  border:1px solid var(--rule);border-radius:8px;overflow:hidden}
-.cflow .step{flex:1 1 120px;min-width:120px;padding:18px 16px;
-  border-right:1px solid var(--rule);position:relative}
-.cflow .step:last-child{border-right:0}
-.cflow .step .sn{font-family:var(--mono);font-size:10.5px;color:var(--accent);
-  letter-spacing:.1em;margin-bottom:9px}
-.cflow .step .st{font-family:var(--serif);font-size:15px;font-weight:600;line-height:1.35}
-.cflow .arrow{display:flex;align-items:center;justify-content:center;
-  width:34px;flex:none;color:var(--faint);font-size:15px;background:rgba(233,226,210,.03)}
-@media(max-width:680px){.cflow{flex-direction:column}
-  .cflow .step{display:flex;align-items:baseline;gap:10px;padding:11px 14px;
-    border-right:0;border-bottom:1px solid var(--rule)}
-  .cflow .step:last-child{border-bottom:0}
-  .cflow .step .sn{margin-bottom:0;flex:none}
-  .cflow .arrow{display:none}}
-
 /* 项目难点 / 解决方案：浅底卡 */
 .cnote{border:1px solid var(--rule);border-radius:8px;padding:22px 24px;
   background:rgba(233,226,210,.03)}

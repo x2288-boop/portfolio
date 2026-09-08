@@ -105,6 +105,22 @@ a{color:inherit;text-decoration:none}
   .hero-collage a:nth-child(3){display:none}}
 @media(max-width:480px){.hero-collage{grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}.hero-collage a:nth-child(3){display:none}.hero-collage a{border-radius:8px;box-shadow:0 5px 14px rgba(0,0,0,.4)}}
 
+/* 手机首屏紧凑化：压缩文字区，让作品图尽早进入首屏 */
+@media(max-width:680px){
+  .hero{padding:42px 0 28px}
+  .hero .kicker{font-size:10.5px;letter-spacing:.15em}
+  .hero h1 br{display:none}
+  .hero h1{font-size:33px;line-height:1.18}
+  .hero-subtitle{font-size:13.5px;margin:8px 0 0;color:var(--muted)}
+  .hero .lead{font-size:14px;line-height:1.68;margin-top:14px}
+  .hero .lead b{font-weight:500}
+  .hero .tags{margin-top:12px;gap:7px}
+  .hero .tags span{font-size:10.5px;padding:5px 11px}
+  .hero-philosophy{display:none}
+  .byline{margin-top:16px;font-size:11.5px}
+  .byline>span:nth-child(2){display:none}
+}
+
 /* ===== 作品分类筛选（电商界面 / 短片界面 …） ===== */
 .filterbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;align-items:center;margin:0 0 40px;padding:0 0 22px;border-bottom:1px solid var(--rule)}
 .filterbar .flabel{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
@@ -377,9 +393,9 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
     <!-- HERO COLLAGE / 首屏代表作品拼贴 -->
     <div class="hero-collage" data-page-node-id="Nmf3yzSK4NZupPmGQRIxV2">
-      <a href="case-coffee-tvc.html" data-page-node-id="4o2K6ZeY8RfQkgE8YADvVG"><img src="assets/coffee-tvc/coffee-cover-card.jpg" alt="咖啡机 TVC 广告" loading="lazy" data-page-node-id="YjrkEqhuV5h2BefpzmEyaB"><span class="tag" data-page-node-id="e4f6gHZFvFBribSr88CFG6">TVC · 商业广告</span></a>
-      <a href="case-comfy-ic-light.html" data-page-node-id="NdO1I71HBju3bb4fPYt4yD"><img src="assets/comfy-ic-light/comfy-cover-card.jpg" alt="ComfyUI 融图打光工作流" loading="lazy" data-page-node-id="KDXGieZ0GtTYcAJrPbKFm7"><span class="tag" data-page-node-id="VsNHd5EiBzcdP8IfcpEo8z">ComfyUI · 工作流</span></a>
-      <a href="case-yunyou-xiaohe.html" data-page-node-id="jDtNaa4FyRch0eYcZEswGZ"><img src="assets/yunyou-xiaohe/yunyou-cover-card.jpg" alt="云游小河 IP" loading="lazy" data-page-node-id="EdnpWO3wnCQQ56137Q0B4r"><span class="tag" data-page-node-id="HCSxMIk6rsWRltBBH9edzU">IP 形象</span></a>
+      <a href="case-coffee-tvc.html" data-page-node-id="4o2K6ZeY8RfQkgE8YADvVG"><img src="assets/coffee-tvc/coffee-cover-card.jpg" alt="咖啡机 TVC 广告 data-page-node-id="YjrkEqhuV5h2BefpzmEyaB"><span class="tag" data-page-node-id="e4f6gHZFvFBribSr88CFG6">TVC · 商业广告</span></a>
+      <a href="case-comfy-ic-light.html" data-page-node-id="NdO1I71HBju3bb4fPYt4yD"><img src="assets/comfy-ic-light/comfy-cover-card.jpg" alt="ComfyUI 融图打光工作流 data-page-node-id="KDXGieZ0GtTYcAJrPbKFm7"><span class="tag" data-page-node-id="VsNHd5EiBzcdP8IfcpEo8z">ComfyUI · 工作流</span></a>
+      <a href="case-yunyou-xiaohe.html" data-page-node-id="jDtNaa4FyRch0eYcZEswGZ"><img src="assets/yunyou-xiaohe/yunyou-cover-card.jpg" alt="云游小河 IP data-page-node-id="EdnpWO3wnCQQ56137Q0B4r"><span class="tag" data-page-node-id="HCSxMIk6rsWRltBBH9edzU">IP 形象</span></a>
     </div>
   </div>
 </section>

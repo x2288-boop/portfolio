@@ -137,6 +137,10 @@ a{color:inherit;text-decoration:none}
 .works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:8px}
 @media(max-width:900px){.works-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:540px){.works-grid{grid-template-columns:1fr}}
+/* 筛选结果 ≤2 张卡片时居中展示，避免单侧空旷 */
+.works-grid.few{display:flex;flex-wrap:wrap;justify-content:center;gap:28px}
+.works-grid.few .card{flex:1 1 360px;max-width:420px}
+@media(max-width:540px){.works-grid.few .card{flex:1 1 100%;max-width:100%}}
 .card{background:var(--bg-2);border:1px solid var(--rule);border-radius:6px;overflow:hidden;
   cursor:pointer;transition:transform .42s cubic-bezier(.2,.7,.2,1),border-color .35s,box-shadow .35s}
 .card:hover{transform:translateY(-7px);border-color:var(--accent);box-shadow:0 20px 44px rgba(232,161,58,.18)}
@@ -804,14 +808,17 @@ bind('heroResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
   const bar=document.getElementById('filterbar');
   if(!bar)return;
   const pills=bar.querySelectorAll('.fpill');
+  const grid=document.querySelector('.works-grid');
   const cards=document.querySelectorAll('.works-grid .card');
   function apply(f){
     pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
+    let visible=0;
     cards.forEach(c=>{
       const show=(f==='all'||c.dataset.cat===f);
       c.style.display=show?'':'none';
-      if(show)c.classList.add('in');          /* 筛选后立即可见，避免被滚动揭示卡住 */
+      if(show){c.classList.add('in');visible++;}          /* 筛选后立即可见，避免被滚动揭示卡住 */
     });
+    if(grid)grid.classList.toggle('few',visible<=2);
   }
   pills.forEach(p=>p.addEventListener('click',()=>apply(p.dataset.filter)));
   /* 进入网站默认聚焦第一个分类（已去除「全部」，故不默认全显） */
@@ -852,9 +859,12 @@ bind('heroResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
     /* 先还原筛选，保证布局与记录的滚动位置一致 */
     try{
       const pills=document.querySelectorAll('#filterbar .fpill');
+      const grid=document.querySelector('.works-grid');
       const cards=document.querySelectorAll('.works-grid .card');
+      let visible=0;
       pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
-      cards.forEach(c=>{const show=(f==='all'||c.dataset.cat===f);c.style.display=show?'':'none';if(show)c.classList.add('in');});
+      cards.forEach(c=>{const show=(f==='all'||c.dataset.cat===f);c.style.display=show?'':'none';if(show){c.classList.add('in');visible++;}});
+      if(grid)grid.classList.toggle('few',visible<=2);
     }catch(err){}
     /* 瞬时定位（避开平滑滚动动画），并在图片加载导致高度变化后再次校正 */
     const go=function(){ try{document.documentElement.style.scrollBehavior='auto';}catch(e){}

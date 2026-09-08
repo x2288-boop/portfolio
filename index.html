@@ -137,6 +137,7 @@ a{color:inherit;text-decoration:none}
 .works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:8px}
 @media(max-width:900px){.works-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:540px){.works-grid{grid-template-columns:1fr}}
+@media(min-width:541px){.works-grid.grid2{grid-template-columns:repeat(2,1fr)}}
 /* 筛选结果 ≤2 张卡片时居中展示，避免单侧空旷 */
 .works-grid.few{display:flex;flex-wrap:wrap;justify-content:center;gap:28px}
 .works-grid.few .card{flex:1 1 360px;max-width:420px}
@@ -623,6 +624,18 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
+      <a class="card reveal" id="case15" data-cat="commercial" href="case-candle-tvc.html" style="text-decoration:none;color:inherit;display:block">
+        <div class="thumb" style="background:url('assets/candle-tvc/cover-card.jpg') center/cover no-repeat,#1a1714">
+          <span class="ctag">TVC · 商业广告</span>
+          <span class="fplay">▶ 查看 TVC</span>
+        </div>
+        <div class="cmeta">
+          <h3 class="ctitle">香薰蜡烛·TVC广告片</h3>
+          <p class="csum">17 秒 TVC · 暖调氛围场景 + 光影特写，营造香薰蜡烛的睡前治愈仪式感。</p>
+          <div class="ctags"><span>创意概念</span><span>产品广告</span><span>AI 场景</span><span>后期</span></div>
+        </div>
+      </a>
+
       <a class="card reveal" id="case13" data-cat="film" href="case-qingxian-tianbiao.html" style="text-decoration:none;color:inherit;display:block" data-page-node-id="cG8TtM7HS2qWfnF6zL9pXa">
         <div class="thumb" style="background:url('assets/qingxian-tianbiao/cover-card.jpg') center/cover no-repeat,#1a1714" data-page-node-id="aB3mKxP9vQnJdL5wR8sYhT">
           <span class="ctag" data-page-node-id="xC4nL6wR9sTzJkP8vQmD2g">短片 · 短剧</span>
@@ -818,7 +831,7 @@ bind('heroResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
       c.style.display=show?'':'none';
       if(show){c.classList.add('in');visible++;}          /* 筛选后立即可见，避免被滚动揭示卡住 */
     });
-    if(grid)grid.classList.toggle('few',visible<=2);
+    if(grid){grid.classList.toggle('few',visible<=2);grid.classList.toggle('grid2',f==='commercial');}
   }
   pills.forEach(p=>p.addEventListener('click',()=>apply(p.dataset.filter)));
   /* 进入网站默认聚焦第一个分类（已去除「全部」，故不默认全显） */
@@ -864,7 +877,7 @@ bind('heroResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
       let visible=0;
       pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
       cards.forEach(c=>{const show=(f==='all'||c.dataset.cat===f);c.style.display=show?'':'none';if(show){c.classList.add('in');visible++;}});
-      if(grid)grid.classList.toggle('few',visible<=2);
+      if(grid){grid.classList.toggle('few',visible<=2);grid.classList.toggle('grid2',f==='commercial');}
     }catch(err){}
     /* 瞬时定位（避开平滑滚动动画），并在图片加载导致高度变化后再次校正 */
     const go=function(){ try{document.documentElement.style.scrollBehavior='auto';}catch(e){}

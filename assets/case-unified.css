@@ -94,15 +94,16 @@
 .cnote p{margin:0;font-size:14.5px;line-height:1.85;color:rgba(233,226,210,.86);
   font-weight:300}
 
-/* 完整项目展示：图网格 */
-.cplate{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;align-items:start}
+/* 完整项目展示：瀑布流两列（消除等高网格造成的行间空白） */
+.cplate{column-count:2;column-gap:18px}
 .cplate .pc{border:1px solid var(--rule);border-radius:8px;overflow:hidden;
-  background:transparent}
+  background:transparent;margin-bottom:18px;break-inside:avoid;
+  page-break-inside:avoid;-webkit-column-break-inside:avoid}
 .cplate .pc img{display:block;width:100%;height:auto;cursor:zoom-in}
 .cplate .pc .cap{padding:11px 13px;font-family:var(--mono);font-size:10.5px;
   letter-spacing:.1em;color:var(--faint);border-top:1px solid var(--rule)}
-.cplate .pc.wide{grid-column:1 / -1}
-@media(max-width:600px){.cplate{grid-template-columns:1fr}}
+.cplate .pc.wide{column-span:all}
+@media(max-width:600px){.cplate{column-count:1}}
 
 /* 下一个项目 */
 .cnext{display:flex;align-items:center;justify-content:space-between;gap:22px;

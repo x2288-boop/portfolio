@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云游小河 · 为你找到下一处风景</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky:#BEE9FF;--sky-light:#E8F7FF;--sky-deep:#7FCFF0;
+  --teal:#78D8C6;--teal-deep:#4DB8A4;
+  --orange:#FFB66B;--orange-deep:#F0995A;
+  --cream:#FFECD6;--white:#FFFFFF;
+  --ink:#2D4A5E;--ink-soft:#5A7B91;--ink-mute:#94AFBE;
+  --accent:#4DB8A4;--accent-light:#78D8C6;
+  --radius:20px;--radius-sm:14px;
+  --shadow:0 8px 32px rgba(45,74,94,.10);--shadow-hover:0 16px 48px rgba(45,74,94,.16);
+  --nav-h:68px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans SC',sans-serif;color:var(--ink);background:linear-gradient(180deg,#E8F7FF 0%,#F5FCFF 30%,#FFFFFF 60%,#FFF8F0 100%);overflow-x:hidden;min-width:0}
+img{display:block;max-width:100%}
+
+/* Clouds */
+.cloud-layer{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden}
+.cloud{position:absolute;opacity:.5;animation:drift linear infinite}
+.cloud svg{display:block}
+@keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(calc(100vw + 200px))}}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;width:100%;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:var(--nav-h);background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border-bottom:1px solid rgba(190,233,255,.5);transition:box-shadow .3s}
+nav.scrolled{box-shadow:0 2px 20px rgba(45,74,94,.08)}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'ZCOOL KuaiLe';font-size:22px;color:var(--ink);cursor:pointer;flex-shrink:0}
+.nav-logo .logo-icon{width:38px;height:38px;border-radius:50%;background:var(--sky-light);display:flex;align-items:center;justify-content:center;border:2px solid var(--teal);transition:transform .4s}
+.nav-logo:hover .logo-icon{transform:rotate(180deg)}
+.nav-logo .logo-icon svg{width:24px;height:24px}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-links a{text-decoration:none;color:var(--ink-soft);font-size:14px;font-weight:500;padding:8px 14px;border-radius:30px;transition:all .25s;white-space:nowrap;cursor:pointer}
+.nav-links a:hover{color:var(--ink);background:var(--sky-light)}
+.nav-links a.active{color:var(--white);background:var(--accent)}
+.nav-links a .nav-num{font-family:'ZCOOL KuaiLe';font-size:11px;opacity:.7;margin-right:3px}
+.nav-cta{background:var(--orange);color:#fff;border:none;cursor:pointer;padding:10px 22px;border-radius:30px;font-size:14px;font-weight:500;font-family:inherit;transition:all .25s;box-shadow:0 4px 14px rgba(255,182,107,.4);flex-shrink:0}
+.nav-cta:hover{background:var(--orange-deep);transform:translateY(-2px)}
+.hamburger{display:none;width:42px;height:42px;border:none;background:transparent;cursor:pointer;flex-direction:column;justify-content:center;gap:5px;align-items:center}
+.hamburger span{width:22px;height:2px;background:var(--ink);border-radius:2px;transition:.3s}
+
+/* Mobile menu */
+.mobile-menu{position:fixed;top:var(--nav-h);left:0;width:100%;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);z-index:99;padding:12px 24px 24px;display:none;flex-direction:column;gap:4px;box-shadow:0 12px 30px rgba(45,74,94,.12);max-height:calc(100vh - var(--nav-h));overflow-y:auto}
+.mobile-menu.open{display:flex;animation:mbIn .3s ease}
+@keyframes mbIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.mobile-menu a{padding:14px 12px;border-radius:14px;font-size:16px;color:var(--ink);cursor:pointer;text-decoration:none;border-bottom:1px solid rgba(190,233,255,.4)}
+.mobile-menu a:active,.mobile-menu a.active{background:var(--sky-light);color:var(--accent)}
+.mobile-menu .m-home{padding:14px 12px;font-weight:700;color:var(--accent)}
+
+/* Pages */
+.page{display:none;padding-top:var(--nav-h);min-height:100vh}
+.page.active{display:block;animation:pageIn .5s ease}
+/* 恢复类切换（返回/上一章节等）禁用入场动画，避免整页上滑造成晃动 */
+.page.active.no-anim{animation:none}
+@keyframes pageIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:1200px;margin:0 auto;padding:0 48px}
+section.block{padding:64px 0}
+.section-tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--accent);background:rgba(120,216,198,.15);padding:6px 16px;border-radius:20px;margin-bottom:16px}
+.section-title{font-family:'ZCOOL KuaiLe';font-size:38px;color:var(--ink);margin-bottom:12px;line-height:1.3}
+.section-sub{font-size:16px;color:var(--ink-soft);line-height:1.8;max-width:680px}
+
+/* page head + breadcrumb */
+.page-head{padding:56px 0 8px;text-align:center}
+.page-index{font-family:'ZCOOL KuaiLe';font-size:64px;color:var(--accent);opacity:.16;line-height:1;margin-bottom:-18px}
+.crumbs{display:flex;justify-content:center;align-items:center;gap:8px;font-size:12px;color:var(--ink-mute);margin-top:14px;flex-wrap:wrap}
+.crumbs .sep{opacity:.5}
+.crumbs .cur{color:var(--accent);font-weight:500}
+.crumbs a{cursor:pointer;color:var(--ink-mute);text-decoration:none}
+.crumbs a:hover{color:var(--accent)}
+
+/* ===== Independent page hero (workfolio) ===== */
+.page-hero{position:relative;padding:72px 0 36px;text-align:center;overflow:hidden}
+.page-hero .chap-label{font-family:'ZCOOL KuaiLe';font-size:14px;letter-spacing:3px;color:var(--accent);opacity:.8;margin-bottom:14px}
+.page-hero .hero-en{font-family:'ZCOOL KuaiLe';font-size:62px;line-height:1;color:var(--accent);opacity:.12;letter-spacing:2px;margin-bottom:-26px}
+.page-hero .hero-cn{font-family:'ZCOOL KuaiLe';font-size:46px;color:var(--ink);line-height:1.2;margin-bottom:14px}
+.page-hero .hero-intro{font-size:16px;color:var(--ink-soft);line-height:1.9;max-width:640px;margin:0 auto 28px}
+.page-hero .hero-rule{width:64px;height:3px;background:linear-gradient(90deg,var(--teal),var(--orange));border-radius:2px;margin:0 auto 28px}
+.page-hero-img{width:100%;max-width:960px;margin:0 auto;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--sky-light)}
+.page-hero-img img{width:100%;display:block}
+.page-hero-img.tall{max-width:560px}
+.flowline{display:flex;justify-content:center;align-items:center;gap:0;flex-wrap:wrap;margin:8px auto 0;max-width:880px}
+.flow-step{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border:1px solid rgba(190,233,255,.5);border-radius:30px;padding:10px 18px;font-size:13px;color:var(--ink-soft)}
+.flow-step b{font-family:'ZCOOL KuaiLe';color:var(--accent);font-size:14px;margin-right:2px}
+.flow-step .fnum{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center;margin-right:6px}
+.flow-arrow{color:var(--orange);font-size:18px;margin:0 6px}
+
+/* Sub nav (二级) */
+.subnav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:22px 0 8px}
+.subnav button{border:none;background:var(--white);color:var(--ink-soft);font-family:inherit;font-size:14px;font-weight:500;padding:10px 22px;border-radius:30px;cursor:pointer;transition:all .25s;box-shadow:0 2px 10px rgba(45,74,94,.06);border:1px solid transparent}
+.subnav button:hover{color:var(--ink);transform:translateY(-2px)}
+.subnav button.active{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(77,184,164,.35)}
+.sub-view{display:none;animation:subIn .45s ease}
+.sub-view.active{display:block}
+/* 恢复类切换时二级内容不播入场动画 */
+.sub-view.no-anim{animation:none}
+@keyframes subIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}
+
+/* Cards */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);transition:all .35s;border:2px solid transparent}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:var(--accent)}
+.img-frame{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);position:relative;cursor:pointer;background:var(--sky-light)}
+.img-frame img{width:100%;transition:transform .5s}
+.img-frame:hover img{transform:scale(1.04)}
+.img-banner{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);position:relative;cursor:pointer;background:var(--sky-light)}
+.img-banner img{width:100%;display:block}
+.img-banner::after{content:'🔍 点击查看大图';position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.85);padding:4px 12px;border-radius:20px;font-size:11px;color:var(--ink-soft);opacity:0;transition:opacity .3s;backdrop-filter:blur(4px)}
+.img-banner:hover::after{opacity:1}
+.caption-tag{position:absolute;bottom:12px;left:12px;background:rgba(45,74,94,.55);color:#fff;font-size:12px;padding:4px 12px;border-radius:20px;backdrop-filter:blur(4px)}
+
+/* Lightbox */
+.lightbox{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:rgba(20,35,45,.92);display:none;align-items:center;justify-content:center;padding:60px;backdrop-filter:blur(8px)}
+.lightbox.open{display:flex;animation:lbIn .3s ease}
+@keyframes lbIn{from{opacity:0}to{opacity:1}}
+.lightbox img{max-width:90%;max-height:85vh;border-radius:12px;box-shadow:0 20px 80px rgba(0,0,0,.4)}
+.lightbox-close{position:absolute;top:24px;right:32px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.lightbox-close:hover{background:rgba(255,255,255,.3)}
+
+/* Hero (home) */
+.hero{min-height:calc(100vh - var(--nav-h));display:flex;align-items:center;padding:40px 0;background:linear-gradient(180deg,var(--sky-light) 0%,#F0FAFF 50%,#FFFFFF 100%)}
+.hero-inner{display:flex;align-items:center;gap:40px;max-width:1200px;margin:0 auto;width:100%}
+.hero-text{flex:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.7);border:1px solid rgba(120,216,198,.3);padding:8px 18px;border-radius:30px;font-size:13px;color:var(--accent);margin-bottom:24px}
+.hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-title{font-family:'ZCOOL KuaiLe';font-size:58px;line-height:1.15;color:var(--ink);margin-bottom:20px}
+.hero-title .accent{color:var(--accent)}.hero-title .accent-o{color:var(--orange-deep)}
+.hero-desc{font-size:17px;color:var(--ink-soft);line-height:1.9;margin-bottom:32px;max-width:480px}
+.hero-actions{display:flex;gap:16px;margin-bottom:32px;flex-wrap:wrap}
+.btn-primary{background:var(--accent-light);color:#fff;border:none;cursor:pointer;padding:14px 32px;border-radius:30px;font-size:15px;font-weight:500;font-family:inherit;transition:all .3s;box-shadow:0 6px 20px rgba(120,216,198,.4);display:inline-flex;align-items:center;gap:8px;position:relative;overflow:hidden}
+.btn-primary:hover{background:var(--accent);transform:translateY(-3px)}
+.btn-primary::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transform:skewX(-20deg);animation:btnShine 3.5s ease-in-out infinite}
+@keyframes btnShine{0%,100%{left:-60%}40%,60%{left:130%}}
+.btn-ghost{background:transparent;color:var(--ink);border:2px solid var(--sky);cursor:pointer;padding:12px 30px;border-radius:30px;font-size:15px;font-weight:500;font-family:inherit;transition:all .3s;display:inline-flex;align-items:center;gap:8px}
+.btn-ghost:hover{background:var(--sky-light);border-color:var(--sky-deep)}
+.hero-visual{flex:0 0 400px;position:relative;display:flex;justify-content:center;align-items:center}
+.hero-poster{width:100%;max-width:400px;border-radius:var(--radius);box-shadow:0 20px 60px rgba(45,74,94,.18);transition:transform .4s;cursor:pointer}
+.compass-float{position:absolute;top:-30px;right:-20px;width:80px;height:80px;z-index:5;animation:bob 5s ease-in-out infinite}
+.compass-float svg{width:100%;height:100%;filter:drop-shadow(0 4px 12px rgba(255,182,107,.3))}
+.hero-stats{display:flex;gap:32px}
+.hero-stat .num{font-family:'ZCOOL KuaiLe';font-size:34px;color:var(--accent)}
+.hero-stat .label{font-size:12px;color:var(--ink-mute)}
+.scroll-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;animation:bob 2.5s ease-in-out infinite}
+.scroll-hint .mouse{width:24px;height:38px;border:2px solid var(--ink-mute);border-radius:12px;position:relative}
+.scroll-hint .mouse::after{content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);width:4px;height:8px;background:var(--ink-mute);border-radius:2px;animation:scrollDot 1.8s ease-in-out infinite}
+@keyframes scrollDot{0%{opacity:0;top:6px}40%{opacity:1}80%{opacity:0;top:18px}100%{opacity:0}}
+.scroll-hint span{font-size:11px;color:var(--ink-mute)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* ===== 01 项目概念 ===== */
+.concept-overview{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;margin-top:36px}
+.kv-card{background:var(--white);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.kv-card .k{font-size:13px;color:var(--accent);font-weight:500;margin-bottom:6px}
+.kv-card .v{font-family:'ZCOOL KuaiLe';font-size:22px;color:var(--ink);line-height:1.4}
+.kv-card .desc{font-size:13px;color:var(--ink-soft);line-height:1.8;margin-top:8px}
+.keywords{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.keyword{background:var(--sky-light);color:var(--teal-deep);font-weight:500;padding:8px 20px;border-radius:30px;font-size:14px}
+.core-concept{font-family:'ZCOOL KuaiLe';font-size:30px;color:var(--ink);text-align:center;padding:30px;background:linear-gradient(135deg,var(--sky-light),#fff);border-radius:var(--radius);margin-top:24px}
+.core-concept b{color:var(--accent)}
+.strategy-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:36px}
+.strategy-item{background:var(--white);border-radius:var(--radius);padding:26px 20px;text-align:center;box-shadow:var(--shadow);transition:all .35s;border:2px solid transparent}
+.strategy-item:hover{transform:translateY(-6px);border-color:var(--accent)}
+.strategy-num{font-family:'ZCOOL KuaiLe';font-size:34px;color:var(--orange);line-height:1}
+.strategy-item h4{font-family:'ZCOOL KuaiLe';font-size:17px;margin:10px 0 8px}
+.strategy-item p{font-size:12px;color:var(--ink-soft);line-height:1.7}
+
+/* ===== 02 IP设定 ===== */
+.about-grid{display:grid;grid-template-columns:380px 1fr;gap:48px;align-items:center;margin-top:36px}
+.about-visual .img-frame{max-width:380px}
+.feature-list{margin-top:24px;display:grid;gap:14px}
+.feature-item{display:flex;gap:14px;align-items:flex-start}
+.feature-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feature-icon.f1{background:rgba(190,233,255,.3);color:var(--sky-deep)}
+.feature-icon.f2{background:rgba(120,216,198,.2);color:var(--teal-deep)}
+.feature-icon.f3{background:rgba(255,182,107,.2);color:var(--orange-deep)}
+.feature-text h4{font-size:15px;font-weight:500;margin-bottom:4px}
+.feature-text p{font-size:13px;color:var(--ink-soft);line-height:1.7}
+.role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:32px}
+.role-card{background:var(--white);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.role-card h4{font-family:'ZCOOL KuaiLe';font-size:18px;margin-bottom:8px}
+.role-card p{font-size:13px;color:var(--ink-soft);line-height:1.8}
+.role-card .role-img{margin-top:14px;border-radius:var(--radius-sm);overflow:hidden;cursor:pointer}
+.role-card .role-img img{width:100%}
+.color-chips{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.color-chip{display:flex;align-items:center;gap:8px;background:var(--sky-light);padding:8px 14px;border-radius:12px;font-size:12px;color:var(--ink-soft);cursor:pointer;transition:all .25s;border:2px solid transparent}
+.color-chip:hover{transform:translateY(-2px)}
+.color-chip.active{border-color:var(--accent);background:#fff}
+.color-chip .swatch{width:20px;height:20px;border-radius:6px;border:1px solid rgba(0,0,0,.06)}
+.color-relations{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+.color-rel{background:var(--white);border-radius:var(--radius-sm);padding:18px;box-shadow:var(--shadow);text-align:center}
+.color-rel .sw{width:46px;height:46px;border-radius:50%;margin:0 auto 10px}
+.color-rel h4{font-size:14px;margin-bottom:4px}
+.color-rel p{font-size:12px;color:var(--ink-soft);line-height:1.6}
+
+/* Expressions (情绪资产) */
+.expr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px}
+.expr-card{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all .35s;border:2px solid transparent}
+.expr-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:var(--accent)}
+.expr-card .expr-img{height:170px;background:var(--sky-light);overflow:hidden}
+.expr-card .expr-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.expr-card:hover .expr-img img{transform:scale(1.08)}
+.expr-card .expr-body{padding:16px}
+.expr-card .expr-name{font-family:'ZCOOL KuaiLe';font-size:18px;margin-bottom:6px}
+.expr-card .expr-meta{font-size:12px;color:var(--ink-mute);margin-bottom:8px}
+.expr-card .expr-scene{font-size:13px;color:var(--ink-soft);line-height:1.7;min-height:44px}
+.expr-card .expr-tag{display:inline-block;font-size:11px;color:var(--accent);background:rgba(120,216,198,.15);padding:4px 12px;border-radius:12px;margin-top:8px;transition:all .25s}
+.expr-card.flipped .expr-tag{background:var(--orange);color:#fff}
+.expr-gallery{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:20px}
+.expr-thumb{border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:all .3s;height:90px}
+.expr-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.expr-thumb:hover{transform:translateY(-4px) scale(1.03)}
+
+/* Actions (动作资产) */
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+.action-card{background:var(--white);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);transition:all .3s;border:1px solid rgba(190,233,255,.3);cursor:pointer}
+.action-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
+.action-num{font-family:'ZCOOL KuaiLe';font-size:32px;color:var(--orange);opacity:.4;line-height:1}
+.action-card h4{font-family:'ZCOOL KuaiLe';font-size:18px;margin:8px 0}
+.action-card p{font-size:13px;color:var(--ink-soft);line-height:1.8}
+.action-demo{margin-top:14px;padding-top:14px;border-top:1px dashed var(--sky);font-size:12px;color:var(--accent);display:flex;align-items:center;gap:6px}
+.action-banner{margin-top:32px;border-radius:var(--radius);overflow:hidden;cursor:pointer;box-shadow:var(--shadow)}
+
+/* ===== 03 世界观 ===== */
+.world-map{position:relative;margin-top:32px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(160deg,#E8F7FF,#D6F0FF 60%,#F0E8FF);min-height:420px;padding:32px}
+.world-map .map-bg{position:absolute;inset:0;opacity:.5}
+.world-map .map-bg img{width:100%;height:100%;object-fit:cover}
+.world-center{position:relative;text-align:center;margin-bottom:18px}
+.world-center .hub{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 8px 30px rgba(45,74,94,.18);border:2px solid var(--accent)}
+.world-center .hub .ico{font-size:34px}
+.world-center .hub .t{font-family:'ZCOOL KuaiLe';font-size:15px;color:var(--ink);margin-top:4px}
+.world-spots{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-top:10px}
+.spot{background:rgba(255,255,255,.85);border-radius:var(--radius-sm);padding:18px 20px;cursor:pointer;transition:all .3s;border:2px solid transparent;backdrop-filter:blur(4px)}
+.spot:hover{transform:translateY(-4px);border-color:var(--orange);box-shadow:var(--shadow)}
+.spot .spot-icon{font-size:26px}
+.spot .spot-name{font-family:'ZCOOL KuaiLe';font-size:18px;margin:4px 0}
+.spot .spot-desc{font-size:12px;color:var(--ink-soft);line-height:1.6}
+.spot .spot-go{font-size:12px;color:var(--accent);margin-top:8px;font-weight:500}
+.stamp-bar{margin-top:24px;background:var(--sky-light);border-radius:var(--radius-sm);padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.stamp-bar .stamp-text{font-size:14px;color:var(--ink);font-weight:500;white-space:nowrap}
+.stamp-track{flex:1;height:10px;background:#fff;border-radius:5px;overflow:hidden;min-width:120px}
+.stamp-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--orange));border-radius:5px;width:0;transition:width .6s ease}
+.stamp-emoji{font-size:20px}
+
+/* Dest modal */
+.detail-modal{position:fixed;inset:0;z-index:9990;background:rgba(20,35,45,.55);display:none;align-items:center;justify-content:center;padding:40px;backdrop-filter:blur(6px)}
+.detail-modal.open{display:flex;animation:lbIn .3s ease}
+.detail-panel{background:#fff;border-radius:24px;max-width:880px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 30px 90px rgba(0,0,0,.35);animation:subIn .4s ease}
+.detail-hero{position:relative;height:240px;overflow:hidden}
+.detail-hero img{width:100%;height:100%;object-fit:cover}
+.detail-hero .detail-badge{position:absolute;top:16px;left:16px;background:rgba(255,255,255,.9);padding:6px 16px;border-radius:20px;font-family:'ZCOOL KuaiLe';font-size:18px;color:var(--ink)}
+.detail-hero .detail-stamp{position:absolute;top:16px;right:16px;font-size:30px;background:rgba(255,255,255,.9);width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.detail-body{padding:28px 36px 36px}
+.detail-body h3{font-family:'ZCOOL KuaiLe';font-size:24px;margin-bottom:8px}
+.detail-story{font-size:14px;color:var(--ink-soft);line-height:1.9;margin-bottom:22px}
+.detail-tags{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.detail-tag{background:var(--sky-light);border-radius:14px;padding:14px}
+.detail-tag .t-label{font-size:11px;color:var(--accent);font-weight:500;margin-bottom:4px}
+.detail-tag .t-val{font-size:14px;color:var(--ink);font-weight:500}
+.detail-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.9);font-size:20px;cursor:pointer;z-index:2}
+.detail-close:hover{background:#fff}
+
+/* ===== 04 互动体验 ===== */
+.quiz-wrap{max-width:700px;margin:36px auto 0;background:var(--white);border-radius:28px;box-shadow:0 12px 48px rgba(45,74,94,.12);overflow:hidden}
+.quiz-header{background:linear-gradient(135deg,var(--accent-light),var(--sky-deep));padding:28px 36px;color:#fff;text-align:center}
+.quiz-header h3{font-family:'ZCOOL KuaiLe';font-size:24px;margin-bottom:6px}
+.quiz-header p{font-size:14px;opacity:.9}
+.quiz-compass-wrap{display:flex;justify-content:center;margin:16px 0}
+.quiz-compass{width:56px;height:56px}
+.quiz-compass .needle{transition:transform 1.2s cubic-bezier(.34,1.56,.64,1)}
+.quiz-body{padding:32px 36px;min-height:280px}
+.quiz-progress{display:flex;gap:8px;margin-bottom:24px}
+.quiz-progress .step{flex:1;height:5px;border-radius:3px;background:var(--sky-light);transition:background .3s}
+.quiz-progress .step.active{background:var(--accent-light)}.quiz-progress .step.done{background:var(--accent)}
+.quiz-q{font-family:'ZCOOL KuaiLe';font-size:20px;margin-bottom:20px;text-align:center}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quiz-option{background:var(--sky-light);border:2px solid transparent;border-radius:16px;padding:20px 16px;cursor:pointer;transition:all .25s;text-align:center}
+.quiz-option:hover{background:#D6F0FF;border-color:var(--sky-deep);transform:translateY(-2px)}
+.quiz-option .opt-icon{font-size:26px;margin-bottom:6px}
+.quiz-option .opt-text{font-size:14px;font-weight:500;color:var(--ink)}
+.quiz-option.selected{background:var(--accent-light);border-color:var(--accent)}
+.quiz-option.selected .opt-text{color:#fff}
+.quiz-result{text-align:center;padding:8px 0}
+.result-dest{font-family:'ZCOOL KuaiLe';font-size:28px;color:var(--accent);margin-bottom:8px}
+.result-desc{font-size:14px;color:var(--ink-soft);line-height:1.9;max-width:400px;margin:0 auto 16px}
+.result-emoji-row{display:flex;justify-content:center;gap:8px;margin-bottom:20px}
+.result-emoji{font-size:22px;background:var(--sky-light);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.quiz-restart{background:var(--orange);color:#fff;border:none;cursor:pointer;padding:12px 28px;border-radius:24px;font-size:14px;font-weight:500;font-family:inherit;transition:all .25s}
+.quiz-restart:hover{background:var(--orange-deep);transform:translateY(-2px)}
+.quiz-share{background:transparent;color:var(--ink-soft);border:1px solid var(--sky);cursor:pointer;padding:12px 24px;border-radius:24px;font-size:14px;font-family:inherit;transition:all .25s;margin-left:10px}
+.quiz-share:hover{background:var(--sky-light)}
+.quiz-fortune-link{margin-top:18px;display:inline-flex;align-items:center;gap:8px;background:var(--teal-deep);color:#fff;border:none;cursor:pointer;padding:12px 26px;border-radius:24px;font-size:14px;font-weight:500;font-family:inherit;transition:all .25s}
+.quiz-fortune-link:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(77,184,164,.4)}
+
+/* Fortune */
+.fortune-wrap{max-width:540px;margin:36px auto 0;text-align:center}
+.fortune-box{background:var(--white);border-radius:28px;padding:44px 36px;box-shadow:0 12px 48px rgba(240,153,90,.15);position:relative;overflow:hidden;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.fortune-box::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,182,107,.1)}
+.fortune-box::after{content:'';position:absolute;bottom:-30px;left:-30px;width:90px;height:90px;border-radius:50%;background:rgba(120,216,198,.1)}
+.fortune-icon{font-size:44px;margin-bottom:14px;transition:transform .6s}
+.fortune-icon.shaking{animation:shake .5s ease-in-out 3}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-15deg)}75%{transform:rotate(15deg)}}
+.fortune-text{font-family:'ZCOOL KuaiLe';font-size:22px;color:var(--ink);line-height:1.6;margin-bottom:8px;min-height:36px}
+.fortune-sub{font-size:14px;color:var(--ink-soft);line-height:1.8;min-height:28px}
+.fortune-btn{margin-top:24px;background:var(--orange);color:#fff;border:none;cursor:pointer;padding:14px 36px;border-radius:30px;font-size:15px;font-weight:500;font-family:inherit;transition:all .3s;box-shadow:0 6px 20px rgba(255,182,107,.4);display:inline-flex;align-items:center;gap:8px}
+.fortune-btn:hover{background:var(--orange-deep);transform:translateY(-3px)}
+.fortune-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Mailbox (写给小河) */
+.mailbox-wrap{max-width:620px;margin:36px auto 0;background:var(--white);border-radius:28px;overflow:hidden;box-shadow:0 12px 48px rgba(45,74,94,.12)}
+.mailbox-header{background:linear-gradient(135deg,var(--accent-light),var(--sky-deep));padding:28px 36px;color:#fff;text-align:center}
+.mailbox-header h3{font-family:'ZCOOL KuaiLe';font-size:22px;margin-bottom:4px}
+.mailbox-header p{font-size:13px;opacity:.9}
+.mailbox-body{padding:32px 36px}
+.mailbox-input{width:100%;border:2px solid var(--sky);border-radius:16px;padding:16px 20px;font-size:14px;font-family:inherit;color:var(--ink);resize:none;min-height:90px;transition:border-color .25s;background:var(--sky-light)}
+.mailbox-input:focus{outline:none;border-color:var(--accent);background:#fff}
+.mailbox-actions{display:flex;gap:12px;margin-top:16px}
+.mailbox-send{background:var(--accent-light);color:#fff;border:none;cursor:pointer;padding:12px 28px;border-radius:24px;font-size:14px;font-weight:500;font-family:inherit;transition:all .25s;flex:1;display:flex;align-items:center;justify-content:center;gap:8px}
+.mailbox-send:hover{background:var(--accent)}
+.mailbox-send:disabled{opacity:.5;cursor:not-allowed}
+.mailbox-clear{background:transparent;color:var(--ink-soft);border:1px solid var(--sky);cursor:pointer;padding:12px 20px;border-radius:24px;font-size:14px;font-family:inherit;transition:all .25s}
+.mailbox-clear:hover{background:var(--sky-light)}
+.mailbox-reply{margin-top:20px;background:var(--sky-light);border-radius:16px;padding:20px 24px;display:none}
+.mailbox-reply.show{display:block;animation:replyIn .5s ease}
+@keyframes replyIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.reply-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.reply-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:18px}
+.reply-name{font-family:'ZCOOL KuaiLe';font-size:16px;color:var(--ink)}
+.reply-text{font-size:14px;color:var(--ink-soft);line-height:1.8}
+.reply-typing{display:inline-block;width:3px;height:16px;background:var(--accent);margin-left:2px;animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.quick-replies{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.quick-reply{background:var(--sky-light);border:1px solid var(--sky);border-radius:20px;padding:8px 16px;font-size:12px;color:var(--ink-soft);cursor:pointer;transition:all .2s;font-family:inherit}
+.quick-reply:hover{background:var(--accent-light);color:#fff;border-color:var(--accent)}
+
+/* ===== 05 IP应用 ===== */
+.app-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px}
+.app-card{background:var(--sky-light);border-radius:var(--radius-sm);padding:20px;transition:all .3s;text-align:center;cursor:pointer}
+.app-card:hover{transform:translateY(-4px);background:#D6F0FF}
+.app-card .app-icon{width:48px;height:48px;border-radius:14px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.app-card h4{font-size:14px;font-weight:500;margin-bottom:6px}
+.app-card p{font-size:12px;color:var(--ink-soft);line-height:1.6}
+.app-banner{margin-top:32px;border-radius:var(--radius);overflow:hidden;cursor:pointer;box-shadow:var(--shadow)}
+
+/* ===== 06 动态展示 ===== */
+.showcase-video{margin-top:32px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(160deg,#E8F7FF,#D6F0FF);position:relative;max-width:960px;margin-left:auto;margin-right:auto}
+.showcase-video video{width:100%;display:block;background:#E8F7FF}
+.video-poster-overlay{position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(232,247,255,.35);transition:opacity .3s;z-index:5}
+.video-poster-overlay.hide{opacity:0;pointer-events:none}
+.video-poster-overlay img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.video-play-btn{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .3s;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.video-play-btn:hover{transform:scale(1.1)}
+.video-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--ink);font-size:14px;display:none;z-index:10;background:rgba(255,255,255,.85);padding:8px 18px;border-radius:20px}
+.video-loading.show{display:block}
+.video-fallback{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(160deg,#E8F7FF,#D6F0FF 60%,#F0E8FF);z-index:6}
+.video-fallback.show{display:flex}
+.video-fallback .fb-ico{font-size:48px;margin-bottom:14px}
+.video-fallback p{font-size:15px;color:var(--ink-soft);line-height:1.8;max-width:380px}
+.video-controls{position:absolute;bottom:0;left:0;width:100%;display:none;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(180deg,transparent,rgba(20,35,45,.6));z-index:8}
+.video-controls.show{display:flex}
+.video-controls button{border:none;background:rgba(255,255,255,.85);color:var(--ink);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
+.video-controls button:hover{background:#fff}
+.v-progress{flex:1;height:6px;background:rgba(255,255,255,.4);border-radius:3px;cursor:pointer;overflow:hidden}
+.v-bar{height:100%;width:0;background:var(--orange);border-radius:3px}
+.showcase-gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+.showcase-gallery .g-item{border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:all .3s;aspect-ratio:4/3}
+.showcase-gallery .g-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.showcase-gallery .g-item:hover{transform:translateY(-4px)}
+
+/* Relations */
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px}
+.rel-card{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;max-height:320px}
+.rel-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.rel-card:hover img{transform:scale(1.03)}
+
+/* Chapter navigation */
+.chapter-nav{display:flex;justify-content:space-between;align-items:stretch;gap:16px;max-width:1000px;margin:0 auto;padding:48px 0 64px}
+.chap-link{display:flex;align-items:center;gap:12px;background:var(--white);border-radius:18px;padding:16px 24px;box-shadow:var(--shadow);cursor:pointer;transition:all .3s;border:1px solid transparent;flex:1;max-width:48%}
+.chap-link:hover{border-color:var(--accent);transform:translateY(-3px)}
+.chap-link.next{flex-direction:row-reverse;text-align:right}
+.chap-link .arrow{font-family:'ZCOOL KuaiLe';font-size:24px;color:var(--accent);flex-shrink:0}
+.chap-link small{display:block;font-size:11px;color:var(--ink-mute);letter-spacing:1px}
+.chap-link strong{font-family:'ZCOOL KuaiLe';font-size:17px;color:var(--ink);font-weight:400}
+.chap-home{display:flex;align-items:center;justify-content:center;background:var(--sky-light);border-radius:18px;padding:16px 24px;box-shadow:var(--shadow);cursor:pointer;transition:all .3s;color:var(--accent);font-family:'ZCOOL KuaiLe';font-size:16px}
+.chap-home:hover{background:var(--accent);color:#fff}
+
+/* Footer */
+footer{background:linear-gradient(180deg,#FFFFFF 0%,var(--sky-light) 100%);padding:56px 48px 36px;text-align:center;position:relative;z-index:2;margin-top:40px}
+.footer-clouds{display:flex;justify-content:center;gap:20px;margin-bottom:20px;opacity:.3}
+.footer-logo{font-family:'ZCOOL KuaiLe';font-size:26px;color:var(--ink);margin-bottom:8px}
+.footer-tag{font-size:14px;color:var(--ink-soft);margin-bottom:20px}
+.footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:20px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--ink-soft);text-decoration:none;transition:color .2s;cursor:pointer}
+.footer-links a:hover{color:var(--accent)}
+.footer-share{display:flex;justify-content:center;gap:12px;margin-bottom:20px}
+.footer-share-btn{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;font-size:18px}
+.footer-share-btn:hover{transform:translateY(-3px)}
+.footer-share-btn.s1{background:rgba(120,216,198,.2)}.footer-share-btn.s2{background:rgba(255,182,107,.2)}.footer-share-btn.s3{background:rgba(190,233,255,.3)}.footer-share-btn.s4{background:rgba(184,169,224,.2)}
+.footer-copy{font-size:12px;color:var(--ink-mute)}
+
+/* Floating Action Bar */
+.fab-bar{position:fixed;right:24px;bottom:24px;z-index:200;display:flex;flex-direction:column;gap:12px}
+.fab{width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;box-shadow:0 4px 20px rgba(45,74,94,.15);font-size:20px;color:#fff}
+.fab:hover{transform:scale(1.1)}
+.fab.fab-top{background:var(--accent-light);opacity:0;pointer-events:none}
+.fab.fab-top.show{opacity:1;pointer-events:auto}
+
+/* ===== 返回首页按钮（悬浮，仅非首页显示） ===== */
+.back-home-fab{position:fixed;left:24px;bottom:24px;z-index:120;
+  display:inline-flex;align-items:center;gap:9px;
+  padding:12px 22px 12px 16px;border-radius:30px;
+  border:1px solid rgba(77,184,164,.35);
+  background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 10px 30px rgba(45,74,94,.16);
+  color:var(--ink);font-family:inherit;font-size:14px;font-weight:500;
+  cursor:pointer;transition:transform .3s,box-shadow .3s,border-color .3s,opacity .3s,color .3s;
+  opacity:0;pointer-events:none;transform:translateY(12px)}
+.back-home-fab.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.back-home-fab:hover{transform:translateY(-3px);border-color:var(--accent);color:var(--accent);box-shadow:0 14px 38px rgba(77,184,164,.34)}
+.back-home-fab .bh-ic{width:26px;height:26px;border-radius:50%;background:var(--sky-light);
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent);transition:transform .3s}
+.back-home-fab:hover .bh-ic{transform:translateX(-3px)}
+
+/* 面包屑中的「首页」升级为可见按钮 */
+.crumbs .crumb-home{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;
+  border:1px solid rgba(77,184,164,.32);background:var(--sky-light);color:var(--accent)!important;font-weight:500;
+  transition:all .25s}
+.crumbs .crumb-home:hover{background:var(--accent);color:#fff!important;border-color:var(--accent)}
+@media(max-width:768px){
+  .back-home-fab{left:14px;bottom:14px;padding:10px 16px 10px 12px;font-size:13px}
+  .back-home-fab .bh-ic{width:23px;height:23px;font-size:13px}
+}
+/* BGM player — 默认只显示圆形按钮，悬停/激活时向左展开音量条，不遮挡下方其他 FAB */
+.bgm-player{position:relative;display:flex;align-items:center;gap:6px}
+/* 展开面板：向左生长，包含标签+滑块+按钮，圆角胶囊形 */
+.bgm-panel{display:flex;align-items:center;gap:8px;background:#fff;border-radius:28px;padding:6px 10px 6px 14px;box-shadow:0 4px 20px rgba(45,74,94,.18);opacity:0;pointer-events:none;transform:translateX(12px);transition:all .3s ease;white-space:nowrap;max-width:0;overflow:hidden;padding-right:10px;padding-left:10px}
+.bgm-player:hover .bgm-panel,.bgm-player.open .bgm-panel{opacity:1;pointer-events:auto;transform:translateX(0);max-width:220px;padding-right:14px;padding-left:14px}
+.bgm-panel-label{font-size:12px;color:var(--ink-mute);flex-shrink:0;font-weight:500;letter-spacing:.5px}
+.bgm-vol{width:72px;height:4px;-webkit-appearance:none;appearance:none;background:rgba(255,182,107,.35);border-radius:4px;outline:none;cursor:pointer;transition:width .25s}
+.bgm-vol::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--orange);box-shadow:0 1px 4px rgba(45,74,94,.3);cursor:pointer}
+.bgm-vol::-moz-range-thumb{width:14px;height:14px;border:none;border-radius:50%;background:var(--orange);cursor:pointer}
+.bgm-btn{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--orange);color:#fff;box-shadow:0 4px 20px rgba(45,74,94,.15);transition:transform .3s;position:relative;flex-shrink:0}
+.bgm-btn:hover{transform:scale(1.08)}
+.bgm-disc{font-size:20px;line-height:1;display:inline-block;transition:transform .3s}
+.bgm-btn.playing{animation:bgmBreath 2.4s ease-in-out infinite}
+.bgm-btn.playing .bgm-disc{animation:discSpin 4.5s linear infinite}
+@keyframes discSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes bgmBreath{0%,100%{box-shadow:0 4px 20px rgba(255,182,107,.4)}50%{box-shadow:0 6px 30px rgba(255,182,107,.7)}}
+@media(max-width:1024px){.bgm-panel{max-width:180px}.bgm-vol{width:56px}}
+.fab.fab-share{background:var(--sky-deep)}
+/* 浮动写信按钮 */
+.fab.fab-mail{background:rgba(184,169,224,.35);color:var(--ink)}
+.fab.fab-mail:hover{background:rgba(184,169,224,.6);transform:translateY(-3px)}
+/* 写信弹窗：全屏半透明遮罩 + 居中卡片 */
+.mail-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(45,74,94,.35);backdrop-filter:blur(6px);opacity:0;transition:opacity .3s}
+.mail-modal.open{display:flex;opacity:1}
+.mail-modal-card{background:#fff;border-radius:28px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:0 30px 90px rgba(45,74,94,.25);transform:translateY(20px) scale(.97);transition:transform .3s}
+.mail-modal.open .mail-modal-card{transform:translateY(0) scale(1)}
+.mail-modal-close{position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;border:none;background:var(--sky-light);color:var(--ink-mute);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:1}
+.mail-modal-close:hover{background:var(--accent-light);color:#fff}
+.fab-tooltip{position:absolute;right:56px;top:50%;transform:translateY(-50%);background:var(--ink);color:#fff;padding:4px 12px;border-radius:8px;font-size:12px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.fab:hover .fab-tooltip{opacity:1}
+
+/* Toast */
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--ink);color:#fff;padding:12px 28px;border-radius:30px;font-size:14px;z-index:9998;opacity:0;transition:all .3s;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.3;z-index:0;pointer-events:none}
+.blob.b1{width:400px;height:400px;background:#BEE9FF;top:10%;left:-100px;animation:blobMove1 18s ease-in-out infinite}
+.blob.b2{width:340px;height:340px;background:#FFECD6;top:50%;right:-80px;animation:blobMove2 22s ease-in-out infinite}
+.blob.b3{width:280px;height:280px;background:#78D8C6;bottom:10%;left:30%;opacity:.15;animation:blobMove1 26s ease-in-out infinite reverse}
+@keyframes blobMove1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.1)}66%{transform:translate(-30px,50px) scale(.95)}}
+@keyframes blobMove2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-50px,30px) scale(1.08)}}
+
+/* Char animation */
+.char{display:inline-block;opacity:0;transform:translateY(30px) rotate(8deg);animation:charIn .6s ease forwards}
+@keyframes charIn{to{opacity:1;transform:translateY(0) rotate(0)}}
+
+/* Tilt */
+.tilt-card{transform-style:preserve-3d;transition:transform .2s ease}
+
+/* Title underline */
+.title-line{height:3px;width:0;background:linear-gradient(90deg,var(--teal),var(--orange));border-radius:2px;margin-top:8px;transition:width 1s ease .3s}
+.reveal.visible .title-line{width:64px}
+
+/* ===== Responsive ===== */
+@media(max-width:1024px){
+  .concept-overview{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr;gap:24px}
+  .about-visual .img-frame{max-width:100%}
+  .strategy-grid{grid-template-columns:repeat(2,1fr)}
+  .role-grid{grid-template-columns:1fr}
+  .expr-grid,.action-grid{grid-template-columns:repeat(2,1fr)}
+  .color-relations{grid-template-columns:repeat(2,1fr)}
+  .app-grid,.showcase-gallery{grid-template-columns:repeat(2,1fr)}
+  .rel-grid{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  nav{padding:0 18px}
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .hamburger{display:flex}
+  .container{padding:0 18px}
+  .hero-inner{flex-direction:column;text-align:center;gap:24px}
+  .hero-text{order:2}
+  .hero-visual{order:1;flex:0 0 auto;width:100%;max-width:320px}
+  .hero-stats{justify-content:center;gap:18px;flex-wrap:wrap}
+  .hero-desc{margin-left:auto;margin-right:auto}
+  .hero-actions{justify-content:center}
+  .hero-title{font-size:42px}
+  .section-title{font-size:28px}
+  .page-index{font-size:48px}
+  .page-hero .hero-en{font-size:44px}
+  .page-hero .hero-cn{font-size:34px}
+  .strategy-grid{grid-template-columns:1fr}
+  .expr-grid,.action-grid,.app-grid,.showcase-gallery{grid-template-columns:1fr}
+  .color-relations{grid-template-columns:1fr}
+  .world-spots{grid-template-columns:1fr}
+  .quiz-options{grid-template-columns:1fr}
+  .detail-tags{grid-template-columns:1fr}
+  .quiz-share{margin-left:0;margin-top:10px}
+  .footer-links{gap:14px}
+  .fab-bar{right:14px;bottom:14px}
+  .detail-body{padding:22px}
+  .flow-step{font-size:12px;padding:8px 14px}
+  .flow-arrow{display:none}
+  .flowline{gap:8px}
+  .chapter-nav{flex-direction:column}
+  .chap-link{max-width:100%}
+  .page{min-width:0}
+  body{overflow-x:hidden}
+}
+</style>
+</head>
+<body>
+
+<!-- Floating Clouds -->
+<div class="cloud-layer" id="cloudLayer"></div>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Nav -->
+<nav id="nav">
+  <div class="nav-logo" onclick="goHome()">
+    <span class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#4DB8A4" stroke-width="2"/><path d="M12 6L13.5 12L12 18L10.5 12Z" fill="#FFB66B"/></svg>
+    </span>
+    云游小河
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a data-page="home" class="nav-home">首页</a>
+    <a data-page="concept"><span class="nav-num">01</span>项目概念</a>
+    <a data-page="ip"><span class="nav-num">02</span>IP设定</a>
+    <a data-page="world"><span class="nav-num">03</span>世界观</a>
+    <a data-page="interactive"><span class="nav-num">04</span>互动体验</a>
+    <a data-page="apps"><span class="nav-num">05</span>IP应用</a>
+    <a data-page="showcase"><span class="nav-num">06</span>动态展示</a>
+  </div>
+  <button class="nav-cta" onclick="switchPage('interactive',null,{sub:'quiz'})">让小河指路</button>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a class="m-home" onclick="goHome();closeMenu()">🏠 首页 Home</a>
+  <a data-page="concept" onclick="closeMenu()">01 项目概念</a>
+  <a data-page="ip" onclick="closeMenu()">02 IP设定</a>
+  <a data-page="world" onclick="closeMenu()">03 世界观</a>
+  <a data-page="interactive" onclick="closeMenu()">04 互动体验</a>
+  <a data-page="apps" onclick="closeMenu()">05 IP应用</a>
+  <a data-page="showcase" onclick="closeMenu()">06 动态展示</a>
+</div>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="page active" data-page="home">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-text reveal">
+        <div class="hero-badge"><span class="dot"></span> 数字文旅 IP · 云端旅行小精灵</div>
+        <h1 class="hero-title">为你找到<br><span class="accent">下一处</span><span class="accent-o">风景</span></h1>
+        <p class="hero-desc">云游小河是一个以"旅行探索"为核心的数字 IP 形象。它头顶指南针、身披山河色斗篷，穿梭在云端驿站之间，为每一位旅人记录旅途中的温暖与好奇。</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="switchPage('concept')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z" fill="#fff"/></svg>
+            开始探索
+          </button>
+          <button class="btn-ghost" onclick="switchPage('ip',null,{sub:'role'})">
+            认识小河
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="num" data-count="6">0</div><div class="label">情绪资产</div></div>
+          <div class="hero-stat"><div class="num" data-count="3">0</div><div class="label">标志性动作</div></div>
+          <div class="hero-stat"><div class="num" data-count="4">0</div><div class="label">云端目的地</div></div>
+          <div class="hero-stat"><div class="num" data-count="4">0</div><div class="label">落地场景</div></div>
+        </div>
+      </div>
+      <div class="hero-visual reveal reveal-delay-2">
+        <div class="compass-float" id="heroCompass">
+          <svg viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="42" fill="#fff" stroke="#FFB66B" stroke-width="3"/>
+            <circle cx="50" cy="50" r="36" fill="none" stroke="#FFECD6" stroke-width="1.5"/>
+            <text x="50" y="20" text-anchor="middle" font-size="10" fill="#F0995A" font-weight="bold">N</text>
+            <text x="50" y="86" text-anchor="middle" font-size="9" fill="#94AFBE">S</text>
+            <text x="84" y="54" text-anchor="middle" font-size="9" fill="#94AFBE">E</text>
+            <text x="16" y="54" text-anchor="middle" font-size="9" fill="#94AFBE">W</text>
+            <g id="heroNeedle" style="transform-origin:50px 50px">
+              <path d="M50 50 L50 24 L45 50 L50 76 L55 50 Z" fill="#FFB66B"/>
+              <path d="M50 50 L50 24 L45 50 Z" fill="#F0995A"/>
+              <circle cx="50" cy="50" r="4" fill="#4DB8A4"/>
+            </g>
+          </svg>
+        </div>
+        <img class="hero-poster" src="assets/poster.webp" alt="云游小河主视觉海报" onclick="openLightbox('assets/poster.webp','云游小河主视觉海报')">
+      </div>
+    </div>
+    <div class="scroll-hint"><div class="mouse"></div><span>向下滚动或点上方导航探索</span></div>
+  </div>
+
+  <!-- 首页引导卡片 -->
+  <section class="block">
+    <div class="container">
+      <div class="reveal" style="text-align:center">
+        <span class="section-tag">EXPLORE</span>
+        <h2 class="section-title">一套完整的数字文旅 IP</h2>
+        <div class="title-line" style="margin:8px auto 0"></div>
+        <p class="section-sub" style="margin:0 auto">从项目概念、IP 设定到世界观、互动体验与文旅落地——跟随小河，进入它的云端驿站。</p>
+      </div>
+      <div class="expr-grid" style="margin-top:36px">
+        <div class="card reveal" style="padding:28px;cursor:pointer" onclick="switchPage('concept')">
+          <div style="font-size:30px">🧭</div><h4 style="font-family:'ZCOOL KuaiLe';font-size:18px;margin:10px 0 6px">01 项目概念</h4>
+          <p style="font-size:13px;color:var(--ink-soft);line-height:1.7">连接「人 × 风景 × 情绪」的数字文旅 IP 是什么、为什么做。</p>
+        </div>
+        <div class="card reveal reveal-delay-1" style="padding:28px;cursor:pointer" onclick="switchPage('ip',null,{sub:'role'})">
+          <div style="font-size:30px">🧚</div><h4 style="font-family:'ZCOOL KuaiLe';font-size:18px;margin:10px 0 6px">02 IP设定</h4>
+          <p style="font-size:13px;color:var(--ink-soft);line-height:1.7">认识小河、角色设计、色彩体系、情绪与动作资产。</p>
+        </div>
+        <div class="card reveal reveal-delay-2" style="padding:28px;cursor:pointer" onclick="switchPage('world')">
+          <div style="font-size:30px">🗺️</div><h4 style="font-family:'ZCOOL KuaiLe';font-size:18px;margin:10px 0 6px">03 世界观</h4>
+          <p style="font-size:13px;color:var(--ink-soft);line-height:1.7">云端驿站与四处目的地，收集你的旅行印章。</p>
+        </div>
+        <div class="card reveal" style="padding:28px;cursor:pointer" onclick="switchPage('interactive',null,{sub:'quiz'})">
+          <div style="font-size:30px">✨</div><h4 style="font-family:'ZCOOL KuaiLe';font-size:18px;margin:10px 0 6px">04 互动体验</h4>
+          <p style="font-size:13px;color:var(--ink-soft);line-height:1.7">让小河为你指路、抽旅行签、写下你的心愿。</p>
+        </div>
+        <div class="card reveal reveal-delay-1" style="padding:28px;cursor:pointer" onclick="switchPage('apps')">
+          <div style="font-size:30px">🎁</div><h4 style="font-family:'ZCOOL KuaiLe';font-size:18px;margin:10px 0 6px">05 IP应用</h4>
+          <p style="font-size:13px;color:var(--ink-soft);line-height:1.7">从游客中心到 AI 导览，一套可落地的视觉系统。</p>
+        </div>
+        <div class="card reveal reveal-delay-2" style="padding:28px;cursor:pointer" onclick="switchPage('showcase')">
+          <div style="font-size:30px">🎬</div><h4 style="font-family:'ZCOOL KuaiLe';font-size:18px;margin:10px 0 6px">06 动态展示</h4>
+          <p style="font-size:13px;color:var(--ink-soft);line-height:1.7">IP 动画、宣传视频与动态海报，看小河动起来。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 首页章节入口 -->
+  <section class="block" style="padding-top:0">
+    <div class="container">
+      <div class="chapter-nav" style="padding-top:0;padding-bottom:0">
+        <div class="chap-link next" style="max-width:100%;flex:1" onclick="switchPage('concept',null,{restore:true})">
+          <span class="arrow">→</span>
+          <div style="text-align:right"><small>从这里开始 · START HERE</small><strong>01 项目概念</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============ 01 项目概念 ============ -->
+<section class="page" data-page="concept">
+  <div class="container">
+    <div class="page-hero reveal">
+      <div class="chap-label">01 / PROJECT CONCEPT</div>
+      <div class="hero-en">PROJECT</div>
+      <h1 class="hero-cn">项目概念</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-intro">为什么做云游小河？它连接「人 × 风景 × 情绪」，为文旅场景打造一个可被识别、被喜爱、可落地的治愈系数字 IP。</p>
+      <div class="page-hero-img"><img src="assets/poster.webp" alt="云游小河主视觉海报"></div>
+    </div>
+
+    <div class="crumbs" style="margin-bottom:8px"><a class="crumb-home" onclick="goHome()">← 首页</a><span class="sep">/</span><span class="cur">项目概念</span></div>
+
+    <div class="subnav" data-page-subnav="concept">
+      <button class="active" data-sub="overview" onclick="switchSub('concept','overview')">项目概述</button>
+      <button data-sub="strategy" onclick="switchSub('concept','strategy')">设计策略</button>
+    </div>
+
+    <div class="sub-view active" data-sub="overview">
+      <section class="block">
+        <div class="concept-overview">
+          <div class="reveal">
+            <div class="kv-card"><div class="k">项目名称</div><div class="v">云游小河</div></div>
+            <div class="kv-card" style="margin-top:16px"><div class="k">项目定位</div><div class="v">数字文旅 IP</div><div class="desc">云端旅行小精灵 · 以「旅行探索」为核心的数字 IP 形象。</div></div>
+            <div class="keywords">
+              <span class="keyword">探索</span><span class="keyword">陪伴</span><span class="keyword">指引</span><span class="keyword">记录</span>
+            </div>
+          </div>
+          <div class="reveal reveal-delay-1">
+            <div class="kv-card"><div class="k">核心概念</div>
+              <div class="core-concept">连接 <b>人</b> × <b>风景</b> × <b>情绪</b></div>
+              <div class="desc" style="font-size:14px;color:var(--ink-soft);line-height:1.9;margin-top:16px">云游小河把每一次出发都变成一段有温度的记录。它不只是向导，更是旅伴——在路途中的好奇、惊喜与安心，都由它认真珍藏。</div>
+            </div>
+          </div>
+        </div>
+        <div class="kv-card reveal" style="margin-top:24px">
+          <div class="k">设计目标</div>
+          <div class="desc" style="font-size:14px;color:var(--ink-soft);line-height:1.9">为文旅场景打造一个可被识别、可被喜爱、可被落地的治愈系 IP 形象；用清晰的人格与世界观，让游客与风景之间产生更亲密的情感联结，并延伸到游客中心、导览、文创与数字导览等真实触点。</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sub-view" data-sub="strategy">
+      <section class="block">
+        <div class="reveal" style="text-align:center">
+          <span class="section-tag">STRATEGY</span>
+          <h2 class="section-title">五大设计策略</h2>
+          <div class="title-line" style="margin:8px auto 0"></div>
+        </div>
+        <div class="strategy-grid">
+          <div class="strategy-item reveal"><div class="strategy-num">1</div><h4>IP 人格化</h4><p>赋予小河鲜明的性格、语言与动作，让形象可被记住、可被对话。</p></div>
+          <div class="strategy-item reveal reveal-delay-1"><div class="strategy-num">2</div><h4>场景世界观</h4><p>搭建云端驿站与目的地体系，让 IP 拥有可探索的空间与故事。</p></div>
+          <div class="strategy-item reveal reveal-delay-2"><div class="strategy-num">3</div><h4>情绪资产</h4><p>将旅途情绪沉淀为可复用资产，让每次互动都有情感共鸣。</p></div>
+          <div class="strategy-item reveal reveal-delay-3"><div class="strategy-num">4</div><h4>互动体验</h4><p>以指路、抽签、写信等轻互动，建立用户与 IP 的长期关系。</p></div>
+          <div class="strategy-item reveal"><div class="strategy-num">5</div><h4>文旅落地</h4><p>从游客中心到 AI 导览，把 IP 转化为可部署的视觉与体验系统。</p></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 章节导航 -->
+    <div class="chapter-nav">
+      <div class="chap-link" onclick="goHome()"><span class="arrow">←</span><div><small>上一章节</small><strong>首页 Home</strong></div></div>
+      <div class="chap-link next" onclick="switchPage('ip',null,{restore:true})"><span class="arrow">→</span><div style="text-align:right"><small>下一章节</small><strong>02 IP设定</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 IP设定 ============ -->
+<section class="page" data-page="ip">
+  <div class="container">
+    <div class="page-hero reveal">
+      <div class="chap-label">02 / IP SYSTEM</div>
+      <div class="hero-en">IP SYSTEM</div>
+      <h1 class="hero-cn">IP 设定</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-intro">云端旅行小精灵 · 头顶指南针、身披山河斗篷。从角色、视觉、情绪到动作，形成一套完整的 IP 资产系统。</p>
+      <div class="page-hero-img tall"><img src="assets/ip.webp" alt="云游小河 IP 形象设计"></div>
+    </div>
+
+    <div class="crumbs" style="margin-bottom:8px"><a class="crumb-home" onclick="goHome()">← 首页</a><span class="sep">/</span><a onclick="switchPage('ip',null,{restore:true})">IP设定</a><span class="sep">/</span><span class="cur" id="ipCur">角色设计</span></div>
+
+    <div class="subnav" data-page-subnav="ip">
+      <button class="active" data-sub="role" onclick="switchSub('ip','role')">01 角色设计</button>
+      <button data-sub="color" onclick="switchSub('ip','color')">02 视觉体系</button>
+      <button data-sub="emotion" onclick="switchSub('ip','emotion')">03 情绪资产</button>
+      <button data-sub="action" onclick="switchSub('ip','action')">04 动作资产</button>
+    </div>
+
+    <!-- 角色设计 -->
+    <div class="sub-view active" data-sub="role">
+      <section class="block">
+        <div class="about-grid">
+          <div class="about-visual reveal reveal-delay-1">
+            <div class="img-frame" onclick="openLightbox('assets/ip.webp','云游小河 IP 形象设计')">
+              <img src="assets/ip.webp" alt="云游小河 IP 形象设计">
+            </div>
+          </div>
+          <div class="about-info reveal reveal-delay-2">
+            <p class="section-sub">一个诞生于云端的旅行小精灵。它的云朵发型柔软蓬松，头顶悬浮着一枚金色指南针，身披山河青绿的斗篷，背上挎着装满地图和车票的旅行小包——每一段旅程，都是它认真记录的故事。</p>
+            <div class="color-chips">
+              <div class="color-chip active" onclick="setTheme('teal','#4DB8A4','#78D8C6',this)"><span class="swatch" style="background:#78D8C6"></span>山河青绿</div>
+              <div class="color-chip" onclick="setTheme('orange','#F0995A','#FFB66B',this)"><span class="swatch" style="background:#FFB66B"></span>日出暖橙</div>
+              <div class="color-chip" onclick="setTheme('sky','#5BB8D8','#7FCFF0',this)"><span class="swatch" style="background:#7FCFF0"></span>晴空浅蓝</div>
+              <div class="color-chip" onclick="setTheme('purple','#8B7AC4','#B8A9E0',this)"><span class="swatch" style="background:#B8A9E0"></span>星野紫</div>
+            </div>
+            <div class="feature-list">
+              <div class="feature-item">
+                <div class="feature-icon f1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7L13 12L12 17L11 12Z" fill="currentColor"/></svg></div>
+                <div class="feature-text"><h4>指南针 · 永远指路</h4><p>头顶的指南针是小河的核心标识，象征它为旅人指引方向的使命——无论走到哪里，都不会迷路。</p></div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon f2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7V12C3 16.5 6.5 20.5 12 22C17.5 20.5 21 16.5 21 12V7L12 2Z" stroke="currentColor" stroke-width="2"/></svg></div>
+                <div class="feature-text"><h4>斗篷 · 山河之色</h4><p>青绿色的斗篷取自山川湖泊的色调，代表着小河与自然风景之间的深厚联结。</p></div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon f3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="8" width="14" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M9 8V6C9 4.9 9.9 4 11 4H13C14.1 4 15 4.9 15 6V8" stroke="currentColor" stroke-width="2"/></svg></div>
+                <div class="feature-text"><h4>旅行包 · 装满故事</h4><p>背上的小包装着地图、车票和沿途收集的风景，是小河作为"旅行记录者"的身份象征。</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="role-grid">
+          <div class="role-card reveal">
+            <h4>角色形象</h4>
+            <p>头顶悬浮金色指南针、身披山河青绿斗篷、云朵发型柔软蓬松的旅行小精灵，整体造型治愈、轻盈、现代。</p>
+            <div class="role-img" onclick="openLightbox('assets/ip.webp','云游小河 IP 形象')"><img src="assets/ip.webp" alt="IP形象"></div>
+          </div>
+          <div class="role-card reveal reveal-delay-1">
+            <h4>角色性格</h4>
+            <p>认真、好奇、温柔。不是冷冰冰的向导，而是有温度的旅伴——指路时专注，发现风景时惊喜，分别时温暖。</p>
+            <div class="role-img" onclick="openLightbox('assets/poster.webp','主视觉海报')"><img src="assets/poster.webp" alt="主视觉海报"></div>
+          </div>
+          <div class="role-card reveal reveal-delay-2">
+            <h4>核心符号</h4>
+            <p>指南针、山河斗篷、旅行小包是小河的三组核心视觉符号，贯穿角色、场景与应用，形成统一识别。</p>
+            <div class="role-img" onclick="openLightbox('assets/behavior.webp','角色行为动作')"><img src="assets/behavior.webp" alt="角色行为"></div>
+          </div>
+          <div class="role-card reveal">
+            <h4>旅行装备</h4>
+            <p>背上挎着装满地图与车票的旅行小包，沿途收集的风景都被认真收藏——这是"旅行记录者"身份的最佳注脚。</p>
+            <div class="role-img" onclick="openLightbox('assets/world.webp','世界观场景')"><img src="assets/world.webp" alt="世界观场景"></div>
+          </div>
+        </div>
+        <div class="expr-gallery reveal reveal-delay-2" style="margin-top:36px">
+          <div class="expr-thumb" onclick="openLightbox('assets/emotion.webp','情绪表达完整图')"><img src="assets/emotion.webp" alt="情绪表达"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/ip.webp','IP形象')"><img src="assets/ip.webp" alt="IP形象"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/poster.webp','主视觉海报')"><img src="assets/poster.webp" alt="主视觉海报"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/behavior.webp','角色行为图')"><img src="assets/behavior.webp" alt="角色行为"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/world.webp','世界观场景')"><img src="assets/world.webp" alt="世界观场景"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/apps.webp','实际应用')"><img src="assets/apps.webp" alt="实际应用"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 视觉体系 -->
+    <div class="sub-view" data-sub="color">
+      <section class="block">
+        <div class="reveal" style="text-align:center">
+          <span class="section-tag">VISUAL SYSTEM</span>
+          <h2 class="section-title">色彩 / 视觉体系</h2>
+          <div class="title-line" style="margin:8px auto 0"></div>
+          <p class="section-sub" style="margin:0 auto">四种主题色贯穿全站，点击下方任意色卡即可实时切换品牌主色。每种颜色都对应一个世界观场景。</p>
+        </div>
+        <div class="reveal reveal-delay-1" style="display:flex;justify-content:center;margin-top:28px">
+          <div class="color-chips" style="font-size:14px">
+            <div class="color-chip active" onclick="setTheme('teal','#4DB8A4','#78D8C6',this)"><span class="swatch" style="background:#78D8C6"></span>山河青绿 #78D8C6</div>
+            <div class="color-chip" onclick="setTheme('orange','#F0995A','#FFB66B',this)"><span class="swatch" style="background:#FFB66B"></span>日出暖橙 #FFB66B</div>
+            <div class="color-chip" onclick="setTheme('sky','#5BB8D8','#7FCFF0',this)"><span class="swatch" style="background:#7FCFF0"></span>晴空浅蓝 #7FCFF0</div>
+            <div class="color-chip" onclick="setTheme('purple','#8B7AC4','#B8A9E0',this)"><span class="swatch" style="background:#B8A9E0"></span>星野紫 #B8A9E0</div>
+          </div>
+        </div>
+        <div class="color-relations reveal reveal-delay-2">
+          <div class="color-rel"><div class="sw" style="background:#78D8C6"></div><h4>山河青绿</h4><p>山河与湖泊之色，是小河斗篷的主色，代表自然与安定。</p></div>
+          <div class="color-rel"><div class="sw" style="background:#FFB66B"></div><h4>日出暖橙</h4><p>清晨第一缕阳光，用于高光与温暖提示，像小河的笑容。</p></div>
+          <div class="color-rel"><div class="sw" style="background:#7FCFF0"></div><h4>晴空浅蓝</h4><p>云端驿站的天空底色，轻盈、通透、充满想象空间。</p></div>
+          <div class="color-rel"><div class="sw" style="background:#B8A9E0"></div><h4>星野紫</h4><p>湖畔星夜的色调，沉静神秘，用于夜晚与梦境场景。</p></div>
+        </div>
+        <div class="reveal reveal-delay-2" style="margin-top:28px">
+          <div class="img-frame" onclick="openLightbox('assets/poster.webp','主视觉海报')"><img src="assets/poster.webp" alt="主视觉海报"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 情绪资产 -->
+    <div class="sub-view" data-sub="emotion">
+      <section class="block">
+        <div class="reveal" style="text-align:center">
+          <span class="section-tag">EMOTIONS</span>
+          <h2 class="section-title">情绪资产</h2>
+          <div class="title-line" style="margin:8px auto 0"></div>
+          <p class="section-sub" style="margin:0 auto">小河的每一种表情对应一个旅途中的真实瞬间。这不是表情包，而是一套可用于 IP 动画、AI 导览、游客中心与文创的情绪资产系统。点击卡片，翻看它的台词与场景。</p>
+        </div>
+        <div class="expr-grid">
+          <div class="expr-card reveal" onclick="flipCard(this)">
+            <div class="expr-img"><img src="assets/emotion.webp" alt="情绪表达" style="object-position:left"></div>
+            <div class="expr-body">
+              <div class="expr-name">🧭 认真指路</div>
+              <div class="expr-meta">动作 · 指方向　|　场景 · 旅人问路</div>
+              <div class="expr-scene" data-default="当旅人问路时，小河会立刻进入专注模式，指南针精准定向。" data-flip="「往那边走，大概三百米就到啦！」">当旅人问路时，小河会立刻进入专注模式，指南针精准定向。</div>
+              <span class="expr-tag">点击翻看台词</span>
+            </div>
+          </div>
+          <div class="expr-card reveal reveal-delay-1" onclick="flipCard(this)">
+            <div class="expr-img"><img src="assets/emotion.webp" alt="情绪表达" style="object-position:center"></div>
+            <div class="expr-body">
+              <div class="expr-name">✨ 惊喜发现</div>
+              <div class="expr-meta">动作 · 捧风景　|　场景 · 偶遇秘景</div>
+              <div class="expr-scene" data-default="偶然发现一处隐秘风景时，小河会瞪大眼睛，开心地跳起来。" data-flip="「哇！你看那边！快过来快过来！」">偶然发现一处隐秘风景时，小河会瞪大眼睛，开心地跳起来。</div>
+              <span class="expr-tag">点击翻看台词</span>
+            </div>
+          </div>
+          <div class="expr-card reveal reveal-delay-2" onclick="flipCard(this)">
+            <div class="expr-img"><img src="assets/emotion.webp" alt="情绪表达" style="object-position:right"></div>
+            <div class="expr-body">
+              <div class="expr-name">💛 贴心提醒</div>
+              <div class="expr-meta">动作 · 挥手迎游　|　场景 · 天色将晚</div>
+              <div class="expr-scene" data-default="天色将晚或天气变化时，小河会温柔地提醒旅人注意安全。" data-flip="「记得带件外套哦，山上风大。」">天色将晚或天气变化时，小河会温柔地提醒旅人注意安全。</div>
+              <span class="expr-tag">点击翻看台词</span>
+            </div>
+          </div>
+          <div class="expr-card reveal" onclick="flipCard(this)">
+            <div class="expr-img"><img src="assets/emotion.webp" alt="情绪表达" style="object-position:15% center"></div>
+            <div class="expr-body">
+              <div class="expr-name">🤔 好奇张望</div>
+              <div class="expr-meta">动作 · 指方向　|　场景 · 遇见新奇</div>
+              <div class="expr-scene" data-default="遇到没见过的风景，小河会歪着头、睁大眼睛仔细打量。" data-flip="「咦？这个以前没见过，好想知道是什么！」">遇到没见过的风景，小河会歪着头、睁大眼睛仔细打量。</div>
+              <span class="expr-tag">点击翻看台词</span>
+            </div>
+          </div>
+          <div class="expr-card reveal reveal-delay-1" onclick="flipCard(this)">
+            <div class="expr-img"><img src="assets/emotion.webp" alt="情绪表达" style="object-position:60% center"></div>
+            <div class="expr-body">
+              <div class="expr-name">🤗 安心陪伴</div>
+              <div class="expr-meta">动作 · 挥手迎游　|　场景 · 旅人疲惫</div>
+              <div class="expr-scene" data-default="当旅人走累了，小河会安静坐在身边，什么都不说也让人安心。" data-flip="「累了就歇会儿吧，我在这儿陪你。」">当旅人走累了，小河会安静坐在身边，什么都不说也让人安心。</div>
+              <span class="expr-tag">点击翻看台词</span>
+            </div>
+          </div>
+          <div class="expr-card reveal reveal-delay-2" onclick="flipCard(this)">
+            <div class="expr-img"><img src="assets/emotion.webp" alt="情绪表达" style="object-position:90% center"></div>
+            <div class="expr-body">
+              <div class="expr-name">👋 温暖道别</div>
+              <div class="expr-meta">动作 · 挥手迎游　|　场景 · 旅程结束</div>
+              <div class="expr-scene" data-default="分别时小河用力挥手，把祝福悄悄塞进旅人的背包。" data-flip="「下次再来玩哦！小河会一直在这里等你。」">分别时小河用力挥手，把祝福悄悄塞进旅人的背包。</div>
+              <span class="expr-tag">点击翻看台词</span>
+            </div>
+          </div>
+        </div>
+        <div class="expr-gallery reveal reveal-delay-2" style="margin-top:24px">
+          <div class="expr-thumb" onclick="openLightbox('assets/emotion.webp','情绪表达完整图')"><img src="assets/emotion.webp" alt="情绪表达" style="object-position:left"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/ip.webp','IP形象')"><img src="assets/ip.webp" alt="IP形象"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/poster.webp','主视觉海报')"><img src="assets/poster.webp" alt="主视觉海报"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/behavior.webp','角色行为图')"><img src="assets/behavior.webp" alt="角色行为"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/world.webp','世界观场景')"><img src="assets/world.webp" alt="世界观场景"></div>
+          <div class="expr-thumb" onclick="openLightbox('assets/apps.webp','实际应用')"><img src="assets/apps.webp" alt="实际应用"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 动作资产 -->
+    <div class="sub-view" data-sub="action">
+      <section class="block">
+        <div class="reveal" style="text-align:center">
+          <span class="section-tag">ACTIONS</span>
+          <h2 class="section-title">动作资产</h2>
+          <div class="title-line" style="margin:8px auto 0"></div>
+          <p class="section-sub" style="margin:0 auto">小河的每一个动作都传递着不同的情绪与含义——指引、分享、欢迎。点击动作卡，看小河演示。</p>
+        </div>
+        <div class="action-banner img-banner reveal reveal-delay-1" onclick="openLightbox('assets/behavior.webp','云游小河角色行为动作')">
+          <img src="assets/behavior.webp" alt="云游小河角色行为动作">
+        </div>
+        <div class="action-grid">
+          <div class="action-card reveal" onclick="actionDemo(0)">
+            <div class="action-num">01</div>
+            <h4>🧭 指方向</h4>
+            <p><b>含义</b>：确定与信任。小河举起手指向远方，指南针同步旋转。<br><b>场景</b>：旅人问路、推荐目的地。<br><b>情绪</b>：认真指路。</p>
+            <div class="action-demo"><span id="ad0">👉 点击体验小河指路</span></div>
+          </div>
+          <div class="action-card reveal reveal-delay-1" onclick="actionDemo(1)">
+            <div class="action-num">02</div>
+            <h4>🌿 捧风景</h4>
+            <p><b>含义</b>：分享美好。双手捧起一片落叶或一束光，递给旅人。<br><b>场景</b>：偶遇秘景、惊喜瞬间。<br><b>情绪</b>：惊喜发现。</p>
+            <div class="action-demo"><span id="ad1">👉 点击接过小河的礼物</span></div>
+          </div>
+          <div class="action-card reveal reveal-delay-2" onclick="actionDemo(2)">
+            <div class="action-num">03</div>
+            <h4>👋 挥手迎游</h4>
+            <p><b>含义</b>：欢迎与告别。斗篷飘起，一只手高高挥动。<br><b>场景</b>：出发、重逢、分别。<br><b>情绪</b>：贴心提醒 / 温暖道别。</p>
+            <div class="action-demo"><span id="ad2">👉 点击和小河挥手</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 章节导航 -->
+    <div class="chapter-nav">
+      <div class="chap-link" onclick="switchPage('concept',null,{restore:true})"><span class="arrow">←</span><div><small>上一章节</small><strong>01 项目概念</strong></div></div>
+      <div class="chap-link next" onclick="switchPage('world',null,{restore:true})"><span class="arrow">→</span><div style="text-align:right"><small>下一章节</small><strong>03 世界观</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 世界观 ============ -->
+<section class="page" data-page="world">
+  <div class="container">
+    <div class="page-hero reveal">
+      <div class="chap-label">03 / WORLD</div>
+      <div class="hero-en">WORLD</div>
+      <h1 class="hero-cn">云端驿站</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-intro">在小河的世界里，每一缕云都藏着下一段旅程。以云端驿站为中心，连接山间秘瀑、花海幽谷、古镇时光与湖畔星野。</p>
+      <div class="page-hero-img"><img src="assets/world.webp" alt="云游小河世界观场景"></div>
+    </div>
+
+    <div class="crumbs" style="margin-bottom:8px"><a class="crumb-home" onclick="goHome()">← 首页</a><span class="sep">/</span><span class="cur">云端驿站</span></div>
+
+    <div class="reveal" style="text-align:center">
+      <span class="section-tag">CLOUD MAP</span>
+      <h2 class="section-title">云端世界地图</h2>
+      <div class="title-line" style="margin:8px auto 0"></div>
+      <p class="section-sub" style="margin:0 auto">点击地图上的目的地，进入它的故事并收集旅行印章。集齐四枚，解锁小河的专属祝福。</p>
+    </div>
+    <div class="world-map reveal reveal-delay-1">
+      <div class="map-bg"><img src="assets/world.webp" alt="云端驿站世界观场景"></div>
+      <div class="world-center">
+        <div class="hub"><div class="ico">🏔️</div><div class="t">云端驿站</div></div>
+      </div>
+      <div class="world-spots">
+        <div class="spot" onclick="openDest('shan','山间秘瀑','⛰️','assets/world.webp','穿越密林，听见水声隆隆，一挂瀑布从天而降。','小河举起指南针，带你穿过密林找到瀑布的源头。','认真指路 · 惊喜发现','指方向','🏅')">
+          <div class="spot-icon">⛰️</div><div class="spot-name">山间秘瀑</div>
+          <div class="spot-desc">穿越密林，听见水声隆隆，一挂瀑布从天而降。</div>
+          <div class="spot-go">查看目的地 →</div>
+        </div>
+        <div class="spot" onclick="openDest('hua','花海幽谷','🌸','assets/world.webp','整片山谷开满野花，风一吹就是一场花瓣雨。','小河轻轻捧起一朵野花，递到你面前。','惊喜发现 · 贴心提醒','捧风景','🌸')">
+          <div class="spot-icon">🌸</div><div class="spot-name">花海幽谷</div>
+          <div class="spot-desc">整片山谷开满野花，风一吹就是一场花瓣雨。</div>
+          <div class="spot-go">查看目的地 →</div>
+        </div>
+        <div class="spot" onclick="openDest('gu','古镇时光','🏮','assets/world.webp','青石板路、老茶馆、檐下的灯笼，时间慢下来。','小河在茶馆檐下等你，陪你把时间走慢一点。','贴心提醒','挥手迎游','🏮')">
+          <div class="spot-icon">🏮</div><div class="spot-name">古镇时光</div>
+          <div class="spot-desc">青石板路、老茶馆、檐下的灯笼，时间慢下来。</div>
+          <div class="spot-go">查看目的地 →</div>
+        </div>
+        <div class="spot" onclick="openDest('xing','湖畔星野','🌠','assets/world.webp','湖面倒映着整片星空，安静得只听见虫鸣。','小河安静地陪你望向星空，不说话也很好。','贴心提醒 · 认真指路','挥手迎游','🌠')">
+          <div class="spot-icon">🌌</div><div class="spot-name">湖畔星野</div>
+          <div class="spot-desc">湖面倒映着整片星空，安静得只听见虫鸣。</div>
+          <div class="spot-go">查看目的地 →</div>
+        </div>
+      </div>
+    </div>
+    <div class="stamp-bar reveal reveal-delay-2">
+      <span class="stamp-emoji">🏅</span>
+      <span class="stamp-text">印章收集 <span id="stampCount">0</span>/4</span>
+      <div class="stamp-track"><div class="stamp-fill" id="stampFill"></div></div>
+      <span class="stamp-emoji" id="stampReward" style="opacity:0;transition:opacity .5s">🎁</span>
+    </div>
+
+    <!-- 章节导航 -->
+    <div class="chapter-nav">
+      <div class="chap-link" onclick="switchPage('ip',null,{restore:true})"><span class="arrow">←</span><div><small>上一章节</small><strong>02 IP设定</strong></div></div>
+      <div class="chap-link next" onclick="switchPage('interactive',null,{restore:true})"><span class="arrow">→</span><div style="text-align:right"><small>下一章节</small><strong>04 互动体验</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 互动体验 ============ -->
+<section class="page" data-page="interactive">
+  <div class="container">
+    <div class="page-hero reveal">
+      <div class="chap-label">04 / EXPERIENCE</div>
+      <div class="hero-en">EXPERIENCE</div>
+      <h1 class="hero-cn">互动体验</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-intro">从指路到留言，小河陪你完成一次完整的云端旅行。跟随流程一步步走，体验指路 → 出发 → 探索 → 抽签 → 留言的完整体验闭环。</p>
+      <div class="flowline">
+        <div class="flow-step"><span class="fnum">1</span><b>小河指路</b></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="fnum">2</span><b>抵达目的地</b></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="fnum">3</span><b>旅行签</b></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="fnum">4</span><b>写给小河</b></div>
+      </div>
+    </div>
+
+    <div class="crumbs" style="margin-bottom:8px"><a class="crumb-home" onclick="goHome()">← 首页</a><span class="sep">/</span><a onclick="switchPage('interactive',null,{restore:true})">互动体验</a><span class="sep">/</span><span class="cur" id="intCur">小河指路</span></div>
+    <div class="subnav" data-page-subnav="interactive">
+      <button class="active" data-sub="quiz" onclick="switchSub('interactive','quiz')">STEP 01 小河指路</button>
+      <button data-sub="fortune" onclick="switchSub('interactive','fortune')">STEP 03 旅行签</button>
+      <button data-sub="mail" onclick="switchSub('interactive','mail')">STEP 04 写给小河</button>
+    </div>
+
+    <!-- 小河指路 -->
+    <div class="sub-view active" data-sub="quiz">
+      <section class="block">
+        <div class="reveal" style="text-align:center">
+          <span class="section-tag">INTERACTIVE</span>
+          <h2 class="section-title">让小河为你指路</h2>
+          <div class="title-line" style="margin:8px auto 0"></div>
+          <p class="section-sub" style="margin:0 auto">回答三个问题，小河的指南针会为你转动，指向属于你的下一处风景。完成后来到目的地，还能收集一枚旅行印章。</p>
+        </div>
+        <div class="quiz-wrap reveal reveal-delay-1">
+          <div class="quiz-header">
+            <div class="quiz-compass-wrap">
+              <div class="quiz-compass">
+                <svg viewBox="0 0 64 64" fill="none">
+                  <circle cx="32" cy="32" r="28" fill="#fff" stroke="#FFECD6" stroke-width="2"/>
+                  <text x="32" y="14" text-anchor="middle" font-size="7" fill="#F0995A" font-weight="bold">N</text>
+                  <g id="quizNeedle" class="needle" style="transform-origin:32px 32px">
+                    <path d="M32 32 L32 10 L28 32 L32 54 L36 32 Z" fill="#FFB66B"/>
+                    <path d="M32 32 L32 10 L28 32 Z" fill="#F0995A"/>
+                    <circle cx="32" cy="32" r="3" fill="#4DB8A4"/>
+                  </g>
+                </svg>
+              </div>
+            </div>
+            <h3 id="quizTitle">小河正在倾听…</h3>
+            <p id="quizSubtitle">回答完三个问题，指南针就会为你揭晓答案</p>
+          </div>
+          <div class="quiz-body" id="quizBody">
+            <div class="quiz-progress" id="quizProgress">
+              <div class="step active"></div><div class="step"></div><div class="step"></div>
+            </div>
+            <div id="quizContent"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 旅行签 -->
+    <div class="sub-view" data-sub="fortune">
+      <section class="block">
+        <div class="reveal" style="text-align:center">
+          <span class="section-tag">FORTUNE</span>
+          <h2 class="section-title">小河的旅行签</h2>
+          <div class="title-line" style="margin:8px auto 0"></div>
+          <p class="section-sub" style="margin:0 auto">旅程中段，让小河为你抽一支旅行签，看看今天的旅途运势。每一支签都是小河从旅途中收集的智慧。</p>
+        </div>
+        <div class="fortune-wrap reveal reveal-delay-1">
+          <div class="fortune-box">
+            <div class="fortune-icon" id="fortuneIcon">🎋</div>
+            <div class="fortune-text" id="fortuneText">点击下方按钮，抽取你的旅行签</div>
+            <div class="fortune-sub" id="fortuneSub">小河已经为你准备好了</div>
+          </div>
+          <button class="fortune-btn" id="fortuneBtn" onclick="drawFortune()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z" fill="#fff"/></svg>
+            抽一支签
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- 写给小河 -->
+    <div class="sub-view" data-sub="mail">
+      <section class="block">
+        <div class="reveal" style="text-align:center">
+          <span class="section-tag">MAILBOX</span>
+          <h2 class="section-title">写给小河</h2>
+          <div class="title-line" style="margin:8px auto 0"></div>
+          <p class="section-sub" style="margin:0 auto">旅程的尾声，有什么想对小河说的吗？写下你的旅行心愿或疑问，小河会认真回复每一封信。</p>
+        </div>
+        <div class="mailbox-wrap reveal reveal-delay-1">
+          <div class="mailbox-header">
+            <h3>📬 给小河写信</h3>
+            <p>小河正在云端驿站等你来信</p>
+          </div>
+          <div class="mailbox-body">
+            <textarea class="mailbox-input" id="mailInput" placeholder="亲爱的的小河，我想说……"></textarea>
+            <div class="quick-replies">
+              <button class="quick-reply" onclick="quickReply('推荐一条适合周末的短途路线')">推荐周末路线</button>
+              <button class="quick-reply" onclick="quickReply('一个人旅行会不会孤单？')">一个人旅行</button>
+              <button class="quick-reply" onclick="quickReply('迷路了怎么办？')">迷路了怎么办</button>
+              <button class="quick-reply" onclick="quickReply('今天适合出发吗？')">今天适合出发吗</button>
+            </div>
+            <div class="mailbox-actions">
+              <button class="mailbox-send" id="mailSend" onclick="sendMail()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 21L23 12L2 3L6 12L2 21Z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+                寄出
+              </button>
+              <button class="mailbox-clear" onclick="document.getElementById('mailInput').value='';document.getElementById('mailReply').classList.remove('show')">清空</button>
+            </div>
+            <div class="mailbox-reply" id="mailReply">
+              <div class="reply-header">
+                <div class="reply-avatar">🧭</div>
+                <div class="reply-name">小河的回信</div>
+              </div>
+              <div class="reply-text" id="replyText"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 章节导航 -->
+    <div class="chapter-nav">
+      <div class="chap-link" onclick="switchPage('world',null,{restore:true})"><span class="arrow">←</span><div><small>上一章节</small><strong>03 世界观</strong></div></div>
+      <div class="chap-link next" onclick="switchPage('apps',null,{restore:true})"><span class="arrow">→</span><div style="text-align:right"><small>下一章节</small><strong>05 IP应用</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 IP应用 ============ -->
+<section class="page" data-page="apps">
+  <div class="container">
+    <div class="page-hero reveal">
+      <div class="chap-label">05 / APPLICATION</div>
+      <div class="hero-en">APPLICATION</div>
+      <h1 class="hero-cn">IP 应用</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-intro">这个 IP 不只在角色设定里。从游客中心到 AI 导览，小河的身影出现在旅途的每一个真实触点——它是一套可落地的视觉系统。</p>
+      <div class="page-hero-img"><img src="assets/apps.webp" alt="云游小河实际应用场景"></div>
+    </div>
+
+    <div class="crumbs" style="margin-bottom:8px"><a class="crumb-home" onclick="goHome()">← 首页</a><span class="sep">/</span><span class="cur">IP应用</span></div>
+
+    <div class="reveal" style="text-align:center">
+      <span class="section-tag">APPLICATIONS</span>
+      <h2 class="section-title">四个落地方向</h2>
+      <div class="title-line" style="margin:8px auto 0"></div>
+      <p class="section-sub" style="margin:0 auto">点击任意应用，查看它在真实文旅场景中的落地方式。</p>
+    </div>
+    <div class="app-banner img-banner reveal reveal-delay-1" onclick="openLightbox('assets/apps.webp','云游小河实际应用场景')">
+      <img src="assets/apps.webp" alt="云游小河实际应用场景">
+    </div>
+    <div class="app-grid">
+      <div class="app-card reveal" onclick="openApp('visitor','🏛️ 游客中心','立牌与迎宾形象，在景区入口迎接每一位旅人。','小河以立牌、迎宾立绘与导视牌进入空间，在景区入口、服务中心与打卡点用一致的形象迎接旅人，提供方向感与温度。','assets/apps.webp')">
+        <div class="app-icon" style="background:rgba(190,233,255,.4)">🏛️</div>
+        <h4>01 游客中心</h4>
+        <p>立牌与迎宾形象，在景区入口迎接每一位旅人。</p>
+      </div>
+      <div class="app-card reveal reveal-delay-1" onclick="openApp('handbook','📖 导览手册','纸质与电子导览图，小河化身路线推荐官。','小河出现在纸质折页与电子导览图中，作为路线推荐官串联景点、地图信息与旅行签玩法，让导览更有陪伴感。','assets/apps.webp')">
+        <div class="app-icon" style="background:rgba(120,216,198,.2)">📖</div>
+        <h4>02 导览手册</h4>
+        <p>纸质与电子导览图，小河化身路线推荐官。</p>
+      </div>
+      <div class="app-card reveal reveal-delay-2" onclick="openApp('souvenir','🎁 文创周边','冰箱贴、明信片、旅行印章，把小河带回家。','将小河形象与视觉符号应用到冰箱贴、明信片、旅行印章等周边，把旅途记忆与 IP 一起带回家。','assets/apps.webp')">
+        <div class="app-icon" style="background:rgba(255,182,107,.2)">🎁</div>
+        <h4>03 文创周边</h4>
+        <p>冰箱贴、明信片、旅行印章，把小河带回家。</p>
+      </div>
+      <div class="app-card reveal reveal-delay-3" onclick="openApp('ai','📱 AI 导览','小程序中的数字小河，实时推荐路线与打卡点。','在小程序中以小河为数字向导，实时推荐路线、讲解打卡点，并打通指路与旅行签，形成持续互动。','assets/apps.webp')">
+        <div class="app-icon" style="background:rgba(184,169,224,.2)">📱</div>
+        <h4>04 AI 导览</h4>
+        <p>小程序中的数字小河，实时推荐路线与打卡点。</p>
+      </div>
+    </div>
+
+    <!-- 章节导航 -->
+    <div class="chapter-nav">
+      <div class="chap-link" onclick="switchPage('interactive',null,{restore:true})"><span class="arrow">←</span><div><small>上一章节</small><strong>04 互动体验</strong></div></div>
+      <div class="chap-link next" onclick="switchPage('showcase',null,{restore:true})"><span class="arrow">→</span><div style="text-align:right"><small>下一章节</small><strong>06 动态展示</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 动态展示 ============ -->
+<section class="page" data-page="showcase">
+  <div class="container">
+    <div class="page-hero reveal">
+      <div class="chap-label">06 / MOTION</div>
+      <div class="hero-en">MOTION</div>
+      <h1 class="hero-cn">让小河动起来</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-intro">从角色动画到宣传视频，看小河在动态中如何呼吸、如何旅行。点击播放，进入它的云端世界。</p>
+      <div class="page-hero-img"><img src="assets/poster.webp" alt="云游小河动态展示封面"></div>
+    </div>
+
+    <div class="crumbs" style="margin-bottom:8px"><a class="crumb-home" onclick="goHome()">← 首页</a><span class="sep">/</span><span class="cur">动态展示</span></div>
+
+    <div class="reveal" style="text-align:center">
+      <span class="section-tag">SHOWREEL</span>
+      <h2 class="section-title">小河的影像世界</h2>
+      <div class="title-line" style="margin:8px auto 0"></div>
+      <p class="section-sub" style="margin:0 auto">完整 Showreel 与动态海报，呈现小河形象魅力与旅行故事。</p>
+    </div>
+
+    <div class="showcase-video reveal reveal-delay-1" id="showcaseVideo">
+      <video id="heroVideo" poster="assets/poster.webp" preload="none" playsinline style="width:100%;display:block;background:#E8F7FF">
+        <source src="assets/showreel.mp4" type="video/mp4">
+      </video>
+      <div class="video-fallback" id="videoFallback">
+        <div class="fb-ico">🌥️</div>
+        <p>视频暂时无法加载，但小河的故事仍在继续——下方图集里有它的每一处风景。</p>
+      </div>
+      <div class="video-poster-overlay" id="videoOverlay" onclick="playVideo()">
+        <img src="assets/poster.webp" alt="视频封面">
+        <div class="video-play-btn">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#4DB8A4"><path d="M8 5V19L19 12L8 5Z"/></svg>
+        </div>
+      </div>
+      <div class="video-loading" id="videoLoading">视频加载中…</div>
+      <div class="video-controls" id="videoControls">
+        <button onclick="togglePlay()" id="vPlay" aria-label="播放/暂停">▶</button>
+        <div class="v-progress" id="vProgress"><div class="v-bar" id="vBar"></div></div>
+        <button onclick="toggleMute()" id="vMute" aria-label="静音">🔊</button>
+        <button onclick="toggleFull()" id="vFull" aria-label="全屏">⛶</button>
+      </div>
+    </div>
+
+    <div class="showcase-gallery">
+      <div class="g-item reveal" onclick="openLightbox('assets/poster.webp','主视觉海报')"><img src="assets/poster.webp" alt="主视觉海报"></div>
+      <div class="g-item reveal reveal-delay-1" onclick="openLightbox('assets/ip.webp','IP形象')"><img src="assets/ip.webp" alt="IP形象"></div>
+      <div class="g-item reveal reveal-delay-2" onclick="openLightbox('assets/world.webp','世界观场景')"><img src="assets/world.webp" alt="世界观场景"></div>
+      <div class="g-item reveal reveal-delay-3" onclick="openLightbox('assets/behavior.webp','角色行为')"><img src="assets/behavior.webp" alt="角色行为"></div>
+      <div class="g-item reveal" onclick="openLightbox('assets/emotion.webp','情绪表达')"><img src="assets/emotion.webp" alt="情绪表达"></div>
+      <div class="g-item reveal reveal-delay-1" onclick="openLightbox('assets/renwu.webp','人物关系')"><img src="assets/renwu.webp" alt="人物关系"></div>
+      <div class="g-item reveal reveal-delay-2" onclick="openLightbox('assets/apps.webp','实际应用')"><img src="assets/apps.webp" alt="实际应用"></div>
+      <div class="g-item reveal reveal-delay-3" onclick="openLightbox('assets/ip.webp','IP形象2')"><img src="assets/ip.webp" alt="IP形象2"></div>
+    </div>
+
+    <!-- 人物关系 (归入动态展示图集) -->
+    <section class="block">
+      <div class="container">
+        <div class="reveal" style="text-align:center">
+          <span class="section-tag">STORY</span>
+          <h2 class="section-title">小河与旅人们</h2>
+          <div class="title-line" style="margin:8px auto 0"></div>
+          <p class="section-sub" style="margin:0 auto">在云端驿站，小河遇见形形色色的旅人——有人来寻找风景，有人来寻找自己。而小河，始终是那个温暖的同行者。</p>
+        </div>
+        <div class="rel-grid">
+          <div class="rel-card reveal reveal-delay-1" onclick="openLightbox('assets/renwu.webp','云游小河人物关系图')">
+            <img src="assets/renwu.webp" alt="云游小河人物关系图">
+          </div>
+          <div class="rel-card reveal reveal-delay-2" onclick="openLightbox('assets/ip.webp','云游小河IP形象')">
+            <img src="assets/ip.webp" alt="云游小河IP形象">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 章节导航 -->
+    <div class="chapter-nav">
+      <div class="chap-link" onclick="switchPage('apps',null,{restore:true})"><span class="arrow">←</span><div><small>上一章节</small><strong>05 IP应用</strong></div></div>
+      <div class="chap-home" onclick="goHome()">🏠 回到首页 Home</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-clouds">
+    <svg width="60" height="36" viewBox="0 0 60 36" fill="#BEE9FF"><ellipse cx="20" cy="24" rx="16" ry="12"/><ellipse cx="36" cy="20" rx="18" ry="14"/><ellipse cx="48" cy="26" rx="12" ry="9"/></svg>
+    <svg width="80" height="40" viewBox="0 0 80 40" fill="#78D8C6" opacity=".6"><ellipse cx="25" cy="28" rx="20" ry="12"/><ellipse cx="48" cy="22" rx="22" ry="15"/><ellipse cx="62" cy="30" rx="14" ry="10"/></svg>
+    <svg width="50" height="30" viewBox="0 0 50 30" fill="#BEE9FF"><ellipse cx="16" cy="20" rx="13" ry="10"/><ellipse cx="30" cy="16" rx="15" ry="12"/><ellipse cx="40" cy="22" rx="10" ry="7"/></svg>
+  </div>
+  <div class="footer-logo">云游小河</div>
+  <div class="footer-tag">为你找到下一处风景</div>
+  <div class="footer-share">
+    <button class="footer-share-btn s1" onclick="copyLink()" title="复制链接">🔗</button>
+    <button class="footer-share-btn s2" onclick="showToast('已生成分享卡片！')" title="分享卡片">🎴</button>
+    <button class="footer-share-btn s3" onclick="showToast('扫码分享功能开发中…')" title="二维码">📱</button>
+    <button class="footer-share-btn s4" onclick="openMailModal()" title="写信">📬</button>
+  </div>
+  <div class="footer-links">
+    <a onclick="switchPage('concept')">项目概念</a>
+    <a onclick="switchPage('ip',null,{sub:'role'})">IP设定</a>
+    <a onclick="switchPage('world')">世界观</a>
+    <a onclick="switchPage('interactive',null,{sub:'quiz'})">小河指路</a>
+    <a onclick="switchPage('interactive',null,{sub:'fortune'})">旅行签</a>
+    <a onclick="openMailModal()">写给小河</a>
+    <a onclick="switchPage('apps')">IP应用</a>
+    <a onclick="switchPage('showcase')">动态展示</a>
+  </div>
+  <div class="footer-copy">© 2026 云游小河 · 数字文旅 IP · All Rights Reserved</div>
+</footer>
+
+<!-- Floating Action Bar -->
+<div class="fab-bar">
+  <div class="bgm-player" id="bgmPlayer">
+    <div class="bgm-panel">
+      <span class="bgm-panel-label">🎵 BGM</span>
+      <input class="bgm-vol" id="bgmVol" type="range" min="0" max="100" value="80" oninput="setBGMVol(this.value)" aria-label="背景音乐音量" title="音量">
+    </div>
+    <button class="bgm-btn" id="fabMusic" onclick="toggleBGM()" aria-label="背景音乐 播放/暂停">
+      <span class="bgm-disc" id="musicIcon">♪</span>
+    </button>
+  </div>
+  <button class="fab fab-share" onclick="copyLink()">
+    <span>🔗</span>
+    <span class="fab-tooltip">复制链接分享</span>
+  </button>
+  <button class="fab fab-mail" onclick="openMailModal()" title="写给小河">
+    <span>📬</span>
+    <span class="fab-tooltip">写给小河</span>
+  </button>
+  <button class="fab fab-top" id="fabTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span>↑</span>
+    <span class="fab-tooltip">回到顶部</span>
+  </button>
+</div>
+
+<!-- 返回首页（仅一级栏目页显示） -->
+<button class="back-home-fab" id="backHomeFab" onclick="goHome()">
+  <span class="bh-ic">←</span>
+  <span>返回首页</span>
+</button>
+
+<!-- 写信弹窗（全局浮动入口） -->
+<div class="mail-modal" id="mailModal">
+  <div class="mail-modal-card" style="position:relative">
+    <button class="mail-modal-close" onclick="closeMailModal()">✕</button>
+    <div class="mailbox-wrap" style="box-shadow:none;border-radius:0">
+      <div class="mailbox-header">
+        <h3>📬 给小河写信</h3>
+        <p>小河正在云端驿站等你来信</p>
+      </div>
+      <div class="mailbox-body">
+        <textarea class="mailbox-input" id="mailInput" placeholder="亲爱的小河，我想说……"></textarea>
+        <div class="quick-replies">
+          <button class="quick-reply" onclick="quickReply('推荐一条适合周末的短途路线')">推荐周末路线</button>
+          <button class="quick-reply" onclick="quickReply('一个人旅行会不会孤单？')">一个人旅行</button>
+          <button class="quick-reply" onclick="quickReply('迷路了怎么办？')">迷路了怎么办</button>
+          <button class="quick-reply" onclick="quickReply('今天适合出发吗？')">今天适合出发吗</button>
+        </div>
+        <div class="mailbox-actions">
+          <button class="mailbox-send" id="mailSend" onclick="sendMail()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 21L23 12L2 3L6 12L2 21Z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+            寄出
+          </button>
+          <button class="mailbox-clear" onclick="document.getElementById('mailInput').value='';document.getElementById('mailReply').classList.remove('show')">清空</button>
+        </div>
+        <div class="mailbox-reply" id="mailReply">
+          <div class="reply-header">
+            <div class="reply-avatar">🧭</div>
+            <div class="reply-name">小河的回信</div>
+          </div>
+          <div class="reply-text" id="replyText"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dest modal -->
+<div class="detail-modal" id="destModal">
+  <div class="detail-panel">
+    <button class="detail-close" onclick="closeDetail('destModal')">✕</button>
+    <div class="detail-hero"><img id="destImg" src="" alt=""><div class="detail-badge" id="destName"></div><div class="detail-stamp" id="destStamp"></div></div>
+    <div class="detail-body">
+      <h3 id="destName2"></h3>
+      <p class="detail-story" id="destStory"></p>
+      <div class="detail-tags">
+        <div class="detail-tag"><div class="t-label">小河在这里做什么</div><div class="t-val" id="destDoing"></div></div>
+        <div class="detail-tag"><div class="t-label">对应情绪</div><div class="t-val" id="destEmotion"></div></div>
+        <div class="detail-tag"><div class="t-label">对应动作</div><div class="t-val" id="destAction"></div></div>
+      </div>
+      <button class="quiz-fortune-link" onclick="collectStampFromModal()">🏅 收集这枚旅行印章</button>
+    </div>
+  </div>
+</div>
+
+<!-- App modal -->
+<div class="detail-modal" id="appModal">
+  <div class="detail-panel">
+    <button class="detail-close" onclick="closeDetail('appModal')">✕</button>
+    <div class="detail-hero"><img id="appImg" src="" alt=""><div class="detail-badge" id="appName"></div></div>
+    <div class="detail-body">
+      <h3 id="appName2"></h3>
+      <p class="detail-story" id="appDesc"></p>
+      <div class="detail-tags">
+        <div class="detail-tag" style="grid-column:1/-1"><div class="t-label">落地方式</div><div class="t-val" id="appHow"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Completion modal -->
+<div class="detail-modal" id="completeModal">
+  <div class="detail-panel" style="text-align:center;max-width:480px;padding:40px">
+    <button class="detail-close" onclick="closeDetail('completeModal')">✕</button>
+    <div style="font-size:56px">🎉</div>
+    <h3 style="font-family:'ZCOOL KuaiLe';font-size:26px;margin:12px 0 8px">云端旅行完成！</h3>
+    <p class="detail-story">你已收集全部 4 枚旅行印章。<br>小河的专属祝福：<br>愿你每次出发，都满载而归；<br>愿你每次归来，都有小河在驿站等你。</p>
+    <button class="quiz-fortune-link" onclick="closeDetail('completeModal')">收下祝福</button>
+  </div>
+</div>
+
+<script>
+/* ===== Floating Clouds ===== */
+(function(){
+  const layer=document.getElementById('cloudLayer');
+  const cloudSVGs=[
+    '<svg width="120" height="60" viewBox="0 0 120 60" fill="#fff"><ellipse cx="30" cy="40" rx="22" ry="16"/><ellipse cx="55" cy="32" rx="28" ry="20"/><ellipse cx="85" cy="42" rx="20" ry="14"/></svg>',
+    '<svg width="90" height="50" viewBox="0 0 90 50" fill="#fff"><ellipse cx="22" cy="34" rx="18" ry="13"/><ellipse cx="45" cy="28" rx="22" ry="16"/><ellipse cx="68" cy="36" rx="16" ry="11"/></svg>',
+    '<svg width="160" height="70" viewBox="0 0 160 70" fill="#fff"><ellipse cx="40" cy="48" rx="30" ry="20"/><ellipse cx="80" cy="38" rx="35" ry="24"/><ellipse cx="120" cy="50" rx="28" ry="18"/></svg>'
+  ];
+  for(let i=0;i<6;i++){
+    const c=document.createElement('div');
+    c.className='cloud';
+    c.innerHTML=cloudSVGs[i%3];
+    c.style.top=(Math.random()*60+5)+'%';
+    c.style.animationDuration=(25+Math.random()*25)+'s';
+    c.style.animationDelay=(-Math.random()*30)+'s';
+    c.style.transform='scale('+(0.5+Math.random()*0.6)+')';
+    layer.appendChild(c);
+  }
+})();
+
+/* ===== Toast ===== */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* ===== Copy link ===== */
+function copyLink(){
+  const url=window.location.href;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>showToast('🔗 链接已复制，快分享给朋友吧！'));
+  }else{
+    const ta=document.createElement('textarea');
+    ta.value=url;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');showToast('🔗 链接已复制！')}catch(e){showToast('请手动复制链接')}
+    document.body.removeChild(ta);
+  }
+}
+
+/* ===== Lightbox ===== */
+function openLightbox(src,caption){
+  const lb=document.getElementById('lightbox');
+  const img=document.getElementById('lightboxImg');
+  img.src=src;
+  img.alt=caption||'';
+  lb.classList.add('open');
+}
+function closeLightbox(e){
+  if(e&&e.target!==e.currentTarget&&e.target.id!=='lightbox')return;
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+/* ===== Theme switcher ===== */
+function setTheme(name,deep,light,el){
+  document.documentElement.style.setProperty('--accent',deep);
+  document.documentElement.style.setProperty('--accent-light',light);
+  document.querySelectorAll('.color-chip').forEach(c=>c.classList.remove('active'));
+  if(el)el.classList.add('active');
+  showToast('🎨 主题色已切换！');
+}
+
+/* ===== Mobile menu ===== */
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('open')}
+
+/* ===== View switching (一级) ===== */
+/* 每个一级页面记住自己的滚动位置与当前二级标签，返回时恢复 */
+const pageScrollPos={};
+const pageSubPos={};
+function navOffset(){
+  const n=document.getElementById('nav');
+  return (n?n.offsetHeight:68)+12;
+}
+/* 只在「二级导航还在视口下方」时才滚动过去；已经滚过就完全不动，绝不跳回最顶 */
+function alignToSubnav(p,smooth,force){
+  if(!p)return;
+  const sn=p.querySelector('.subnav');
+  if(!sn)return;
+  const top=sn.getBoundingClientRect().top+window.scrollY-navOffset();
+  if(force || window.scrollY < top-8){
+    window.scrollTo({top:Math.max(0,top),behavior:smooth?'smooth':'auto'});
+  }
+}
+function switchPage(page, sub, opts){
+  opts=opts||{};
+  /* 离开前保存当前页面位置 */
+  const prev=document.querySelector('.page.active');
+  if(prev){
+    pageScrollPos[prev.dataset.page]=window.scrollY;
+    const act=prev.querySelector('.sub-view.active');
+    if(act)pageSubPos[prev.dataset.page]=act.dataset.sub;
+  }
+
+  /* 恢复类切换：有保存位置才算「返回」，全程瞬时定位、无入场动画，杜绝晃动 */
+  const restoring=!!(opts.restore&&typeof pageScrollPos[page]==='number');
+
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active','no-anim'));
+  const target=document.querySelector('.page[data-page="'+page+'"]');
+  if(target){
+    target.classList.add('active');
+    if(restoring)target.classList.add('no-anim');
+  }
+  document.querySelectorAll('#navLinks a[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
+  document.querySelectorAll('#mobileMenu a[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
+
+  let subTo=opts.sub||sub;
+  if(!subTo&&opts.restore)subTo=pageSubPos[page]||null;
+  if(!subTo){
+    const firstSub=target?target.querySelector('.subnav button'):null;
+    subTo=firstSub?firstSub.dataset.sub:null;
+  }
+  if(subTo)switchSub(page,subTo,true,restoring);
+
+  if(target)target.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
+
+  /* 返回类操作：瞬时滚到原位置，只滚一次；首次进入则回到顶部（全局 CSS 是 smooth，
+     behavior:'auto' 会被带成平滑滚动，必须显式用 'instant' 才能瞬跳） */
+  const saved=pageScrollPos[page];
+  const y=restoring?saved:0;
+  window.scrollTo({top:y,behavior:'instant'});
+  /* 仅首次进入需要下一帧校正（防止图片加载后高度变化）；恢复路径绝不再滚第二次 */
+  if(!restoring){
+    requestAnimationFrame(()=>{window.scrollTo({top:y,behavior:'instant'});});
+  }
+
+  const bhf=document.getElementById('backHomeFab');
+  if(bhf)bhf.classList.toggle('show',page!=='home');
+  closeMenu();
+}
+function goHome(){switchPage('home',null,{restore:true})}
+
+/* ===== Sub switching (二级) ===== */
+const subLabels={
+  concept:{overview:'项目概述',strategy:'设计策略'},
+  ip:{role:'角色设计',color:'视觉体系',emotion:'情绪资产',action:'动作资产'},
+  interactive:{quiz:'小河指路',fortune:'旅行签',mail:'写给小河'},
+  world:{},apps:{},showcase:{}
+};
+function switchSub(page,sub,silent,noAnim){
+  const p=document.querySelector('.page[data-page="'+page+'"]');
+  if(!p)return;
+  p.querySelectorAll('.sub-view').forEach(v=>v.classList.remove('active','no-anim'));
+  const target=p.querySelector('.sub-view[data-sub="'+sub+'"]');
+  if(target){
+    target.classList.add('active');
+    if(noAnim)target.classList.add('no-anim');
+  }
+  p.querySelectorAll('.subnav button').forEach(b=>b.classList.toggle('active',b.dataset.sub===sub));
+  const cur=document.getElementById(page==='ip'?'ipCur':(page==='interactive'?'intCur':null));
+  if(cur&&subLabels[page]&&subLabels[page][sub])cur.textContent=subLabels[page][sub];
+  if(target)target.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
+  /* 切换二级内容不再强制回到页面最顶端：只把二级导航带进视野，已在其下方则原地不动 */
+  if(!silent){
+    alignToSubnav(p,true);
+    /* 若新内容更短、页面被回弹导致二级导航跑出视口上方，则瞬时带回视野（不用 smooth，避免二次晃动） */
+    requestAnimationFrame(()=>{
+      const sn=p.querySelector('.subnav');
+      if(sn&&sn.getBoundingClientRect().bottom<100)alignToSubnav(p,false,true);
+    });
+  }
+}
+
+/* ===== Nav links click ===== */
+document.querySelectorAll('#navLinks a[data-page]').forEach(a=>{
+  a.addEventListener('click',()=>switchPage(a.dataset.page,null,{restore:a.dataset.page==='home'}));
+});
+document.querySelectorAll('#mobileMenu a[data-page]').forEach(a=>{
+  a.addEventListener('click',()=>switchPage(a.dataset.page,null,{restore:a.dataset.page==='home'}));
+});
+
+/* ===== Reveal on scroll (for long pages) ===== */
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+/* ===== Hero compass ===== */
+const heroCompass=document.getElementById('heroCompass');
+const heroNeedle=document.getElementById('heroNeedle');
+if(heroCompass&&heroNeedle){
+  const heroSection=document.querySelector('.hero');
+  heroSection.addEventListener('mousemove',(e)=>{
+    const rect=heroCompass.getBoundingClientRect();
+    const cx=rect.left+rect.width/2;
+    const cy=rect.top+rect.height/2;
+    const angle=Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI+90;
+    heroNeedle.style.transform='rotate('+angle+'deg)';
+  });
+}
+
+/* ===== Expression flip ===== */
+function flipCard(card){
+  const scene=card.querySelector('.expr-scene');
+  if(!scene)return;
+  const flipped=card.classList.contains('flipped');
+  if(flipped){
+    scene.textContent=scene.dataset.default;
+    card.classList.remove('flipped');
+    card.querySelector('.expr-tag').textContent='点击翻看台词';
+  }else{
+    if(scene.dataset.flip){
+      scene.textContent=scene.dataset.flip;
+      card.classList.add('flipped');
+      card.querySelector('.expr-tag').textContent='点击返回';
+    }
+  }
+}
+
+/* ===== Stamp collection (world) ===== */
+let stampCount=0;
+let stampCompleteShown=false;
+function toggleStamp(card){
+  const stamped=card.classList.toggle('stamped');
+  if(stamped){
+    stampCount++;
+    showToast('🏅 收到一枚「'+card.querySelector('.dest-name').textContent+'」印章！');
+  }else{
+    stampCount--;
+  }
+  updateStamp();
+}
+function updateStamp(){
+  document.getElementById('stampCount').textContent=stampCount;
+  document.getElementById('stampFill').style.width=(stampCount/4*100)+'%';
+  const reward=document.getElementById('stampReward');
+  if(stampCount>=4){
+    reward.style.opacity='1';
+    if(!stampCompleteShown){
+      stampCompleteShown=true;
+      setTimeout(()=>{document.getElementById('completeModal').classList.add('open');},400);
+      showToast('🎉 集齐四枚印章！小河的隐藏祝福已解锁。');
+    }
+  }else{
+    reward.style.opacity='0';
+    stampCompleteShown=false;
+  }
+}
+function collectStampFromModal(){
+  if(stampCount<4){
+    stampCount++;
+    updateStamp();
+    showToast('🏅 已收集「'+(document.getElementById('destName').textContent)+'」印章！');
+    closeDetail('destModal');
+  }
+}
+
+/* ===== Action demo ===== */
+const actionDemos=[
+  ()=>{showToast('🧭 小河指向了东北方——「那边有片花海，现在去正好！」')},
+  ()=>{showToast('🌿 小河捧起一片金黄的落叶递给你——「这是秋天送你的礼物。」')},
+  ()=>{showToast('👋 小河挥了挥手，斗篷飘起——「走吧！下一段旅程在等你！」')}
+];
+function actionDemo(i){actionDemos[i]()}
+
+/* ===== Quiz (小河指路) ===== */
+const quizData=[
+  {q:'此刻你的心情是？',options:[
+    {icon:'🔥',text:'充满干劲',dest:0},
+    {icon:'🌿',text:'想被治愈',dest:1},
+    {icon:'📖',text:'怀念旧时光',dest:2},
+    {icon:'✨',text:'想一个人静静',dest:3}
+  ]},
+  {q:'想和谁一起出发？',options:[
+    {icon:'🎒',text:'独自出发',dest:3},
+    {icon:'👥',text:'三五好友',dest:0},
+    {icon:'💕',text:'心上的人',dest:1},
+    {icon:'👨‍👩‍👧',text:'家人相伴',dest:2}
+  ]},
+  {q:'最想从旅途带走什么？',options:[
+    {icon:'⛰️',text:'一场冒险',dest:0},
+    {icon:'🌸',text:'一束花',dest:1},
+    {icon:'📜',text:'一段故事',dest:2},
+    {icon:'🌠',text:'一片星空',dest:3}
+  ]}
+];
+const destinations=[
+  {name:'山间秘瀑',desc:'小河的指南针指向了群山深处——那里有一挂藏在密林中的瀑布，水声隆隆，雾气弥漫。带上你的冒险精神，跟着小河一起穿越丛林吧！',emoji:['⛰️','💦','🌲','🧗'],angle:45},
+  {name:'花海幽谷',desc:'小河轻轻捧起一朵野花，指向了那片开满鲜花的山谷——风一吹就是一场花瓣雨。适合想被治愈的你，让小河陪你慢慢走过花田。',emoji:['🌸','🌷','🦋','🌿'],angle:135},
+  {name:'古镇时光',desc:'小河的指南针缓缓停在南方——那里有一座青石板铺就的老镇，檐下挂着灯笼，茶馆里飘出桂花香。跟着小河，把时间走慢一点。',emoji:['🏮','🍵','📜','🏘️'],angle:225},
+  {name:'湖畔星野',desc:'小河安静地望向远方，指南针指向一片倒映星空的湖泊——虫鸣四起，万籁俱寂。如果你想一个人待着，这里就是小河为你找到的角落。',emoji:['🌠','🌌','🪷','🌙'],angle:315}
+];
+let quizStep=0;let quizAnswers=[];
+const quizContent=document.getElementById('quizContent');
+const quizProgress=document.getElementById('quizProgress');
+const quizNeedle=document.getElementById('quizNeedle');
+const quizTitle=document.getElementById('quizTitle');
+const quizSubtitle=document.getElementById('quizSubtitle');
+function renderQuiz(){
+  if(quizStep>=quizData.length){showResult();return}
+  const data=quizData[quizStep];
+  quizTitle.textContent='小河正在倾听…';
+  quizSubtitle.textContent='回答完三个问题，指南针就会为你揭晓答案';
+  const steps=quizProgress.querySelectorAll('.step');
+  steps.forEach((s,i)=>{s.classList.remove('active','done');if(i<quizStep)s.classList.add('done');else if(i===quizStep)s.classList.add('active')});
+  quizNeedle.style.transform='rotate('+(quizStep*120+30)+'deg)';
+  let html='<div class="quiz-q">'+data.q+'</div><div class="quiz-options">';
+  data.options.forEach((opt,i)=>{html+='<div class="quiz-option" onclick="selectAnswer('+i+')"><div class="opt-icon">'+opt.icon+'</div><div class="opt-text">'+opt.text+'</div></div>'});
+  html+='</div>';
+  quizContent.innerHTML=html;
+  quizContent.style.opacity=0;
+  requestAnimationFrame(()=>{quizContent.style.transition='opacity .4s';quizContent.style.opacity=1});
+}
+function selectAnswer(idx){
+  quizContent.querySelectorAll('.quiz-option')[idx].classList.add('selected');
+  quizAnswers.push(quizData[quizStep].options[idx].dest);
+  setTimeout(()=>{quizStep++;renderQuiz()},500);
+}
+function showResult(){
+  const counts=[0,0,0,0];quizAnswers.forEach(d=>counts[d]++);
+  let maxIdx=0;for(let i=1;i<4;i++){if(counts[i]>counts[maxIdx])maxIdx=i}
+  const dest=destinations[maxIdx];
+  quizProgress.querySelectorAll('.step').forEach(s=>{s.classList.remove('active');s.classList.add('done')});
+  quizNeedle.style.transform='rotate('+(dest.angle+720)+'deg)';
+  quizTitle.textContent='指南针停下来了！';
+  quizSubtitle.textContent='小河为你找到了属于你的风景';
+  let eh='<div class="result-emoji-row">';dest.emoji.forEach(e=>{eh+='<div class="result-emoji">'+e+'</div>'});eh+='</div>';
+  quizContent.innerHTML='<div class="quiz-result"><div class="result-dest">'+dest.name+'</div>'+eh+'<div class="result-desc">'+dest.desc+'</div><button class="quiz-restart" onclick="restartQuiz()">再让小河指一次路</button><button class="quiz-share" onclick="copyLink()">分享给朋友</button><button class="quiz-fortune-link" onclick="switchSub(\'interactive\',\'fortune\')">🎋 顺便抽支旅行签</button></div>';
+  quizContent.style.opacity=0;
+  requestAnimationFrame(()=>{quizContent.style.transition='opacity .5s';quizContent.style.opacity=1});
+}
+function restartQuiz(){quizStep=0;quizAnswers=[];renderQuiz()}
+renderQuiz();
+
+/* ===== Fortune (旅行签) ===== */
+const fortunes=[
+  {icon:'🌈',text:'今日宜出发',sub:'小河说：最好的风景，永远在路上的下一个拐角。'},
+  {icon:'🌸',text:'今日宜赏花',sub:'小河说：慢下来，才能看见花瓣飘落的方向。'},
+  {icon:'⛰️',text:'今日宜爬山',sub:'小河说：山顶的风，是对每一步辛苦的犒赏。'},
+  {icon:'🌙',text:'今日宜仰望星空',sub:'小河说：当你抬头的时候，星星也在看你。'},
+  {icon:'🏮',text:'今日宜漫步古镇',sub:'小河说：老街的灯笼亮起来，故事就开始了。'},
+  {icon:'🍜',text:'今日宜品尝美食',sub:'小河说：每一道地方小吃，都是一座城市的味觉名片。'},
+  {icon:'📷',text:'今日宜记录瞬间',sub:'小河说：不用拍得多好看，记录本身就是意义。'},
+  {icon:'🤝',text:'今日宜结伴同行',sub:'小河说：一个人走得快，一群人走得远。'},
+  {icon:'📖',text:'今日宜写旅行日记',sub:'小河说：写下来的旅途，会变成永远不会丢的行李。'},
+  {icon:'🌧️',text:'今日宜雨中漫步',sub:'小河说：雨天的风景，是给有心人准备的限量版。'},
+  {icon:'🌅',text:'今日宜看日出',sub:'小河说：为日出早起的人，会得到一整天的馈赠。'},
+  {icon:'🧭',text:'今日宜迷路',sub:'小河说：迷路也没关系，迷路才是旅行的本质。'}
+];
+let fortuneIndex=-1;
+function drawFortune(){
+  const btn=document.getElementById('fortuneBtn');
+  btn.disabled=true;
+  const icon=document.getElementById('fortuneIcon');
+  icon.classList.add('shaking');
+  uiFortune();
+  setTimeout(()=>icon.classList.remove('shaking'),1500);
+  let idx;do{idx=Math.floor(Math.random()*fortunes.length)}while(idx===fortuneIndex&&fortunes.length>1);
+  fortuneIndex=idx;
+  const f=fortunes[idx];
+  const textEl=document.getElementById('fortuneText');
+  const subEl=document.getElementById('fortuneSub');
+  textEl.style.opacity=0;subEl.style.opacity=0;
+  setTimeout(()=>{
+    icon.textContent=f.icon;
+    textEl.textContent=f.text;
+    subEl.textContent=f.sub;
+    textEl.style.transition='opacity .4s';subEl.style.transition='opacity .4s';
+    textEl.style.opacity=1;subEl.style.opacity=1;
+    btn.disabled=false;
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z" fill="#fff"/></svg>再抽一支';
+  },1200);
+}
+
+/* ===== Mailbox (写给小河) ===== */
+const replies=[
+  {keywords:['周末','短途','推荐','路线'],reply:'小河翻了翻背包里的地图，为你找到了一条周末短途路线：从城市出发，驱车1小时到山脚，沿着溪流步道走2公里，有一处隐秘的小瀑布。带上水壶和相机，半天就够了！'},
+  {keywords:['一个人','独自','孤单','寂寞'],reply:'小河认真地看着你说：「一个人旅行不是孤单，是自由。你可以在花海里坐一整个下午，在古镇的石桥上发呆到天黑，不用迁就任何人的节奏。而且，你还有小河呀！」'},
+  {keywords:['迷路','找不到','方向'],reply:'小河拍了拍头顶的指南针，笑着说：「迷路了别慌！最好的风景往往在计划之外。深呼吸，看看周围有没有路标，或者找一家小店问问当地人。如果实在不行，小河的指南针永远为你指路！」'},
+  {keywords:['今天','出发','适合','可以'],reply:'小河看了看天空，眼睛亮了起来：「今天是个好日子！风向东南，云层不高不低，正是出发的好天气。不管去哪里，只要迈出第一步，旅途就已经开始了。」'},
+  {keywords:['你好','嗨','hello','hi'],reply:'小河开心地挥了挥手：「你好呀！欢迎来到云端驿站！有什么想问的尽管说，小河的耳朵一直竖着呢。」'},
+  {keywords:['谢谢','感谢','thanks'],reply:'小河害羞地摸了摸云朵发型：「不用谢啦！能帮到旅人，就是小河最开心的事情。祝你旅途愉快！」'}
+];
+const defaultReply='小河认真读完了你的信，想了想，然后写道：「谢谢你的来信！每一封信小河都会好好收藏在旅行包里。无论你走到哪里，小河都会在这里等你回来。旅途平安！」';
+function sendMail(){
+  const input=document.getElementById('mailInput').value.trim();
+  if(!input){showToast('✉️ 信箱是空的，写点什么吧！');return}
+  const sendBtn=document.getElementById('mailSend');
+  sendBtn.disabled=true;sendBtn.innerHTML='⏳ 小河读信中…';
+  const replyBox=document.getElementById('mailReply');
+  const replyText=document.getElementById('replyText');
+  setTimeout(()=>{
+    let reply=defaultReply;
+    for(const r of replies){
+      if(r.keywords.some(k=>input.includes(k))){reply=r.reply;break}
+    }
+    replyBox.classList.add('show');
+    replyText.innerHTML='';
+    let i=0;
+    const typing=setInterval(()=>{
+      if(i>=reply.length){clearInterval(typing);sendBtn.disabled=false;sendBtn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 21L23 12L2 3L6 12L2 21Z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>寄出';return}
+      replyText.innerHTML=reply.substring(0,i+1)+'<span class="reply-typing"></span>';
+      i++;
+    },40);
+  },800);
+}
+function quickReply(text){
+  document.getElementById('mailInput').value=text;
+  sendMail();
+}
+/* 全局写信弹窗 */
+function openMailModal(){
+  const m=document.getElementById('mailModal');
+  m.classList.add('open');
+  document.body.style.overflow='hidden';
+  /* 聚焦输入框 */
+  setTimeout(()=>{const inp=document.getElementById('mailInput');if(inp)inp.focus()},350);
+}
+function closeMailModal(){
+  const m=document.getElementById('mailModal');
+  m.classList.remove('open');
+  document.body.style.overflow='';
+}
+/* 点击遮罩层关闭 */
+document.getElementById('mailModal').addEventListener('click',function(e){
+  if(e.target===this)closeMailModal();
+});
+/* ESC 关闭 */
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMailModal()});
+
+/* ===== Video ===== */
+function playVideo(){
+  const video=document.getElementById('heroVideo');
+  const overlay=document.getElementById('videoOverlay');
+  const loading=document.getElementById('videoLoading');
+  const controls=document.getElementById('videoControls');
+  overlay.classList.add('hide');
+  loading.classList.add('show');
+  video.load();
+  video.addEventListener('canplay',()=>{loading.classList.remove('show');controls.classList.add('show');video.play();updateVBtn();},{once:true});
+  video.addEventListener('error',()=>{loading.classList.remove('show');document.getElementById('videoFallback').classList.add('show');overlay.classList.add('hide');},{once:true});
+}
+function togglePlay(){const v=document.getElementById('heroVideo');if(v.paused){v.play();}else{v.pause();}updateVBtn();}
+function updateVBtn(){const v=document.getElementById('heroVideo');document.getElementById('vPlay').textContent=v.paused?'▶':'⏸';}
+function toggleMute(){const v=document.getElementById('heroVideo');v.muted=!v.muted;document.getElementById('vMute').textContent=v.muted?'🔇':'🔊';}
+function toggleFull(){const v=document.getElementById('heroVideo');if(v.requestFullscreen)v.requestFullscreen();else if(v.webkitRequestFullscreen)v.webkitRequestFullscreen();}
+(function(){
+  const v=document.getElementById('heroVideo');
+  const bar=document.getElementById('vBar');
+  const prog=document.getElementById('vProgress');
+  if(v&&bar){
+    v.addEventListener('timeupdate',()=>{if(v.duration)bar.style.width=(v.currentTime/v.duration*100)+'%';updateVBtn();});
+    v.addEventListener('ended',()=>updateVBtn());
+    if(prog)prog.addEventListener('click',(e)=>{const r=prog.getBoundingClientRect();if(v.duration)v.currentTime=(e.clientX-r.left)/r.width*v.duration;});
+  }
+})();
+
+/* ===== Detail modals (目的地 / 应用) ===== */
+function openDest(id,name,stamp,img,story,doing,emotion,action,stampChar){
+  document.getElementById('destImg').src=img;
+  document.getElementById('destName').textContent=name;
+  document.getElementById('destName2').textContent=name;
+  document.getElementById('destStamp').textContent=stampChar;
+  document.getElementById('destStory').textContent=story;
+  document.getElementById('destDoing').textContent=doing;
+  document.getElementById('destEmotion').textContent=emotion;
+  document.getElementById('destAction').textContent=action;
+  document.getElementById('destModal').classList.add('open');
+  uiDing();
+}
+function openApp(id,name,desc,how,img){
+  document.getElementById('appImg').src=img;
+  document.getElementById('appName').textContent=name;
+  document.getElementById('appName2').textContent=name;
+  document.getElementById('appDesc').textContent=desc;
+  document.getElementById('appHow').textContent=how;
+  document.getElementById('appModal').classList.add('open');
+}
+function closeDetail(id){document.getElementById(id).classList.remove('open')}
+
+/* ===== Background music: 治愈系云端探索 (Web Audio generative loop) ===== */
+let audioCtx=null, musicPlaying=false, userMuted=false, bgmPaused=false;
+let savedStep16=0, savedNextNoteTime=0;
+let bus, comp, conv, wetGain, lp, masterGain, fadeGain;
+let padGain, bassGain, pianoGain, harpGain, pizzGain, stringGain, percGain, uiGain;
+let noiseBuf=null, bgmTimer=null, nextNoteTime=0, step16=0, bgmStart=0;
+/* 洛克王国式：有主旋律 + 温暖童话音色（钢琴/竖琴/弦乐拨奏），编曲干净现代 */
+const BPM=112, SIX=60/BPM/4, BARS=32, LOOP_STEPS=BARS*16;
+const n2f=n=>440*Math.pow(2,(n-69)/12);
+/* 8 小节和弦循环：C - G - Am - Em - F - C - F - G（明亮、有推进感） */
+const PROG=[
+  {b:48,c:[60,64,67]},{b:43,c:[55,59,62]},{b:45,c:[57,60,64]},{b:40,c:[52,55,59]},
+  {b:41,c:[53,57,60]},{b:48,c:[60,64,67]},{b:41,c:[53,57,60]},{b:43,c:[55,59,62]}
+];
+/* 主题 A（可哼唱）：5 6 1' | 7 6 5 | 6 1' 3' | 2' 7 | 1' 6 4 | 5 3 5 | 6 1' 4' | 3' 2' */
+const MEL_A=[
+  [[0,67,4],[4,69,4],[8,72,8]],
+  [[0,71,4],[4,69,4],[8,67,8]],
+  [[0,69,4],[4,72,4],[8,76,8]],
+  [[0,74,8],[8,71,8]],
+  [[0,72,4],[4,69,4],[8,65,8]],
+  [[0,67,4],[4,64,4],[8,67,8]],
+  [[0,69,4],[4,72,4],[8,77,8]],
+  [[0,76,8],[8,74,8]]
+];
+/* 主题 B（情绪展开，音区抬高） */
+const MEL_B=[
+  [[0,72,4],[4,74,4],[8,76,8]],
+  [[0,79,8],[8,76,8]],
+  [[0,72,4],[4,71,4],[8,69,8]],
+  [[0,67,8],[8,64,8]],
+  [[0,69,4],[4,72,4],[8,74,8]],
+  [[0,76,8],[8,72,8]],
+  [[0,74,8],[8,71,8]],
+  [[0,67,16]]
+];
+/* AABA 曲式：段落变化，长时间听不腻 */
+const SECTION=[0,0,1,0];
+function bgmVolEl(){return document.getElementById('bgmVol')}
+/* 音量标定：此前 masterGain 未接入链路，实际一直是「满增益」播放。
+   现在接入后按 VOL_K 重新标定，使默认档位 ≈ 用户已习惯的响度，滑块同时真正可用。 */
+const VOL_DEFAULT=80, VOL_K=1.15;
+function readVol(){let v=VOL_DEFAULT;try{v=parseInt(localStorage.getItem('yyxx_vol'));if(isNaN(v))v=VOL_DEFAULT}catch(e){}const el=bgmVolEl();if(el)el.value=v;return v/100*VOL_K}
+function saveVol(v){try{localStorage.setItem('yyxx_vol',v)}catch(e){}}
+function makeNoise(){const len=Math.floor(audioCtx.sampleRate*2);const b=audioCtx.createBuffer(1,len,audioCtx.sampleRate);const d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;return b}
+function makeImpulse(dur,decay){const len=Math.floor(audioCtx.sampleRate*dur);const b=audioCtx.createBuffer(2,len,audioCtx.sampleRate);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}return b}
+function ensureAudio(){
+  if(audioCtx){if(audioCtx.state==='suspended')audioCtx.resume();return}
+  const AC=window.AudioContext||window.webkitAudioContext; audioCtx=new AC();
+  bus=audioCtx.createGain(); bus.gain.value=1;
+  lp=audioCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=5200; lp.Q.value=0.3;
+  comp=audioCtx.createDynamicsCompressor(); comp.threshold.value=-18; comp.knee.value=24; comp.ratio.value=2.5; comp.attack.value=0.02; comp.release.value=0.30;
+  conv=audioCtx.createConvolver(); conv.buffer=makeImpulse(2.6,2.6);
+  wetGain=audioCtx.createGain(); wetGain.gain.value=0.30;
+  masterGain=audioCtx.createGain(); masterGain.gain.value=readVol();
+  /* 淡入/淡出专用节点（与用户音量解耦：滑块跟手，淡入曲线不被打断） */
+  fadeGain=audioCtx.createGain(); fadeGain.gain.value=0;
+  padGain=audioCtx.createGain(); padGain.gain.value=0.15;
+  bassGain=audioCtx.createGain(); bassGain.gain.value=0.055;
+  pianoGain=audioCtx.createGain(); pianoGain.gain.value=0.48;
+  harpGain=audioCtx.createGain(); harpGain.gain.value=0.26;
+  pizzGain=audioCtx.createGain(); pizzGain.gain.value=0.14;
+  stringGain=audioCtx.createGain(); stringGain.gain.value=0.12;
+  percGain=audioCtx.createGain(); percGain.gain.value=0.07;
+  uiGain=audioCtx.createGain(); uiGain.gain.value=1;
+  noiseBuf=makeNoise();
+  [padGain,bassGain,pianoGain,harpGain,pizzGain,stringGain,percGain].forEach(g=>g.connect(bus));
+  /* 音乐：bus → fadeGain → masterGain（用户音量）→ lp → comp
+     UI 音效直连 lp，绕过淡入淡出与音量衰减，保持原有的轻提示感 */
+  bus.connect(fadeGain); fadeGain.connect(masterGain); masterGain.connect(lp);
+  uiGain.connect(lp);
+  lp.connect(comp);
+  comp.connect(audioCtx.destination);
+  comp.connect(conv); conv.connect(wetGain); wetGain.connect(audioCtx.destination);
+}
+/* 空气感 Pad：纯净微失谐 sine，柔和无簧片感 */
+function vPad(freqs,t,dur){freqs.forEach((f,idx)=>{const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=f;const o2=audioCtx.createOscillator();o2.type='sine';o2.frequency.value=f*1.005;const g=audioCtx.createGain();const lfo=audioCtx.createOscillator();lfo.type='sine';lfo.frequency.value=0.07+0.02*idx;const lfoG=audioCtx.createGain();lfoG.gain.value=0.18;lfo.connect(lfoG);lfoG.connect(g.gain);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.34,t+0.55);g.gain.setValueAtTime(0.34,t+dur-0.45);g.gain.linearRampToValueAtTime(0,t+dur);const o3=audioCtx.createOscillator();o3.type='sine';o3.frequency.value=f*4;const g3=audioCtx.createGain();g3.gain.value=0.05;o.connect(g);o2.connect(g);o3.connect(g3);g3.connect(g);g.connect(padGain);o.start(t);o2.start(t);o3.start(t);lfo.start(t);o.stop(t+dur+0.05);o2.stop(t+dur+0.05);o3.stop(t+dur+0.05);lfo.stop(t+dur+0.05);});}
+/* 低音：圆润 sine */
+function vBass(f,t,dur){const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=f;const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.62,t+0.035);g.gain.setValueAtTime(0.62,t+dur*0.7);g.gain.exponentialRampToValueAtTime(0.0008,t+dur+0.12);o.connect(g);g.connect(bassGain);o.start(t);o.stop(t+dur+0.18);}
+/* 主旋律音色：柔和钢琴（sine+triangle+极轻八度泛音），有芯但不刺、不吹奏 */
+function vPiano(f,t,dur){const o1=audioCtx.createOscillator();o1.type='sine';o1.frequency.value=f;const o2=audioCtx.createOscillator();o2.type='triangle';o2.frequency.value=f;o2.detune.value=3;const o3=audioCtx.createOscillator();o3.type='sine';o3.frequency.value=f*2;const o4=audioCtx.createOscillator();o4.type='sine';o4.frequency.value=f*3;const o5=audioCtx.createOscillator();o5.type='sine';o5.frequency.value=f*4;const gg=audioCtx.createGain();gg.gain.value=0.12;const g4=audioCtx.createGain();g4.gain.value=0.08;const g5=audioCtx.createGain();g5.gain.value=0.03;const lp2=audioCtx.createBiquadFilter();lp2.type='lowpass';lp2.frequency.value=4200;const g=audioCtx.createGain();const sustain=Math.max(0.20,dur*0.55);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.85,t+0.012);g.gain.exponentialRampToValueAtTime(0.30,t+0.20);g.gain.setValueAtTime(0.30,t+sustain);g.gain.exponentialRampToValueAtTime(0.0008,t+dur+0.32);o1.connect(g);o2.connect(g);o3.connect(gg);gg.connect(g);o4.connect(g4);g4.connect(g);o5.connect(g5);g5.connect(g);g.connect(lp2);lp2.connect(pianoGain);o1.start(t);o2.start(t);o3.start(t);o4.start(t);o5.start(t);o1.stop(t+dur+0.38);o2.stop(t+dur+0.38);o3.stop(t+dur+0.38);o4.stop(t+dur+0.38);o5.stop(t+dur+0.38);}
+/* 竖琴：温暖快衰减（低通抑制高频"叮叮"），童话感来源 */
+function vHarp(f,t){const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=f;const o2=audioCtx.createOscillator();o2.type='sine';o2.frequency.value=f*2.005;const o3=audioCtx.createOscillator();o3.type='sine';o3.frequency.value=f*3.01;const o4=audioCtx.createOscillator();o4.type='sine';o4.frequency.value=f*4.02;const g=audioCtx.createGain();const g2=audioCtx.createGain();const g3=audioCtx.createGain();const g4=audioCtx.createGain();const lp2=audioCtx.createBiquadFilter();lp2.type='lowpass';lp2.frequency.value=3200;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.70,t+0.004);g.gain.exponentialRampToValueAtTime(0.0006,t+0.60);g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(0.24,t+0.004);g2.gain.exponentialRampToValueAtTime(0.0005,t+0.28);g3.gain.setValueAtTime(0,t);g3.gain.linearRampToValueAtTime(0.08,t+0.004);g3.gain.exponentialRampToValueAtTime(0.0005,t+0.20);g4.gain.setValueAtTime(0,t);g4.gain.linearRampToValueAtTime(0.04,t+0.004);g4.gain.exponentialRampToValueAtTime(0.0005,t+0.16);o.connect(g);o2.connect(g2);o3.connect(g3);o4.connect(g4);g.connect(lp2);g2.connect(lp2);g3.connect(lp2);g4.connect(lp2);lp2.connect(harpGain);o.start(t);o2.start(t);o3.start(t);o4.start(t);o.stop(t+0.65);o2.stop(t+0.65);o3.stop(t+0.65);o4.stop(t+0.65);}
+/* 弦乐拨奏 Pizzicato：轻快律动 */
+function vPizz(f,t){const o=audioCtx.createOscillator();o.type='triangle';o.frequency.value=f;const lp2=audioCtx.createBiquadFilter();lp2.type='lowpass';lp2.frequency.value=2400;const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.80,t+0.005);g.gain.exponentialRampToValueAtTime(0.0008,t+0.24);o.connect(lp2);lp2.connect(g);g.connect(pizzGain);o.start(t);o.stop(t+0.28);}
+/* 极轻弦乐长音：填补中频，洛克王国式温暖底色 */
+function vString(f,t,dur){const o=audioCtx.createOscillator();o.type='triangle';o.frequency.value=f;const o2=audioCtx.createOscillator();o2.type='sine';o2.frequency.value=f*2;const g2=audioCtx.createGain();g2.gain.value=0.18;const lp2=audioCtx.createBiquadFilter();lp2.type='lowpass';lp2.frequency.value=1500;const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.50,t+0.6);g.gain.setValueAtTime(0.50,t+dur-0.8);g.gain.linearRampToValueAtTime(0,t+dur);o.connect(lp2);o2.connect(g2);g2.connect(lp2);lp2.connect(g);g.connect(stringGain);o.start(t);o2.start(t);o.stop(t+dur+0.05);o2.stop(t+dur+0.05);}
+/* 极轻低鼓：给轻快推进感 */
+function vKick(t){const o=audioCtx.createOscillator();o.type='sine';o.frequency.setValueAtTime(125,t);o.frequency.exponentialRampToValueAtTime(48,t+0.12);const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.65,t+0.006);g.gain.exponentialRampToValueAtTime(0.0008,t+0.20);o.connect(g);g.connect(percGain);o.start(t);o.stop(t+0.24);}
+function vBrush(t){const s=audioCtx.createBufferSource();s.buffer=noiseBuf;s.loop=true;const bp=audioCtx.createBiquadFilter();bp.type='highpass';bp.frequency.value=3800;const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.40,t+0.01);g.gain.exponentialRampToValueAtTime(0.0008,t+0.10);s.connect(bp);bp.connect(g);g.connect(percGain);s.start(t);s.stop(t+0.13);}
+/* 竖琴琶音：6 音摇摆位，透气不密集 */
+const HARP_STEPS=[0,3,6,8,11,14], HARP_SEQ=[0,1,2,0,1,2], HARP_OCT=[0,0,12,0,12,12];
+function scheduleStep(step,t){
+  const bar=Math.floor(step/16)%BARS, b16=step%16;
+  const P=PROG[bar%8];
+  const mel=(SECTION[Math.floor(bar/8)]===1?MEL_B:MEL_A)[bar%8];
+  /* 和声底 + 低音 */
+  if(b16===0){vPad(P.c.map(n2f),t,SIX*16*0.98);vString(n2f(P.c[0]),t,SIX*16*0.98);vString(n2f(P.c[2]),t,SIX*16*0.98);vBass(n2f(P.b),t,SIX*8*0.92);}
+  if(b16===8)vBass(n2f(P.b),t,SIX*8*0.92);
+  /* 主旋律（钢琴 + 少量竖琴同音叠加，增强童话感） */
+  mel.forEach(nt=>{if(nt[0]===b16){const f=n2f(nt[1]);vPiano(f,t,nt[2]*SIX);}});
+  /* 竖琴琶音 */
+  const hi=HARP_STEPS.indexOf(b16);
+  if(hi>=0)vHarp(n2f(P.c[HARP_SEQ[hi]]+HARP_OCT[hi]),t);
+  /* 弦乐拨奏：第 2、4 拍律动 */
+  if(b16===4||b16===12)vPizz(n2f(P.c[2]+12),t);
+  /* 极轻节奏 */
+  if(b16===0||b16===8)vKick(t);
+  if(b16===4||b16===12)vBrush(t);
+}
+function scheduler(){if(!audioCtx||!musicPlaying)return;while(nextNoteTime<audioCtx.currentTime+0.25){scheduleStep(step16,nextNoteTime);nextNoteTime+=SIX;step16=(step16+1)%LOOP_STEPS;}}
+/* ===== 缓慢淡入 / 淡出 ===== */
+const FADE_IN=6.0, FADE_OUT=1.2;
+let stopTimer=null;
+/* smoothstep 曲线：起步极缓 → 中段渐起 → 尾段轻收，听感是「从远处慢慢飘来」。
+   从当前音量归一化起步，任何时刻重复调用都不会掉音量 */
+function fadeCurve(n,from){const a=new Float32Array(n);for(let i=0;i<n;i++){const t=i/(n-1),s=t*t*(3-2*t);a[i]=from+(1-from)*s;}return a;}
+function fadeParam(param,t){try{param.cancelAndHoldAtTime(t)}catch(e){try{param.cancelScheduledValues(t)}catch(e2){}}}
+function fadeInBGM(){
+  if(!fadeGain)return;
+  const t=audioCtx.currentTime;
+  const g=fadeGain.gain;
+  const from=Math.min(0.999,Math.max(0,g.value));
+  fadeParam(g,t);
+  g.setValueAtTime(Math.max(0.0001,from),t);
+  try{g.setValueCurveAtTime(fadeCurve(128,from),t,FADE_IN);}
+  catch(e){g.linearRampToValueAtTime(1,t+FADE_IN);}
+  /* 淡入期混响稍重，声音像从云端远处飘近，之后回到常态（仅在从静音起播时施加） */
+  if(wetGain&&from<0.12){
+    fadeParam(wetGain.gain,t);
+    wetGain.gain.setValueAtTime(0.46,t);
+    wetGain.gain.linearRampToValueAtTime(0.30,t+FADE_IN+1.0);
+  }
+}
+function fadeOutBGM(){
+  if(!fadeGain)return;
+  const t=audioCtx.currentTime;
+  const g=fadeGain.gain;
+  fadeParam(g,t);
+  g.setValueAtTime(Math.max(0.0001,g.value),t);
+  try{g.linearRampToValueAtTime(0.0001,t+FADE_OUT);}catch(e){g.value=0.0001;}
+}
+function startBGM(){
+  ensureAudio();
+  if(audioCtx.state==='suspended')audioCtx.resume();
+  if(stopTimer){clearTimeout(stopTimer);stopTimer=null;}
+  if(musicPlaying){fadeInBGM();return;}
+  const now=audioCtx.currentTime;
+  if(bgmPaused && savedStep16>0){
+    /* 续播：从暂停处恢复，计算时间差后继续推进 */
+    const elapsed=now-savedNextNoteTime;
+    const stepsSkipped=Math.floor(elapsed/SIX);
+    step16=(savedStep16+stepsSkipped)%LOOP_STEPS;
+    nextNoteTime=now+0.05;
+  }else{
+    /* 首次播放：从头开始 */
+    bgmStart=now;nextNoteTime=now+0.12;step16=0;
+  }
+  bgmPaused=false;
+  musicPlaying=true;
+  document.getElementById('bgmPlayer').classList.add('open');
+  if(!bgmTimer)bgmTimer=setInterval(scheduler,25);
+  if(masterGain)masterGain.gain.setTargetAtTime(readVol(),audioCtx.currentTime,0.05);
+  fadeInBGM();
+  const btn=document.getElementById('fabMusic');btn.classList.add('playing');
+  document.getElementById('musicIcon').textContent='♫';
+}
+function stopBGM(){
+  const btn=document.getElementById('fabMusic');if(btn)btn.classList.remove('playing');
+  const mi=document.getElementById('musicIcon');if(mi)mi.textContent='♪';
+  if(!audioCtx||!musicPlaying)return;
+  /* 保存当前播放位置，供续播使用 */
+  savedStep16=step16;savedNextNoteTime=nextNoteTime;bgmPaused=true;
+  document.getElementById('bgmPlayer').classList.remove('open');
+  /* 先淡出，等声音真的弱下去再停调度，避免戛然而止 */
+  fadeOutBGM();
+  if(stopTimer)clearTimeout(stopTimer);
+  stopTimer=setTimeout(()=>{
+    musicPlaying=false;
+    if(bgmTimer){clearInterval(bgmTimer);bgmTimer=null;}
+    stopTimer=null;
+  },FADE_OUT*1000);
+}
+function setBGMVol(v){v=parseInt(v,10);if(isNaN(v))v=VOL_DEFAULT;saveVol(v);if(!masterGain)return;masterGain.gain.setTargetAtTime(v/100*VOL_K,audioCtx.currentTime,0.03);}
+function toggleBGM(){ensureAudio();if(audioCtx.state==='suspended')audioCtx.resume();if(musicPlaying){stopBGM();userMuted=true;try{localStorage.setItem('yyxx_muted','1')}catch(e){}showToast('音乐已暂停');}else{userMuted=false;try{localStorage.setItem('yyxx_muted','0')}catch(e){}startBGM();showToast('🎵 小河为你播放旅行音乐');}}
+/* UI sound effects (very light, below BGM) */
+function uiGate(){if(userMuted)return false;ensureAudio();if(audioCtx.state==='suspended')audioCtx.resume();return true;}
+function uiTone(f,t,dur,vol,type){const o=audioCtx.createOscillator();o.type=type||'sine';o.frequency.value=f;const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+0.004);g.gain.exponentialRampToValueAtTime(0.0006,t+dur);o.connect(g);g.connect(uiGain);o.start(t);o.stop(t+dur+0.02);}
+function uiDing(){if(!uiGate())return;const t=audioCtx.currentTime;uiTone(1318.5,t,0.5,0.12,'sine');uiTone(1567.98,t+0.06,0.5,0.09,'sine');}
+function uiSoft(){if(!uiGate())return;const t=audioCtx.currentTime;uiTone(880.0,t,0.4,0.08,'sine');}
+function uiFortune(){if(!uiGate())return;const t=audioCtx.currentTime;uiTone(1046.5,t,0.6,0.10,'sine');uiTone(1318.5,t+0.08,0.6,0.08,'sine');const s=audioCtx.createBufferSource();s.buffer=noiseBuf;s.loop=true;const bp=audioCtx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=2600;bp.Q.value=0.8;const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.10,t+0.02);g.gain.exponentialRampToValueAtTime(0.0006,t+0.45);s.connect(bp);bp.connect(g);g.connect(uiGain);s.start(t);s.stop(t+0.5);}
+function uiWind(){if(!uiGate())return;const t=audioCtx.currentTime;const s=audioCtx.createBufferSource();s.buffer=noiseBuf;s.loop=true;const bp=audioCtx.createBiquadFilter();bp.type='bandpass';bp.frequency.setValueAtTime(400,t);bp.frequency.linearRampToValueAtTime(1800,t+0.5);bp.Q.value=0.7;const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.12,t+0.15);g.gain.exponentialRampToValueAtTime(0.0006,t+0.55);s.connect(bp);bp.connect(g);g.connect(uiGain);s.start(t);s.stop(t+0.6);uiTone(1567.98,t+0.45,0.7,0.08,'sine');}
+/* autoplay on first user interaction (handles browser autoplay policy) */
+(function(){try{userMuted=(localStorage.getItem('yyxx_muted')==='1')}catch(e){}
+  let done=false;
+  function kick(e){if(done)return;if(e&&e.target&&e.target.closest&&e.target.closest('#fabMusic'))return;done=true;if(userMuted)return;startBGM();}
+  window.addEventListener('pointerdown',kick);
+  window.addEventListener('keydown',kick);
+})();
+
+/* ===== Hero title char animation ===== */
+(function(){
+  const title=document.querySelector('.hero-title');
+  if(!title)return;
+  const tmp=document.createElement('div');tmp.innerHTML=title.innerHTML;
+  let delay=0;
+  function walk(node){
+    node.childNodes.forEach(child=>{
+      if(child.nodeType===3){
+        const text=child.textContent;
+        const frag=document.createDocumentFragment();
+        text.split('').forEach(ch=>{
+          const span=document.createElement('span');
+          span.className='char';span.textContent=ch;
+          span.style.animationDelay=(delay*0.05)+'s';delay++;
+          frag.appendChild(span);
+        });
+        child.replaceWith(frag);
+      }else if(child.nodeType===1){
+        if(child.tagName==='BR'){delay+=1;return}
+        walk(child);
+      }
+    });
+  }
+  walk(title);
+})();
+
+/* ===== Count-up stats ===== */
+(function(){
+  const nums=document.querySelectorAll('.hero-stat .num[data-count]');
+  const so=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const el=e.target;if(el.dataset.done)return;el.dataset.done='1';
+      const target=parseInt(el.dataset.count,10);
+      const suffix=el.dataset.suffix||'';
+      let cur=0;const step=Math.max(1,Math.ceil(target/30));
+      const tick=()=>{cur+=step;if(cur>=target){cur=target;el.textContent=cur+suffix;return}el.textContent=cur+suffix;requestAnimationFrame(tick)};
+      requestAnimationFrame(tick);
+    });
+  },{threshold:0.5});
+  nums.forEach(n=>so.observe(n));
+})();
+
+/* ===== Parallax hero ===== */
+(function(){
+  const hero=document.querySelector('.hero');
+  const poster=document.querySelector('.hero-poster');
+  const compass=document.getElementById('heroCompass');
+  const text=document.querySelector('.hero-text');
+  if(!hero)return;
+  window.addEventListener('scroll',()=>{
+    const y=window.scrollY;if(y>window.innerHeight)return;
+    if(poster)poster.style.transform='translateY('+(y*0.12)+'px) scale('+(1-y*0.0002)+')';
+    if(compass)compass.style.marginTop=(y*0.08)+'px';
+    if(text)text.style.transform='translateY('+(y*0.05)+'px)';
+  },{passive:true});
+})();
+
+/* ===== 3D Tilt ===== */
+(function(){
+  document.querySelectorAll('.expr-card,.dest-card,.action-card,.app-card,.spot,.card').forEach(card=>{
+    card.classList.add('tilt-card');
+    card.addEventListener('mousemove',(e)=>{
+      const rect=card.getBoundingClientRect();
+      const x=e.clientX-rect.left;const y=e.clientY-rect.top;
+      const rx=((y-rect.height/2)/(rect.height/2))*-6;
+      const ry=((x-rect.width/2)/(rect.width/2))*6;
+      card.style.transform='perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-4px)';
+    });
+    card.addEventListener('mouseleave',()=>{card.style.transform=''});
+  });
+})();
+
+/* ===== Cloud parallax ===== */
+(function(){
+  const clouds=document.querySelectorAll('.cloud');
+  window.addEventListener('scroll',()=>{
+    const y=window.scrollY;
+    clouds.forEach((c,i)=>{c.style.marginTop=(y*(0.02+(i%3)*0.015))+'px'});
+  },{passive:true});
+})();
+
+/* ===== Nav scroll state + fab top ===== */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',window.scrollY>20);
+  document.getElementById('fabTop').classList.toggle('show',window.scrollY>400);
+});
+
+/* ===== Keyboard shortcuts ===== */
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape'){closeLightbox();closeDetail('destModal');closeDetail('appModal');closeDetail('completeModal');closeMenu();}
+  if(e.key==='ArrowDown'&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='INPUT'&&document.querySelector('.page.active').dataset.page==='home'){
+    e.preventDefault();window.scrollBy({top:window.innerHeight*0.8,behavior:'smooth'});
+  }
+});
+
+/* ===== init home reveal ===== */
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.page.active .reveal').forEach(el=>el.classList.add('visible'));
+});
+</script>
+</body>
+</html>

@@ -150,6 +150,10 @@ a{color:inherit;text-decoration:none}
 .card .cmeta{padding:20px 22px 24px}
 .card .cmeta>.ctitle{margin-top:2px}
 .card .ctitle{font-family:var(--serif);font-weight:700;font-size:clamp(18px,2.1vw,20px);line-height:1.32;margin:8px 0 11px;text-align:center}
+.mplay{display:flex;width:max-content;margin:10px auto 0;align-items:center;gap:7px;padding:8px 22px;font-family:var(--sans);font-size:13px;letter-spacing:.1em;color:var(--accent);background:rgba(232,161,58,.08);border:1px solid rgba(232,161,58,.5);border-radius:100px;cursor:pointer;transition:background .25s,color .25s,transform .15s}
+.mplay:hover{background:rgba(232,161,58,.16)}
+.mplay:active{transform:scale(.96)}
+.mplay.playing{color:#100e0b;background:var(--accent);border-color:var(--accent)}
 .card .csum{color:var(--muted);font-size:13.5px;font-weight:300;line-height:1.75;max-height:0;opacity:0;overflow:hidden;transition:max-height .35s ease,opacity .3s,margin .35s;text-align:center}
 .card:hover .csum{max-height:80px;opacity:1;margin-bottom:6px}
 .card .ctags{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px;justify-content:center}
@@ -590,6 +594,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
         <div class="cmeta">
           <h3 class="ctitle">《时光来信》</h3>
+          <button class="mplay" type="button" data-src="lyric-player/song.mp3">▶ 播放歌曲</button>
         </div>
       </a>
 
@@ -600,6 +605,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
         <div class="cmeta">
           <h3 class="ctitle">《旧便签》</h3>
+          <button class="mplay" type="button" data-src="lyric-player-4/song.mp3">▶ 播放歌曲</button>
         </div>
       </a>
 
@@ -837,6 +843,34 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
     e.preventDefault();
     var qr=document.querySelector('[data-action="qr-zoom"]');
     if(qr){ qr.click(); }
+  });
+})();
+</script>
+
+<script>
+(function(){
+  var buttons=document.querySelectorAll('.mplay');
+  if(!buttons.length)return;
+  var current=null,curBtn=null;
+  function reset(btn){btn.classList.remove('playing');btn.textContent='▶ 播放歌曲';}
+  buttons.forEach(function(btn){
+    var audio=null;
+    btn.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(current&&current!==audio){current.pause();reset(curBtn);current=null;curBtn=null;}
+      if(!audio){audio=new Audio(btn.getAttribute('data-src'));audio.addEventListener('ended',function(){reset(btn);if(current===audio)current=null;});}
+      if(audio.paused){
+        audio.play();
+        btn.classList.add('playing');
+        btn.textContent='⏸ 暂停';
+        current=audio;curBtn=btn;
+      }else{
+        audio.pause();
+        reset(btn);
+        if(current===audio)current=null;
+      }
+    });
   });
 })();
 </script>

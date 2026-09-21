@@ -46,20 +46,6 @@ a{color:inherit;text-decoration:none}
 .mh-in{max-width:var(--maxw);margin:0 auto;padding:13px 28px;display:flex;align-items:center;justify-content:space-between;
   font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
 .mh-in .nm{color:var(--paper);font-weight:500}
-.mh-in .mid{letter-spacing:.3em}
-.mh-nav{display:flex;gap:20px}
-.mh-nav a{transition:.2s;white-space:nowrap;position:relative;padding-bottom:3px}
-.mh-nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--accent);
-  transform:scaleX(0);transform-origin:left;transition:transform .25s}
-.mh-nav a:hover{color:var(--accent)}
-.mh-nav a:hover::after{transform:scaleX(1)}
-.mh-right{display:flex;align-items:center;gap:14px}
-.mh-resume{border:1px solid var(--rule-strong);padding:6px 15px;border-radius:100px;color:var(--accent);
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;transition:.2s;white-space:nowrap}
-.mh-resume:hover{border-color:var(--accent)}
-@media(max-width:760px){.mh-in .mid{display:none}.mh-right{gap:10px}.mh-nav{gap:14px;overflow-x:auto;max-width:190px;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-right:4px}
-.mh-nav::-webkit-scrollbar{display:none}}
-@media(max-width:480px){.mh-in{padding:13px 18px}.mh-nav{max-width:120px}.mh-resume{padding:5px 11px;font-size:11px}}
 
 /* HERO / MANIFESTO — 左右分栏编辑式 */
 .hero{padding:90px 0 52px;position:relative}
@@ -314,22 +300,6 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 .wf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:8px;justify-items:stretch}
 @media(max-width:900px){.wf-grid{grid-template-columns:1fr}}
 
-/* ===== SELECTED WORKS / FEATURED：1 主案例 + 3 精选，建立视觉主次 ===== */
-.featured{padding:14px 0 30px}
-.featured-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin:14px 0 30px;flex-wrap:wrap}
-.featured-head .eyebrow{display:block;margin-bottom:8px}
-.featured-head h2{font-family:var(--serif);font-weight:700;font-size:clamp(24px,3.4vw,34px);line-height:1.2;margin:0}
-.featured-lead{color:var(--muted);font-weight:300;font-size:14px;max-width:42ch}
-.featured-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start;margin-top:8px}
-.featured-main .thumb{height:436px}
-.featured-secondary{display:flex;flex-direction:column;gap:24px}
-.featured-secondary .card .thumb{height:152px}
-@media(max-width:900px){
-  .featured-grid{grid-template-columns:1fr}
-  .featured-main .thumb{height:300px}
-  .featured-secondary .card .thumb{height:200px}
-}
-
 /* ===== PROCESS / 输入→处理→输出 视觉结构 ===== */
 .ps-col{display:flex;flex-direction:column;gap:9px}
 .ps-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
@@ -366,12 +336,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 <header class="masthead" id="mast" data-page-node-id="5Asgw97jEE9ItFyd7BwLEA">
   <div class="mh-in" data-page-node-id="mEGppNvmmiJOMRpfopTJDP">
     <div data-page-node-id="o5OO0rAMWWz808MBcUjWgU"><span class="nm" data-page-node-id="QPNtNEM0JIFiSqTpmOAYAs">许多</span> <span style="color:var(--faint)" data-page-node-id="Jnp5h9fxqFdZUKkK1oBCb4">— AIGC 视觉设计师</span></div>
-    <nav class="mh-nav" data-page-node-id="CrFuzutneJYO0b4r0eocTM">
-      <a href="#works" data-page-node-id="WabbJRNZ6FRyxtjgrCg9aM">作品</a>
-      <a href="#about" data-page-node-id="HykPnExeji2JAM7VhjYvAh">关于</a>
-      <a href="#contact" id="topResumeBtn" data-page-node-id="yaU5gQG1li7w3bZFktXU5g">简历</a>
-    </nav>
-  </div>
+      </div>
 </header>
 
 <!-- HERO / MANIFESTO -->
@@ -395,7 +360,6 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
     <div class="byline" data-page-node-id="1lzfZbh32LHpDsp9zMRTXq">
       <span data-page-node-id="1n24lg54FW3FlwI7ssOjEJ"><span class="av" data-page-node-id="HGEmVNVUt3TsZlTI3lr9pF"></span>许多 · AIGC 视觉设计师</span>
       <span data-page-node-id="CsXIsR1QFH5z8aAIqzIaL8">开放合作 · 全职 / 远程 / 项目制</span>
-      <a class="resume" href="#" id="heroResumeBtn" data-page-node-id="BwHx7J4109Fc67ApevSTBM">索取简历</a>
     </div>
 
     <!-- HERO COLLAGE / 首屏代表作品拼贴 -->
@@ -414,59 +378,6 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
     <div class="st" data-page-node-id="1kmWECJvUF7DogdRuNVm7V"><span class="sn" data-page-node-id="NR60vYI0mOYI3BF0HfVznV">09</span><span class="sl" data-page-node-id="m6EJVKolW68EjrDqjm89hA">影片</span></div>
     <div class="st" data-page-node-id="CMQ0CcN9NAanmRDJ4AHI4Z"><span class="sn" data-page-node-id="OFbZvF0zD7XkWhOGNmEpnW">60<span style="font-size:.55em">+</span></span><span class="sl" data-page-node-id="o4du5vMNVyK9DRXByz9o5r">镜头</span></div>
     <div class="st" data-page-node-id="kTEfMTcpxVF98NpssjjR68"><span class="sn" data-page-node-id="YysWlu9XGlsVEwzOy6NBQ1">05</span><span class="sl" data-page-node-id="a0fsoDFqHORMiC7FO6Im6c">内容类型</span></div>
-  </div>
-</section>
-
-<!-- SELECTED WORKS / 精选作品 -->
-<section class="featured" id="featured" data-page-node-id="featured-section">
-  <div class="wrap" data-page-node-id="featured-wrap">
-    <div class="featured-head" data-page-node-id="featured-head">
-      <div>
-        <span class="eyebrow" data-page-node-id="featured-eyebrow">Selected Works</span>
-        <h2 class="serif" data-page-node-id="featured-h2">精选作品</h2>
-      </div>
-      <p class="featured-lead" data-page-node-id="featured-lead">代表方向：AI 短片 / 商业 TVC / 电商套图 / 旅游 IP 形象。</p>
-    </div>
-    <div class="featured-grid" data-page-node-id="featured-grid">
-      <a class="card featured-main reveal" href="case-shumao-tegong.html" data-page-node-id="featured-main">
-        <div class="thumb" style="background:url('assets/shumao-tegong/cover-card.jpg') center/cover no-repeat,#0a0810" data-page-node-id="featured-main-thumb">
-          <span class="ctag" data-page-node-id="featured-main-ctag">动画短片 / 叙事</span>
-          <span class="fplay" data-page-node-id="featured-main-fplay">▶ 观看短片 (1:56)</span>
-        </div>
-        <div class="cmeta" data-page-node-id="featured-main-meta">
-          <h3 class="ctitle" data-page-node-id="featured-main-title">《鼠猫特工》动画短片</h3>
-        </div>
-      </a>
-      <div class="featured-secondary" data-page-node-id="featured-secondary">
-        <a class="card reveal" href="case-haiyanzhi.html" data-page-node-id="featured-s1">
-          <div class="thumb" style="background:url('assets/haiyanzhi-cover.jpg') center/cover no-repeat,#0a0810" data-page-node-id="featured-s1-thumb">
-            <span class="ctag" data-page-node-id="featured-s1-ctag">COMMERCIAL</span>
-            <span class="fplay" data-page-node-id="featured-s1-fplay">▶ 播放 TVC (0:20)</span>
-          </div>
-          <div class="cmeta" data-page-node-id="featured-s1-meta">
-            <h3 class="ctitle" data-page-node-id="featured-s1-title">海之言 · TVC 广告片</h3>
-          </div>
-        </a>
-        <a class="card reveal" href="case-yunyou-xiaohe.html" data-page-node-id="featured-s2">
-          <div class="thumb" style="background:url('assets/yunyou-xiaohe/yunyou-cover-card.jpg') center/cover no-repeat,#1a1714" data-page-node-id="featured-s2-thumb">
-            <span class="ctag" data-page-node-id="featured-s2-ctag">旅游IP</span>
-            <span class="fplay" data-page-node-id="featured-s2-fplay">▶ 查看详情页</span>
-          </div>
-          <div class="cmeta" data-page-node-id="featured-s2-meta">
-            <h3 class="ctitle" data-page-node-id="featured-s2-title">云游小河旅游小精灵</h3>
-          </div>
-        </a>
-        <a class="card reveal" href="case-qingxian-tianbiao.html" data-page-node-id="featured-s3">
-          <div class="thumb" style="background:url('assets/qingxian-tianbiao/cover-card.jpg') center/cover no-repeat,#1a1714" data-page-node-id="featured-s3-thumb">
-            <span class="ctag" data-page-node-id="featured-s3-ctag">FILM / SHORT</span>
-            <span class="fplay" data-page-node-id="featured-s3-fplay">▶ 观看短片</span>
-          </div>
-          <div class="cmeta" data-page-node-id="featured-s3-meta">
-            <h3 class="ctitle" data-page-node-id="featured-s3-title">《请先填表》动画短片</h3>
-          </div>
-        </a>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -765,12 +676,9 @@ if(mh)addEventListener('scroll',()=>mh.classList.toggle('scrolled',scrollY>20),{
   setTimeout(()=>els.forEach(el=>el.classList.add('in')),4000);
 })();
 /* 占位提示（带空值保护，缺任一元素也不影响其余交互） */
-const resumeMsg='简历可通过邮箱 x2288@foxmail.com 或微信二维码索取，我会第一时间发送。';
 const bind=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener('click',fn);};
 const stop=e=>e.preventDefault();
 const toContact=()=>{const el=document.getElementById('contact');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
-bind('topResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
-bind('heroResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
 
 /* 作品分类筛选：胶囊分类条，点分类只看该类，下方说明行显示「分类 · 描述：共 N 件作品」 */
 (function(){

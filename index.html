@@ -154,6 +154,11 @@ a{color:inherit;text-decoration:none}
 .mplay:hover{background:rgba(232,161,58,.16)}
 .mplay:active{transform:scale(.96)}
 .mplay.playing{color:#100e0b;background:var(--accent);border-color:var(--accent)}
+.thumb .lyr{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;background:rgba(16,14,11,.9);color:var(--paper);font-family:var(--sans);font-size:13px;line-height:2.05;text-align:center;padding:20px 22px;opacity:0;visibility:hidden;transform:scale(1.04);transition:opacity .4s,transform .4s,visibility .4s;overflow:hidden;white-space:pre-line}
+.thumb .lyr .lt{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px;flex-shrink:0}
+.thumb .lyr .lb{overflow:hidden;max-height:100%}
+.card.show-lyr .lyr{opacity:1;visibility:visible;transform:scale(1)}
+.card.show-lyr .ctag,.card.show-lyr .fplay{opacity:0}
 .card .csum{color:var(--muted);font-size:13.5px;font-weight:300;line-height:1.75;max-height:0;opacity:0;overflow:hidden;transition:max-height .35s ease,opacity .3s,margin .35s;text-align:center}
 .card:hover .csum{max-height:80px;opacity:1;margin-bottom:6px}
 .card .ctags{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px;justify-content:center}
@@ -591,6 +596,61 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         <div class="thumb" style="background:url('assets/ai-music/cover-card.jpg') center/cover no-repeat,#1a1714">
           <span class="ctag">AI 音乐 · 外链</span>
           <span class="fplay">↗ 打开播放器</span>
+          <div class="lyr"><div class="lt">《时光来信》</div><div class="lb">【主歌】
+推开窗看见旧时光
+风轻轻掠过老围墙
+那些没说完的向往
+静静躺在回忆行囊
+【预副歌】
+原来时光不会匆忙
+只是我们走得慌张
+某段被遗忘的晴朗
+还在心底慢慢发亮
+【副歌】
+如果拥有一台时光机
+回到那年黄昏的河堤
+不用追赶前路的谜题
+只留住此刻温柔呼吸
+如果拥有一台时光机
+接住所有散落的叹息
+岁月慢慢写下的日记
+藏着不曾褪色的情绪
+【主歌】
+路灯拉长孤单身影
+耳机循环熟悉旋律
+那些遗憾不必叹息
+都是成长留下印记
+【预副歌】
+原来时光不会匆忙
+只是我们走得慌张
+某段被遗忘的晴朗
+还在心底慢慢发亮
+【副歌】
+如果拥有一台时光机
+回到那年黄昏的河堤
+不用追赶前路的谜题
+只留住此刻温柔呼吸
+如果拥有一台时光机
+接住所有散落的叹息
+岁月慢慢写下的日记
+藏着不曾褪色的情绪
+【桥段】
+不必追赶远方的黎明
+当下风景也值得珍惜
+所有相遇所有别离
+都是时光赠予的信
+【副歌】
+如果拥有一台时光机
+回到那年黄昏的河堤
+不用追赶前路的谜题
+只留住此刻温柔呼吸
+如果拥有一台时光机
+接住所有散落的叹息
+岁月慢慢写下的日记
+藏着不曾褪色的情绪
+【尾声】
+风轻轻 慢慢停
+时光安静</div></div>
         </div>
         <div class="cmeta">
           <h3 class="ctitle">《时光来信》</h3>
@@ -602,6 +662,69 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         <div class="thumb" style="background:url('assets/ai-music/cover-jiubianqian.jpg') center/cover no-repeat,#1a1714">
           <span class="ctag">AI 音乐 · 外链</span>
           <span class="fplay">↗ 打开播放器</span>
+          <div class="lyr"><div class="lt">《旧便签》</div><div class="lb">粉笔灰落在靠窗的桌面
+第一次见你 是喧闹的课间
+我们总为一点小事争辩
+转过身却又笑着和好如初
+书页翻过 一年又一年
+你的名字藏在我的字里面
+那些想说的话到了嘴边
+最后只剩一句
+明天见
+课桌中线隔着两个世界
+却隔不开望向你的视线
+那些没说出口的想念
+被晚风带过屋檐
+你还记不记得 那张旧便签
+写着我喜欢你 却没让你看见
+三年的风 三年的雨
+吹不散我们走过的每一天
+你还记不记得 那个少年
+把所有心事藏在课桌里面
+如果时光能够再重来一遍
+我一定会说 我喜欢你
+电影院外落着细雨点点
+旧校园还留着你的侧脸
+错题本写满我们的心愿
+一句别怕 就陪我走过那几年
+分班以后隔着遥远的座位
+清晨扫地也成了短暂相随
+毕业那天你递来的手表
+让整个夏天停在那一回
+课桌中线隔着两个世界
+你的名字却从没走远
+那些没说出口的想念
+一直藏在青春里面
+你还记不记得 那张旧便签
+写着我喜欢你 却没让你看见
+三年的风 三年的雨
+吹不散我们走过的每一天
+你还记不记得 那个少年
+把所有心事藏在课桌里面
+如果时光能够再重来一遍
+我一定会说 我喜欢你
+我曾害怕毕业就是终点
+害怕我们走散在人海里面
+后来才发现 有些人啊
+走了很远 还是会再遇见
+江边夜色慢慢亮起来
+我又拿出那张旧便签
+你笑着问我 这么多年以后
+这一次 还要不要说再见
+你还记不记得 那张旧便签
+写着我喜欢你 却没让你看见
+三年的风 三年的雨
+终于把我们带回彼此身边
+你还记不记得 那个少年
+一直把你放在心里面
+如果时光真的能够再重来一遍
+我还是会说 我喜欢你
+我还是会说
+我喜欢你
+那张旧便签
+留了好多年
+这一次
+我们不说再见</div></div>
         </div>
         <div class="cmeta">
           <h3 class="ctitle">《旧便签》</h3>
@@ -851,24 +974,26 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
 (function(){
   var buttons=document.querySelectorAll('.mplay');
   if(!buttons.length)return;
-  var current=null,curBtn=null;
-  function reset(btn){btn.classList.remove('playing');btn.textContent='▶ 播放歌曲';}
+  var current=null,curBtn=null,curCard=null;
+  function reset(btn){btn.classList.remove('playing');btn.textContent='▶ 播放歌曲';if(curCard)curCard.classList.remove('show-lyr');}
   buttons.forEach(function(btn){
     var audio=null;
+    var card=btn.closest('.card');
     btn.addEventListener('click',function(e){
       e.preventDefault();
       e.stopPropagation();
-      if(current&&current!==audio){current.pause();reset(curBtn);current=null;curBtn=null;}
-      if(!audio){audio=new Audio(btn.getAttribute('data-src'));audio.addEventListener('ended',function(){reset(btn);if(current===audio)current=null;});}
+      if(current&&current!==audio){current.pause();reset(curBtn);current=null;curBtn=null;curCard=null;}
+      if(!audio){audio=new Audio(btn.getAttribute('data-src'));audio.addEventListener('ended',function(){reset(btn);if(current===audio)current=null;curCard=null;});}
       if(audio.paused){
         audio.play();
         btn.classList.add('playing');
         btn.textContent='⏸ 暂停';
-        current=audio;curBtn=btn;
+        card.classList.add('show-lyr');
+        current=audio;curBtn=btn;curCard=card;
       }else{
         audio.pause();
         reset(btn);
-        if(current===audio)current=null;
+        if(current===audio)current=null;curCard=null;
       }
     });
   });

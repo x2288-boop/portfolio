@@ -20,8 +20,9 @@
   .top h1{font-size:20px;font-weight:700;letter-spacing:2px}
   .top p{font-size:12px;color:var(--dim);margin-top:5px;letter-spacing:1px}
 
-  /* 歌词区域：原生可滚动（滚轮/触屏/拖滚动条均可） */
-  .lyrics-box{flex:1;position:relative;overflow-y:auto;overflow-x:hidden;min-height:0;
+  /* 歌词区域：外层 wrap 不滚动（钉住遮罩/按钮），内层 box 才是滚动容器 */
+  .lyrics-wrap{flex:1;position:relative;min-height:0}
+  .lyrics-box{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
     scrollbar-width:none;-ms-overflow-style:none}
   .lyrics-box::-webkit-scrollbar{display:none}
   .lyrics{padding:0 20px;text-align:center}
@@ -82,9 +83,11 @@
   <p>AI 生成 · 滚动歌词</p>
 </div>
 
-<div class="lyrics-box" id="box">
+<div class="lyrics-wrap">
+  <div class="lyrics-box" id="box">
+    <div class="lyrics" id="lyrics"></div>
+  </div>
   <div class="fade top"></div>
-  <div class="lyrics" id="lyrics"></div>
   <div class="fade bot"></div>
   <button class="back2cur" id="bBack2cur">回到当前句</button>
 </div>

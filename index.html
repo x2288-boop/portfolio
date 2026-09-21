@@ -388,8 +388,9 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
     <button class="fpill" data-filter="digital">AI数字人</button>
     <button class="fpill" data-filter="ecom" data-page-node-id="rJcQTG8HkV3qC7XcH5A8XZ">电商套图</button>
     <button class="fpill" data-filter="film" data-page-node-id="B8mCHW7aLcyw9vHNmGLSfe">短片短剧</button>
-    <button class="fpill" data-filter="ip" data-page-node-id="Wt5XKcLuuTaBfidb1ZCQzA">旅游IP</button>
+    <button class="fpill" data-filter="ip" data-page-node-id="Wt5XKcLuuTaBfidb1ZCQzA">原创IP</button>
     <button class="fpill" data-filter="workflow">AI 工作流</button>
+    <button class="fpill" data-filter="music">AI音乐</button>
   </div>
   <div class="fnote" id="fnote"></div>
 </div>
@@ -582,6 +583,16 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
+      <a class="card reveal" id="case19" data-cat="music" href="https://x2288-boop.github.io/portfolio/lyric-player/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block">
+        <div class="thumb" style="background:url('assets/ai-music/cover-card.jpg') center/cover no-repeat,#1a1714">
+          <span class="ctag">AI 音乐 · 外链</span>
+          <span class="fplay">↗ 打开播放器</span>
+        </div>
+        <div class="cmeta">
+          <h3 class="ctitle">歌词可视化 AI 音乐播放器</h3>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>
@@ -693,8 +704,9 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
     digital:{label:'AI数字人',desc:'AI 数字人出镜成片，真人感讲解与产品种草'},
     ecom:{label:'电商套图',desc:'主图、Banner、详情页与海报，覆盖多品类卖货素材'},
     film:{label:'短片短剧',desc:'叙事动画与短剧成片，从分镜到后期全流程'},
-    ip:{label:'旅游IP',desc:'角色三视图与世界观场景，延展表情动作与应用'},
-    workflow:{label:'AI 工作流',desc:'ComfyUI 节点流程与多角度输出方案'}
+    ip:{label:'原创IP',desc:'角色三视图与世界观场景，延展表情动作与应用'},
+    workflow:{label:'AI 工作流',desc:'ComfyUI 节点流程与多角度输出方案'},
+    music:{label:'AI音乐',desc:'AI 生成的音乐与歌词可视化播放器，在线试听'}
   };
   function apply(f){
     pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));

@@ -387,23 +387,24 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 <!-- 编辑式指标栏 -->
 <section class="stats" id="stats" data-page-node-id="DwezY4nm7QisgMyiTUN18t">
   <div class="wrap stats-row" data-page-node-id="stats-row">
-    <div class="st" data-page-node-id="Gq8ZsZoiYsreNrqO1ZHYzS"><span class="sn" data-page-node-id="NSXZH6NjxIU7C9NsGLmsSW">19</span><span class="sl" data-page-node-id="dqUdFkSsDRVgwe16K456vW">精选案例</span></div>
-    <div class="st" data-page-node-id="1kmWECJvUF7DogdRuNVm7V"><span class="sn" data-page-node-id="NR60vYI0mOYI3BF0HfVznV">10</span><span class="sl" data-page-node-id="m6EJVKolW68EjrDqjm89hA">影片</span></div>
+    <div class="st" data-page-node-id="Gq8ZsZoiYsreNrqO1ZHYzS"><span class="sn" data-page-node-id="NSXZH6NjxIU7C9NsGLmsSW">20</span><span class="sl" data-page-node-id="dqUdFkSsDRVgwe16K456vW">精选案例</span></div>
+    <div class="st" data-page-node-id="1kmWECJvUF7DogdRuNVm7V"><span class="sn" data-page-node-id="NR60vYI0mOYI3BF0HfVznV">11</span><span class="sl" data-page-node-id="m6EJVKolW68EjrDqjm89hA">影片</span></div>
     <div class="st" data-page-node-id="CMQ0CcN9NAanmRDJ4AHI4Z"><span class="sn" data-page-node-id="OFbZvF0zD7XkWhOGNmEpnW">60<span style="font-size:.55em">+</span></span><span class="sl" data-page-node-id="o4du5vMNVyK9DRXByz9o5r">镜头</span></div>
-    <div class="st" data-page-node-id="kTEfMTcpxVF98NpssjjR68"><span class="sn" data-page-node-id="YysWlu9XGlsVEwzOy6NBQ1">07</span><span class="sl" data-page-node-id="a0fsoDFqHORMiC7FO6Im6c">内容类型</span></div>
+    <div class="st" data-page-node-id="kTEfMTcpxVF98NpssjjR68"><span class="sn" data-page-node-id="YysWlu9XGlsVEwzOy6NBQ1">08</span><span class="sl" data-page-node-id="a0fsoDFqHORMiC7FO6Im6c">内容类型</span></div>
   </div>
 </section>
 
 <!-- 作品分类筛选：胶囊分类条（无「全部」，默认进入第一个分类） -->
 <div class="filterwrap" id="filterbar" data-page-node-id="0aeVMWEaUdIMnrlTPPUlzr">
   <div class="filterpill-box" data-page-node-id="6Tj6gnbmucSN8NpOkhnjyE">
-    <button class="fpill active" data-filter="commercial" data-page-node-id="9W4aiXWGixz0hTU66KhAC9">电商TVC</button>
+    <button class="fpill active" data-filter="ecom" data-page-node-id="rJcQTG8HkV3qC7XcH5A8XZ">电商套图</button>
+    <button class="fpill" data-filter="commercial" data-page-node-id="9W4aiXWGixz0hTU66KhAC9">电商TVC</button>
+    <button class="fpill" data-filter="feed">AI信息流</button>
     <button class="fpill" data-filter="digital">AI数字人</button>
-    <button class="fpill" data-filter="ecom" data-page-node-id="rJcQTG8HkV3qC7XcH5A8XZ">电商套图</button>
     <button class="fpill" data-filter="film" data-page-node-id="B8mCHW7aLcyw9vHNmGLSfe">短片短剧</button>
     <button class="fpill" data-filter="ip" data-page-node-id="Wt5XKcLuuTaBfidb1ZCQzA">原创IP</button>
-    <button class="fpill" data-filter="workflow">AI 工作流</button>
     <button class="fpill" data-filter="music">AI音乐</button>
+    <button class="fpill" data-filter="workflow">AI 工作流</button>
   </div>
   <div class="fnote" id="fnote"></div>
 </div>
@@ -731,6 +732,16 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
+      <a class="card reveal" id="case21" data-cat="feed" href="case-feed-ecom.html" style="text-decoration:none;color:inherit;display:block">
+        <div class="thumb" style="background:url('assets/feed-ecom/cover-card.jpg') center/cover no-repeat,#1a1714">
+          <span class="ctag">AI 信息流</span>
+          <span class="fplay">▶ 观看成片</span>
+        </div>
+        <div class="cmeta">
+          <h3 class="ctitle">桌面制冷小风扇 · 信息流视频</h3>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>
@@ -839,6 +850,7 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
   const fnote=document.getElementById('fnote');
   const CATMETA={
     commercial:{label:'电商TVC',desc:'品牌 TVC 广告片与种草成片，覆盖产品营销与海外投放'},
+    feed:{label:'AI信息流',desc:'电商信息流短视频，AIGC 批量生成的种草与投放素材'},
     digital:{label:'AI数字人',desc:'AI 数字人出镜成片，真人感讲解与产品种草'},
     ecom:{label:'电商套图',desc:'主图、Banner、详情页与海报，覆盖多品类卖货素材'},
     film:{label:'短片短剧',desc:'叙事动画与短剧成片，从分镜到后期全流程'},
@@ -854,7 +866,7 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
       c.style.display=show?'':'none';
       if(show){c.classList.add('in');visible++;}          /* 筛选后立即可见，避免被滚动揭示卡住 */
     });
-    if(grid){grid.classList.toggle('few',visible<=2 && f!=='music');grid.classList.toggle('grid2',f==='commercial'||f==='digital'||f==='music');}
+    if(grid){grid.classList.toggle('few',visible<=2 && f!=='music' && f!=='feed');grid.classList.toggle('grid2',f==='commercial'||f==='digital'||f==='music'||f==='feed');}
     const meta=CATMETA[f]||{label:f,desc:''};
     if(fnote)fnote.innerHTML='<b>'+meta.label+'</b> · '+meta.desc+'：共 '+visible+' 件作品';
   }
@@ -905,7 +917,7 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
         let visible=0;
         pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
         cards.forEach(c=>{const show=(c.dataset.cat===f);c.style.display=show?'':'none';if(show){c.classList.add('in');visible++;}});
-        if(grid){grid.classList.toggle('few',visible<=2 && f!=='music');grid.classList.toggle('grid2',f==='commercial'||f==='digital'||f==='music');}
+        if(grid){grid.classList.toggle('few',visible<=2 && f!=='music' && f!=='feed');grid.classList.toggle('grid2',f==='commercial'||f==='digital'||f==='music'||f==='feed');}
       }
     }catch(err){}
     /* 瞬时定位（避开平滑滚动动画），并在图片加载导致高度变化后再次校正 */

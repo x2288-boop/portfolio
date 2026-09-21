@@ -271,20 +271,6 @@ a{color:inherit;text-decoration:none}
 .about h2{font-family:var(--serif);font-weight:700;font-size:clamp(24px,3.4vw,34px);line-height:1.25;margin:0;max-width:24ch}
 .about-lead{color:var(--muted);font-weight:300;line-height:1.85;margin-top:22px;max-width:58ch}
 
-/* ===== 数据 tally：用数字替代成段文字（编辑式指标栏） ===== */
-.stats{display:block;margin:48px 0 8px;
-  padding:30px 36px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
-  background:linear-gradient(180deg,rgba(232,161,58,.05),transparent 60%)}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.st{position:relative;padding:0 18px;text-align:center}
-.st+.st::before{content:"";position:absolute;left:0;top:18%;bottom:18%;width:1px;background:var(--rule)}
-.st .sn{font-family:var(--serif);font-size:clamp(36px,4.8vw,56px);font-weight:700;color:var(--accent);
-  letter-spacing:-.02em;line-height:1;display:block}
-.st .sl{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--muted);margin-top:12px;display:block}
-@media(max-width:760px){.stats-row{grid-template-columns:1fr 1fr;gap:28px 16px}}
-@media(max-width:380px){.stats-row{grid-template-columns:1fr}}
-
 /* ===== 背景图（案例图模糊，低对比不挡字） + 颗粒质感 ===== */
 .hero{overflow:hidden}
 .hero-bg{position:absolute;inset:-40px;z-index:0;background:url('assets/werewolf-cover.jpg') center 32%/cover;
@@ -386,16 +372,6 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
       <a href="case-comfy-ic-light.html" data-page-node-id="NdO1I71HBju3bb4fPYt4yD"><img src="assets/comfy-ic-light/comfy-cover-card.jpg" alt="ComfyUI 融图打光工作流 data-page-node-id="KDXGieZ0GtTYcAJrPbKFm7"><span class="tag" data-page-node-id="VsNHd5EiBzcdP8IfcpEo8z">ComfyUI · 工作流</span></a>
       <a href="case-yunyou-xiaohe.html" data-page-node-id="jDtNaa4FyRch0eYcZEswGZ"><img src="assets/yunyou-xiaohe/yunyou-cover-card.jpg" alt="云游小河 IP 形象" data-page-node-id="EdnpWO3wnCQQ56137Q0B4r"><span class="tag" data-page-node-id="HCSxMIk6rsWRltBBH9edzU">旅游 IP 形象</span></a>
     </div>
-  </div>
-</section>
-
-<!-- 编辑式指标栏 -->
-<section class="stats" id="stats" data-page-node-id="DwezY4nm7QisgMyiTUN18t">
-  <div class="wrap stats-row" data-page-node-id="stats-row">
-    <div class="st" data-page-node-id="Gq8ZsZoiYsreNrqO1ZHYzS"><span class="sn" data-page-node-id="NSXZH6NjxIU7C9NsGLmsSW">22</span><span class="sl" data-page-node-id="dqUdFkSsDRVgwe16K456vW">精选案例</span></div>
-    <div class="st" data-page-node-id="1kmWECJvUF7DogdRuNVm7V"><span class="sn" data-page-node-id="NR60vYI0mOYI3BF0HfVznV">13</span><span class="sl" data-page-node-id="m6EJVKolW68EjrDqjm89hA">影片</span></div>
-    <div class="st" data-page-node-id="CMQ0CcN9NAanmRDJ4AHI4Z"><span class="sn" data-page-node-id="OFbZvF0zD7XkWhOGNmEpnW">60<span style="font-size:.55em">+</span></span><span class="sl" data-page-node-id="o4du5vMNVyK9DRXByz9o5r">镜头</span></div>
-    <div class="st" data-page-node-id="kTEfMTcpxVF98NpssjjR68"><span class="sn" data-page-node-id="YysWlu9XGlsVEwzOy6NBQ1">08</span><span class="sl" data-page-node-id="a0fsoDFqHORMiC7FO6Im6c">内容类型</span></div>
   </div>
 </section>
 

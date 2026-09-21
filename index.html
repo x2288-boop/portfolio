@@ -122,15 +122,20 @@ a{color:inherit;text-decoration:none}
   .byline>span:nth-child(2){display:none}
 }
 
-/* ===== 作品分类筛选（电商界面 / 短片界面 …） ===== */
-.filterbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;align-items:center;margin:0 0 40px;padding:0 0 22px;border-bottom:1px solid var(--rule)}
-.filterbar .flabel{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
-.fpill{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--muted);
-  background:transparent;border:1px solid var(--rule-strong);padding:8px 16px;border-radius:100px;cursor:pointer;
-  transition:.22s}
-.fpill:hover{color:var(--paper);border-color:var(--accent)}
-.fpill.active{color:var(--bg);background:var(--accent);border-color:var(--accent);font-weight:500}
-@media(max-width:560px){.filterbar{gap:10px;margin-bottom:32px;padding-bottom:20px}.filterbar .flabel{width:100%;text-align:center;margin:0 0 8px;font-size:12px;letter-spacing:.22em;color:var(--muted)}.fpill{padding:11px 20px;font-size:13.5px;letter-spacing:.05em;color:var(--paper);background:rgba(232,161,58,.10);border:1.5px solid rgba(232,161,58,.55);border-radius:100px}.fpill:active{transform:scale(.96)}.fpill.active{color:var(--bg);background:var(--accent);border-color:var(--accent);font-weight:600;box-shadow:0 2px 16px rgba(232,161,58,.4)}}
+/* ===== 作品分类筛选（胶囊分类条 + 计数说明行） ===== */
+.filterwrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin:0 0 34px}
+.filterpill-box{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;
+  padding:8px 12px;border-radius:100px;background:rgba(255,255,255,.035);border:1px solid var(--rule)}
+.fpill{font-family:var(--mono);font-size:13px;letter-spacing:.05em;color:var(--muted);
+  background:transparent;border:1px solid transparent;padding:9px 18px;border-radius:100px;cursor:pointer;
+  transition:.22s;white-space:nowrap}
+.fpill:hover{color:var(--paper)}
+.fpill:active{transform:scale(.96)}
+.fpill.active{color:var(--bg);background:linear-gradient(135deg,#f2c069,#e8a13a);font-weight:600;
+  box-shadow:0 4px 18px rgba(232,161,58,.35)}
+.fnote{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--faint);text-align:center;padding:0 16px}
+.fnote b{color:var(--paper);font-weight:500}
+@media(max-width:560px){.filterwrap{gap:12px;margin-bottom:28px}.filterpill-box{gap:2px;padding:7px 9px;max-width:100%}.fpill{padding:9px 13px;font-size:12.5px}.fnote{font-size:11px}}
 
 /* ===== WORKS / 作品卡片网格（参考图式，但保留本站基因） ===== */
 .gallery{padding:14px 0 78px}
@@ -474,14 +479,17 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
   </div>
 </section>
 
-<!-- 作品分类筛选：ALL / COMMERCIAL / E-COMMERCE / FILM / SHORT -->
-<div class="filterbar" id="filterbar" data-page-node-id="0aeVMWEaUdIMnrlTPPUlzr">
-  <span class="flabel" data-page-node-id="6Tj6gnbmucSN8NpOkhnjyE">筛选</span>
-  <button class="fpill active" data-filter="all" data-page-node-id="VqYd53T1TQmTuGykz16vEL">全部</button>
-  <button class="fpill" data-filter="commercial" data-page-node-id="9W4aiXWGixz0hTU66KhAC9">商业广告</button>
-  <button class="fpill" data-filter="ecom" data-page-node-id="rJcQTG8HkV3qC7XcH5A8XZ">电商视觉</button>
-  <button class="fpill" data-filter="film" data-page-node-id="B8mCHW7aLcyw9vHNmGLSfe">短片短剧</button>
-  <button class="fpill" data-filter="ip" data-page-node-id="Wt5XKcLuuTaBfidb1ZCQzA">旅游IP形象</button>
+<!-- 作品分类筛选：胶囊分类条（无「全部」，默认进入第一个分类） -->
+<div class="filterwrap" id="filterbar" data-page-node-id="0aeVMWEaUdIMnrlTPPUlzr">
+  <div class="filterpill-box" data-page-node-id="6Tj6gnbmucSN8NpOkhnjyE">
+    <button class="fpill active" data-filter="commercial" data-page-node-id="9W4aiXWGixz0hTU66KhAC9">商业广告</button>
+    <button class="fpill" data-filter="digital">AI数字人</button>
+    <button class="fpill" data-filter="ecom" data-page-node-id="rJcQTG8HkV3qC7XcH5A8XZ">电商视觉</button>
+    <button class="fpill" data-filter="film" data-page-node-id="B8mCHW7aLcyw9vHNmGLSfe">短片短剧</button>
+    <button class="fpill" data-filter="ip" data-page-node-id="Wt5XKcLuuTaBfidb1ZCQzA">旅游IP形象</button>
+    <button class="fpill" data-filter="workflow">AI 工作流</button>
+  </div>
+  <div class="fnote" id="fnote"></div>
 </div>
 
 <!-- WORK / ALL CASES -->
@@ -660,7 +668,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case16" data-cat="commercial" href="case-digital-human.html" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case16" data-cat="digital" href="case-digital-human.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" style="background:url('assets/digital-human/cover-card.jpg') center/cover no-repeat,#1a1714">
           <span class="ctag">数字人 · 商业广告</span>
           <span class="fplay">▶ 播放短片 (0:15)</span>
@@ -672,13 +680,13 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case17" data-cat="commercial" href="case-shampoo-tvc.html" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case17" data-cat="digital" href="case-shampoo-tvc.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" style="background:url('assets/shampoo-tvc/cover-card.jpg') center/cover no-repeat,#1a1714">
-          <span class="ctag">海外 · 商业广告</span>
+          <span class="ctag">海外 · AI数字人</span>
           <span class="fplay">▶ 播放广告 (0:30)</span>
         </div>
         <div class="cmeta">
-          <h3 class="ctitle">洗发水 · 海外市场广告</h3>
+          <h3 class="ctitle">洗发水 · 海外AI数字人</h3>
           <p class="csum">30 秒海外广告 · 英语口播 + 真人感演绎，把去屑卖点讲成「烦恼 → 方案 → 光泽」的生活叙事。</p>
           <div class="ctags"><span>创意策划</span><span>英语脚本</span><span>AI 生成</span><span>后期包装</span></div>
         </div>
@@ -840,25 +848,37 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
 bind('topResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
 bind('heroResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
 
-/* 作品分类筛选：点「电商视觉」只看电商，「短片·短剧」只看短片 … */
+/* 作品分类筛选：胶囊分类条，点分类只看该类，下方说明行显示「分类 · 描述：共 N 件作品」 */
 (function(){
   const bar=document.getElementById('filterbar');
   if(!bar)return;
   const pills=bar.querySelectorAll('.fpill');
   const grid=document.querySelector('.works-grid');
   const cards=document.querySelectorAll('.works-grid .card');
+  const fnote=document.getElementById('fnote');
+  const CATMETA={
+    commercial:{label:'商业广告',desc:'TVC 广告片与品牌种草成片，覆盖产品营销与海外投放'},
+    digital:{label:'AI数字人',desc:'AI 数字人出镜成片，真人感讲解与产品种草'},
+    ecom:{label:'电商视觉',desc:'主图、Banner、详情页与海报，覆盖多品类卖货素材'},
+    film:{label:'短片短剧',desc:'叙事动画与短剧成片，从分镜到后期全流程'},
+    ip:{label:'旅游IP形象',desc:'角色三视图与世界观场景，延展表情动作与应用'},
+    workflow:{label:'AI 工作流',desc:'ComfyUI 节点流程与多角度输出方案'}
+  };
   function apply(f){
     pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
     let visible=0;
     cards.forEach(c=>{
-      const show=(f==='all'||c.dataset.cat===f);
+      const show=(c.dataset.cat===f);
       c.style.display=show?'':'none';
       if(show){c.classList.add('in');visible++;}          /* 筛选后立即可见，避免被滚动揭示卡住 */
     });
-    if(grid){grid.classList.toggle('few',visible<=2);grid.classList.toggle('grid2',f==='commercial');}
+    if(grid){grid.classList.toggle('few',visible<=2);grid.classList.toggle('grid2',f==='commercial'||f==='digital');}
+    const meta=CATMETA[f]||{label:f,desc:''};
+    if(fnote)fnote.innerHTML='<b>'+meta.label+'</b> · '+meta.desc+'：共 '+visible+' 件作品';
   }
   pills.forEach(p=>p.addEventListener('click',()=>apply(p.dataset.filter)));
-  /* 进入网站默认聚焦第一个分类（已去除「全部」，故不默认全显） */
+  window.pfApply=apply;  /* 供返回恢复逻辑复用 */
+  /* 进入网站默认聚焦第一个分类（无「全部」，不默认全显） */
   const def=bar.querySelector('.fpill.active')||pills[0];
   apply(def.dataset.filter);
 })();
@@ -875,7 +895,7 @@ bind('heroResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
       try{
         sessionStorage.setItem(KEY,String(window.scrollY));
         const act=document.querySelector('#filterbar .fpill.active');
-        sessionStorage.setItem(FKEY,act?act.dataset.filter:'all');
+        sessionStorage.setItem(FKEY,act?act.dataset.filter:'commercial');
         sessionStorage.setItem(RKEY,'1');
       }catch(err){}
     }
@@ -891,17 +911,20 @@ bind('heroResumeBtn',e=>{stop(e);toContact();alert(resumeMsg);});
           || (document.referrer && /\/case-/.test(document.referrer));
     }catch(err){}
     if(!from) return;
-    let y=0,f='all';
-    try{ y=parseInt(sessionStorage.getItem(KEY)||'0',10)||0; f=sessionStorage.getItem(FKEY)||'all'; }catch(err){}
+    let y=0,f='commercial';
+    try{ y=parseInt(sessionStorage.getItem(KEY)||'0',10)||0; f=sessionStorage.getItem(FKEY)||'commercial'; }catch(err){}
     /* 先还原筛选，保证布局与记录的滚动位置一致 */
     try{
-      const pills=document.querySelectorAll('#filterbar .fpill');
-      const grid=document.querySelector('.works-grid');
-      const cards=document.querySelectorAll('.works-grid .card');
-      let visible=0;
-      pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
-      cards.forEach(c=>{const show=(f==='all'||c.dataset.cat===f);c.style.display=show?'':'none';if(show){c.classList.add('in');visible++;}});
-      if(grid){grid.classList.toggle('few',visible<=2);grid.classList.toggle('grid2',f==='commercial');}
+      if(window.pfApply){ window.pfApply(f); }
+      else{
+        const pills=document.querySelectorAll('#filterbar .fpill');
+        const grid=document.querySelector('.works-grid');
+        const cards=document.querySelectorAll('.works-grid .card');
+        let visible=0;
+        pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
+        cards.forEach(c=>{const show=(c.dataset.cat===f);c.style.display=show?'':'none';if(show){c.classList.add('in');visible++;}});
+        if(grid){grid.classList.toggle('few',visible<=2);grid.classList.toggle('grid2',f==='commercial'||f==='digital');}
+      }
     }catch(err){}
     /* 瞬时定位（避开平滑滚动动画），并在图片加载导致高度变化后再次校正 */
     const go=function(){ try{document.documentElement.style.scrollBehavior='auto';}catch(e){}

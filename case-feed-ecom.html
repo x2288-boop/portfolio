@@ -35,7 +35,11 @@
       url('assets/feed-ecom/cover-card.jpg') center/cover no-repeat;
     filter:blur(30px) brightness(.34) saturate(1.06);transform:scale(1.12);opacity:.58;pointer-events:none}
   /* 竖屏 9:16 视频：媒体框限宽居中 */
-  @media(min-width:721px){.cmedia .frame{max-width:420px;margin:0 auto}}
+  @media(min-width:721px){.cmedia .frame{max-width:500px;margin:0 auto}}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal,.reveal.in{opacity:1!important;transform:none!important;transition:none!important}}
 </style>
 </head>
 <body data-page-node-id="KP2dAwUQv59gPLI5BmsJrh">
@@ -63,6 +67,15 @@
     </div>
   </div>
 
+
+  <section class="csec reveal">
+    <div class="csec-head"><span class="csec-no">01</span><h2 class="csec-title">内容卖点</h2><span class="csec-en">SELLING POINTS</span></div>
+    <div class="cnote">
+      <h3>投放定位</h3>
+      <p>面向久坐办公与宿舍场景，主打「桌面级即时降温」。20 秒成片以第一视角切入闷热出汗的痛点，3 秒钩子后快速展示三档风力、静音运转与 USB 即插即用，结尾以「夏天办公桌的清凉答案」收口并引导点击。画面采用冷调光与产品特写，强化「小体积、大风力」的种草记忆点。</p>
+    </div>
+  </section>
+
   <div class="cnext" data-page-node-id="Y2o6j8n5EWs18vu7d5rcoR">
     <div data-page-node-id="aF4XOdFXzDYRdWQgApiq1W">
       <div class="nl" data-page-node-id="VIiJa1cIcxZU7gOODkuhCK">下一个项目 / NEXT</div>
@@ -75,5 +88,14 @@
 
 <div class="imprint" data-page-node-id="DtXUZEIXBHsaOlEC8Wd3OM">许多 · AIGC 视觉作品集 · ISSUE 01 · 2026</div>
 
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'-40px',threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+  setTimeout(function(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in')})},4000);
+})();
+</script>
+<script src="assets/video-controls.js"></script>
 </body>
 </html>

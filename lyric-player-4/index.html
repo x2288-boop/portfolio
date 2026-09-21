@@ -48,10 +48,6 @@
   .setbtn{display:none;font-size:11px;color:var(--accent);border:1px solid var(--accent);
     border-radius:6px;padding:1px 7px;margin-left:8px;vertical-align:2px;opacity:.8}
 
-  .fade{position:absolute;left:0;right:0;height:38px;pointer-events:none;z-index:2}
-  .fade.top{top:0;background:linear-gradient(to bottom,var(--bg2),transparent)}
-  .fade.bot{bottom:0;background:linear-gradient(to top,var(--bg2),transparent)}
-
   .ctrl{flex-shrink:0;padding:10px 22px 20px;background:linear-gradient(to top,rgba(0,0,0,.45),transparent)}
   .prog{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
   .track{flex:1;height:4px;background:rgba(255,255,255,.12);border-radius:99px;cursor:pointer;position:relative}
@@ -87,8 +83,6 @@
   <div class="lyrics-box" id="box">
     <div class="lyrics" id="lyrics"></div>
   </div>
-  <div class="fade top"></div>
-  <div class="fade bot"></div>
   <button class="back2cur" id="bBack2cur">回到当前句</button>
 </div>
 

@@ -20,8 +20,9 @@
   .top h1{font-size:20px;font-weight:700;letter-spacing:2px}
   .top p{font-size:12px;color:var(--dim);margin-top:5px;letter-spacing:1px}
 
-  /* 歌词区域：原生可滚动（滚轮/触屏/拖滚动条均可） */
-  .lyrics-box{flex:1;position:relative;overflow-y:auto;overflow-x:hidden;min-height:0;
+  /* 歌词区域：外层不滚动（承载浮动按钮），内层原生可滚动 */
+  .lyrics-wrap{flex:1;position:relative;min-height:0}
+  .lyrics-box{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
     scrollbar-width:none;-ms-overflow-style:none}
   .lyrics-box::-webkit-scrollbar{display:none}
   .lyrics{padding:0 20px;text-align:center}
@@ -33,9 +34,6 @@
     text-shadow:0 0 22px rgba(61,220,132,.35)}
   .line.past{color:var(--dimmer);opacity:.5}
   .line.near{color:var(--dim)}
-  .tag{font-size:12px;letter-spacing:3px;opacity:.55}
-  .tag-line{cursor:default}
-  .tag-line:hover{background:none}
 
   /* 非跟随状态下显示「回到当前句」浮动按钮 */
   .back2cur{position:absolute;right:14px;bottom:18px;z-index:3;display:none;
@@ -49,10 +47,6 @@
   .cal .line .setbtn{display:inline-block}
   .setbtn{display:none;font-size:11px;color:var(--accent);border:1px solid var(--accent);
     border-radius:6px;padding:1px 7px;margin-left:8px;vertical-align:2px;opacity:.8}
-
-  .fade{position:absolute;left:0;right:0;height:80px;pointer-events:none;z-index:2}
-  .fade.top{top:0;background:linear-gradient(to bottom,var(--bg2),transparent)}
-  .fade.bot{bottom:0;background:linear-gradient(to top,var(--bg2),transparent)}
 
   .ctrl{flex-shrink:0;padding:10px 22px 20px;background:linear-gradient(to top,rgba(0,0,0,.45),transparent)}
   .prog{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
@@ -85,10 +79,10 @@
   <p>AI 生成 · 滚动歌词</p>
 </div>
 
-<div class="lyrics-box" id="box">
-  <div class="fade top"></div>
-  <div class="lyrics" id="lyrics"></div>
-  <div class="fade bot"></div>
+<div class="lyrics-wrap">
+  <div class="lyrics-box" id="box">
+    <div class="lyrics" id="lyrics"></div>
+  </div>
   <button class="back2cur" id="bBack2cur">回到当前句</button>
 </div>
 
@@ -127,17 +121,14 @@ const TITLE = "时光来信";
 // 副歌三遍时间交叉验证一致；主歌2/预副歌2 为加快演唱（逐词密度已核验）。
 // 文字来源：以参考词为底，副歌末句按两轮识别一致结果定为「情绪」。
 const LINES = [
-  {t:"【主歌】", tag:true},
   {t:"推开窗看见旧时光", time:13780},
   {t:"风轻轻掠过老围墙", time:16620},
   {t:"那些没说完的向往", time:20940},
   {t:"静静躺在回忆行囊", time:23400},
-  {t:"【预副歌】", tag:true},
   {t:"原来时光不会匆忙", time:26880},
   {t:"只是我们走得慌张", time:30300},
   {t:"某段被遗忘的晴朗", time:33480},
   {t:"还在心底慢慢发亮", time:36840},
-  {t:"【副歌】", tag:true},
   {t:"如果拥有一台时光机", time:40220},
   {t:"回到那年黄昏的河堤", time:43560},
   {t:"不用追赶前路的谜题", time:47480},
@@ -146,17 +137,14 @@ const LINES = [
   {t:"接住所有散落的叹息", time:57120},
   {t:"岁月慢慢写下的日记", time:60680},
   {t:"藏着不曾褪色的情绪", time:64080},
-  {t:"【主歌】", tag:true},
   {t:"路灯拉长孤单身影", time:71980},
   {t:"耳机循环熟悉旋律", time:73940},
   {t:"那些遗憾不必叹息", time:75580},
   {t:"都是成长留下印记", time:77280},
-  {t:"【预副歌】", tag:true},
   {t:"原来时光不会匆忙", time:79000},
   {t:"只是我们走得慌张", time:80660},
   {t:"某段被遗忘的晴朗", time:82340},
   {t:"还在心底慢慢发亮", time:84060},
-  {t:"【副歌】", tag:true},
   {t:"如果拥有一台时光机", time:86140},
   {t:"回到那年黄昏的河堤", time:89480},
   {t:"不用追赶前路的谜题", time:93340},
@@ -165,12 +153,10 @@ const LINES = [
   {t:"接住所有散落的叹息", time:101120},
   {t:"岁月慢慢写下的日记", time:105100},
   {t:"藏着不曾褪色的情绪", time:108480},
-  {t:"【桥段】", tag:true},
   {t:"不必追赶远方的黎明", time:125500},
   {t:"当下风景也值得珍惜", time:129000},
   {t:"所有相遇所有别离", time:132560},
   {t:"都是时光赠予的信", time:135560},
-  {t:"【副歌】", tag:true},
   {t:"如果拥有一台时光机", time:140180},
   {t:"回到那年黄昏的河堤", time:143460},
   {t:"不用追赶前路的谜题", time:147480},
@@ -179,24 +165,23 @@ const LINES = [
   {t:"接住所有散落的叹息", time:157040},
   {t:"岁月慢慢写下的日记", time:160540},
   {t:"藏着不曾褪色的情绪", time:164340},
-  {t:"【尾声】", tag:true},
   {t:"风轻轻 慢慢停", time:169360},
   {t:"时光安静", time:173300}
 ];
 
 const $ = id => document.getElementById(id);
 const audio = $("audio"), lyricsEl = $("lyrics"), box = $("box"), toast = $("toast");
-let cal = false, offset = +(localStorage.getItem("lyr_offset_v2")||0);
-// v2：全新精确时间轴，不读取旧版校准数据
-let times = JSON.parse(localStorage.getItem("lyr_times_v2")||"null") || LINES.map(l=>l.time||0);
+let cal = false, offset = +(localStorage.getItem("lyr_offset_v3")||0);
+// v3：移除段落标记后索引重排，不读取旧版校准数据
+let times = JSON.parse(localStorage.getItem("lyr_times_v3")||"null") || LINES.map(l=>l.time||0);
 
 LINES.forEach((l,i)=>{
   const d = document.createElement("div");
-  d.className = "line" + (l.tag ? " tag-line" : "");
-  d.innerHTML = (l.tag ? `<span class="tag">${l.t}</span>` : l.t) + `<span class="setbtn" data-i="${i}">设为此处</span>`;
+  d.className = "line";
+  d.innerHTML = l.t + `<span class="setbtn" data-i="${i}">设为此处</span>`;
   d.addEventListener("click", ()=>{
-    if(cal && !l.tag){ times[i] = Math.round((audio.currentTime + offset)*1000); save(); toastMsg(`第${i}句 → ${fmt(times[i])}`); }
-    else if(!l.tag){ audio.currentTime = Math.max(0,(times[i]-offset)/1000); audio.play(); }
+    if(cal){ times[i] = Math.round((audio.currentTime + offset)*1000); save(); toastMsg(`第${i}句 → ${fmt(times[i])}`); }
+    else{ audio.currentTime = Math.max(0,(times[i]-offset)/1000); audio.play(); }
     follow();
   });
   lyricsEl.appendChild(d);
@@ -207,7 +192,7 @@ const lineEls = [...lyricsEl.children];
 function padHalf(){ lyricsEl.style.paddingTop = (box.clientHeight/2)+"px"; lyricsEl.style.paddingBottom = (box.clientHeight/2)+"px"; }
 padHalf(); window.addEventListener("resize", ()=>{ padHalf(); if(following) snapTo(lineEls[activeIdx]||lineEls[0], true); });
 
-function save(){ localStorage.setItem("lyr_times_v2", JSON.stringify(times)); localStorage.setItem("lyr_offset_v2", offset); }
+function save(){ localStorage.setItem("lyr_times_v3", JSON.stringify(times)); localStorage.setItem("lyr_offset_v3", offset); }
 function fmt(ms){ const s=Math.max(0,ms)/1000; return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`; }
 function toastMsg(m){ toast.textContent=m; toast.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>toast.classList.remove("show"),1400); }
 
@@ -247,7 +232,7 @@ bBack2cur.addEventListener("click", ()=>follow());
 let activeIdx = -1;
 function pickActive(t){
   let idx = -1;
-  for(let i=0;i<LINES.length;i++){ if(!LINES[i].tag && times[i] <= t) idx = i; }
+  for(let i=0;i<LINES.length;i++){ if(times[i] <= t) idx = i; }
   return idx;
 }
 function tick(){
@@ -256,10 +241,9 @@ function tick(){
   if(idx !== activeIdx){
     activeIdx = idx;
     lineEls.forEach((el,i)=>{
-      const isTag = !!LINES[i].tag;
-      el.classList.toggle("active", !isTag && i===idx);
-      el.classList.toggle("past", !isTag && idx>=0 && i<idx);
-      el.classList.toggle("near", !isTag && i>idx && i<=idx+2);
+      el.classList.toggle("active", i===idx);
+      el.classList.toggle("past", idx>=0 && i<idx);
+      el.classList.toggle("near", i>idx && i<=idx+2);
     });
     if(following) snapTo(lineEls[Math.max(0,idx)]);
   }
@@ -321,7 +305,6 @@ $("offset").oninput = e=>{ offset = +e.target.value; $("offsetVal").textContent 
 
 $("bExport").onclick = ()=>{
   const lrc = LINES.map((l,i)=>{
-    if(l.tag) return "";
     const ms = times[i] - offset;
     const m = Math.floor(ms/60000), s = Math.floor(ms%60000/1000), c = Math.floor(ms%1000/10);
     return `[${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(c).padStart(2,"0")}]${l.t}`;

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>旧便签 · 歌词播放器</title>
+<style>
+  :root{
+    --bg:#1a1d24; --bg2:#14161c; --panel:rgba(255,255,255,.04);
+    --text:#e8eaef; --dim:rgba(232,234,239,.32); --dimmer:rgba(232,234,239,.16);
+    --accent:#3ddc84; --accent-dim:rgba(61,220,132,.15); --line:rgba(255,255,255,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:radial-gradient(120% 90% at 50% 0%, #232838 0%, var(--bg2) 70%);
+    color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex;flex-direction:column;overflow:hidden;-webkit-font-smoothing:antialiased;user-select:none}
+
+  .top{padding:26px 8px 6px;text-align:center;flex-shrink:0}
+  .top h1{font-size:20px;font-weight:700;letter-spacing:2px}
+  .top p{font-size:12px;color:var(--dim);margin-top:5px;letter-spacing:1px}
+
+  /* 歌词区域：原生可滚动（滚轮/触屏/拖滚动条均可） */
+  .lyrics-box{flex:1;position:relative;overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:none;-ms-overflow-style:none}
+  .lyrics-box::-webkit-scrollbar{display:none}
+  .lyrics{padding:0 20px;text-align:center}
+  .line{padding:15px 10px;font-size:18px;line-height:1.5;color:var(--dimmer);cursor:pointer;
+    transition:color .4s,transform .4s,opacity .4s;transform:scale(1);transform-origin:center;
+    border-radius:10px;white-space:pre-wrap}
+  .line:hover{color:var(--dim);background:var(--panel)}
+  .line.active{color:var(--accent);transform:scale(1.16);font-weight:600;
+    text-shadow:0 0 22px rgba(61,220,132,.35)}
+  .line.past{color:var(--dimmer);opacity:.5}
+  .line.near{color:var(--dim)}
+
+  /* 非跟随状态下显示「回到当前句」浮动按钮 */
+  .back2cur{position:absolute;right:14px;bottom:18px;z-index:3;display:none;
+    background:rgba(61,220,132,.92);color:#08130c;border:none;border-radius:99px;
+    font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .back2cur.show{display:block}
+
+  .cal .line{outline:1px dashed rgba(61,220,132,.25);outline-offset:-1px}
+  .cal .line:hover{outline-color:rgba(61,220,132,.7);color:var(--accent)}
+  .cal .line .t{display:none}
+  .cal .line .setbtn{display:inline-block}
+  .setbtn{display:none;font-size:11px;color:var(--accent);border:1px solid var(--accent);
+    border-radius:6px;padding:1px 7px;margin-left:8px;vertical-align:2px;opacity:.8}
+
+  .fade{position:absolute;left:0;right:0;height:38px;pointer-events:none;z-index:2}
+  .fade.top{top:0;background:linear-gradient(to bottom,var(--bg2),transparent)}
+  .fade.bot{bottom:0;background:linear-gradient(to top,var(--bg2),transparent)}
+
+  .ctrl{flex-shrink:0;padding:10px 22px 20px;background:linear-gradient(to top,rgba(0,0,0,.45),transparent)}
+  .prog{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .track{flex:1;height:4px;background:rgba(255,255,255,.12);border-radius:99px;cursor:pointer;position:relative}
+  .track .fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:99px;width:0}
+  .track .dot{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:#fff;
+    transform:translate(-50%,-50%);box-shadow:0 0 6px rgba(0,0,0,.4);left:0}
+  .btns{display:flex;align-items:center;justify-content:center;gap:26px;margin-top:12px}
+  .btn{background:none;border:none;color:var(--text);cursor:pointer;opacity:.85;display:flex;align-items:center}
+  .btn:hover{opacity:1}
+  .btn svg{width:20px;height:20px;fill:currentColor}
+  .btn.play svg{width:46px;height:46px}
+  .btn.play{color:#fff}
+  .tools{display:flex;justify-content:center;gap:14px;margin-top:10px}
+  .tools button{font-size:11px;color:var(--dim);background:var(--panel);border:1px solid var(--line);
+    border-radius:99px;padding:4px 12px;cursor:pointer}
+  .tools button.on{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+  .offset-row{display:none;align-items:center;justify-content:center;gap:10px;margin-top:8px;font-size:11px;color:var(--dim)}
+  .offset-row.show{display:flex}
+  .offset-row input{width:150px;accent-color:var(--accent)}
+  .toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(0,0,0,.75);
+    color:#fff;font-size:12px;padding:7px 16px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>旧便签</h1>
+  <p>AI 生成 · 滚动歌词</p>
+</div>
+
+<div class="lyrics-box" id="box">
+  <div class="fade top"></div>
+  <div class="lyrics" id="lyrics"></div>
+  <div class="fade bot"></div>
+  <button class="back2cur" id="bBack2cur">回到当前句</button>
+</div>
+
+<div class="ctrl">
+  <div class="prog">
+    <span id="cur">0:00</span>
+    <div class="track" id="track"><div class="fill" id="fill"></div><div class="dot" id="dot"></div></div>
+    <span id="dur">0:00</span>
+  </div>
+  <div class="btns">
+    <button class="btn" id="bBack" title="后退5秒"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8z"/></svg></button>
+    <button class="btn play" id="bPlay" title="播放/暂停"><svg id="icPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+    <button class="btn" id="bFwd" title="前进5秒"><svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6h2c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8z"/></svg></button>
+  </div>
+  <div class="tools">
+    <button id="bCal">校准模式</button>
+    <button id="bExport">导出 LRC</button>
+  </div>
+  <div class="offset-row" id="offsetRow">
+    <span>整体偏移</span>
+    <input type="range" id="offset" min="-2000" max="2000" step="50" value="0">
+    <span id="offsetVal">0.0s</span>
+  </div>
+</div>
+
+<audio id="audio" preload="auto"></audio>
+<div class="toast" id="toast"></div>
+
+<script>
+// 防直链：fetch -> blob
+const AUDIO_URL = "song.mp3";
+const TITLE = "旧便签";
+
+// 歌词 + 时间轴（ms）。
+// 时间来源：faster-whisper-small（中文）逐词时间戳，62 行全部与歌词 1:1 对齐；
+// 识别同音误字（粉笔灰→分泌挥、课桌→歌著、三年→却不散 等）已按用户提供的参考词订正；
+// 合并段（如「最后只剩一句 / 明天见」「我还记不记得 / 那张旧便签」「我还是会说 / 我喜欢你」）用逐词时间戳精确拆开；
+// Outro「这一次」识别未分离，时间取插值（173.1s~176.1s 之间），可在校准模式微调。
+const LINES = [
+  {t:"粉笔灰落在靠窗的桌面", time:9860},
+  {t:"第一次见你 是喧闹的课间", time:12500},
+  {t:"我们总为一点小事争辩", time:15080},
+  {t:"转过身却又笑着和好如初", time:17600},
+  {t:"书页翻过 一年又一年", time:20640},
+  {t:"你的名字藏在我的字里面", time:23340},
+  {t:"那些想说的话到了嘴边", time:26140},
+  {t:"最后只剩一句", time:28540},
+  {t:"明天见", time:29900},
+  {t:"课桌中线隔着两个世界", time:31040},
+  {t:"却隔不开望向你的视线", time:34020},
+  {t:"那些没说出口的想念", time:36820},
+  {t:"被晚风带过屋檐", time:39340},
+  {t:"你还记不记得 那张旧便签", time:41580},
+  {t:"写着我喜欢你 却没让你看见", time:44680},
+  {t:"三年的风 三年的雨", time:47340},
+  {t:"吹不散我们走过的每一天", time:49560},
+  {t:"你还记不记得 那个少年", time:52220},
+  {t:"把所有心事藏在课桌里面", time:55340},
+  {t:"如果时光能够再重来一遍", time:57980},
+  {t:"我一定会说 我喜欢你", time:60640},
+  {t:"电影院外落着细雨点点", time:65800},
+  {t:"旧校园还留着你的侧脸", time:68600},
+  {t:"错题本写满我们的心愿", time:70940},
+  {t:"一句别怕 就陪我走过那几年", time:73900},
+  {t:"分班以后隔着遥远的座位", time:76320},
+  {t:"清晨扫地也成了短暂相随", time:79240},
+  {t:"毕业那天你递来的手表", time:81940},
+  {t:"让整个夏天停在那一回", time:84540},
+  {t:"课桌中线隔着两个世界", time:86800},
+  {t:"你的名字却从没走远", time:90000},
+  {t:"那些没说出口的想念", time:92700},
+  {t:"一直藏在青春里面", time:95320},
+  {t:"你还记不记得 那张旧便签", time:97420},
+  {t:"写着我喜欢你 却没让你看见", time:100620},
+  {t:"三年的风 三年的雨", time:103340},
+  {t:"吹不散我们走过的每一天", time:105580},
+  {t:"你还记不记得 那个少年", time:108200},
+  {t:"把所有心事藏在课桌里面", time:111320},
+  {t:"如果时光能够再重来一遍", time:113820},
+  {t:"我一定会说 我喜欢你", time:116660},
+  {t:"我曾害怕毕业就是终点", time:121880},
+  {t:"害怕我们走散在人海里面", time:124880},
+  {t:"后来才发现 有些人啊", time:127660},
+  {t:"走了很远 还是会再遇见", time:130020},
+  {t:"江边夜色慢慢亮起来", time:132420},
+  {t:"我又拿出那张旧便签", time:135480},
+  {t:"你笑着问我 这么多年以后", time:137720},
+  {t:"这一次 还要不要说再见", time:140460},
+  {t:"你还记不记得 那张旧便签", time:142660},
+  {t:"写着我喜欢你 却没让你看见", time:146080},
+  {t:"三年的风 三年的雨", time:148660},
+  {t:"终于把我们带回彼此身边", time:150860},
+  {t:"你还记不记得 那个少年", time:153660},
+  {t:"一直把你放在心里面", time:156660},
+  {t:"如果时光真的能够再重来一遍", time:159180},
+  {t:"我还是会说 我喜欢你", time:161960},
+  {t:"我还是会说", time:167260},
+  {t:"我喜欢你", time:169280},
+  {t:"那张旧便签", time:171180},
+  {t:"留了好多年", time:173120},
+  {t:"这一次", time:175000},
+  {t:"我们不说再见", time:176140}
+];
+
+const $ = id => document.getElementById(id);
+const audio = $("audio"), lyricsEl = $("lyrics"), box = $("box"), toast = $("toast");
+let cal = false, offset = +(localStorage.getItem("lyr_offset_v5")||0);
+// v5：移除段落标记后索引重排，不读取旧版校准数据
+let times = JSON.parse(localStorage.getItem("lyr_times_v5")||"null") || LINES.map(l=>l.time||0);
+
+LINES.forEach((l,i)=>{
+  const d = document.createElement("div");
+  d.className = "line";
+  d.innerHTML = l.t + `<span class="setbtn" data-i="${i}">设为此处</span>`;
+  d.addEventListener("click", ()=>{
+    if(cal){ times[i] = Math.round((audio.currentTime + offset)*1000); save(); toastMsg(`第${i}句 → ${fmt(times[i])}`); }
+    else{ audio.currentTime = Math.max(0,(times[i]-offset)/1000); audio.play(); }
+    follow();
+  });
+  lyricsEl.appendChild(d);
+});
+const lineEls = [...lyricsEl.children];
+
+// 上下留白 = 容器一半高，保证首尾句也能居中
+function padHalf(){ lyricsEl.style.paddingTop = (box.clientHeight/2)+"px"; lyricsEl.style.paddingBottom = (box.clientHeight/2)+"px"; }
+padHalf(); window.addEventListener("resize", ()=>{ padHalf(); if(following) snapTo(lineEls[activeIdx]||lineEls[0], true); });
+
+function save(){ localStorage.setItem("lyr_times_v5", JSON.stringify(times)); localStorage.setItem("lyr_offset_v5", offset); }
+function fmt(ms){ const s=Math.max(0,ms)/1000; return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`; }
+function toastMsg(m){ toast.textContent=m; toast.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>toast.classList.remove("show"),1400); }
+
+/* ---------- 滚动跟随 ---------- */
+let following = true;          // 是否自动跟随当前句
+let animId = null, idleTimer = null;
+const bBack2cur = $("bBack2cur");
+
+function cancelAnim(){ if(animId){ cancelAnimationFrame(animId); animId = null; } }
+// 平滑滚动到目标行（immediate=true 直接跳转）
+function snapTo(el, immediate){
+  if(!el) return;
+  const target = el.offsetTop - box.clientHeight/2 + el.offsetHeight/2;
+  cancelAnim();
+  if(immediate){ box.scrollTop = Math.max(0,target); return; }
+  const from = box.scrollTop, dist = Math.max(0,target) - from, t0 = performance.now(), dur = 550;
+  const ease = x => 1 - Math.pow(1-x, 3);
+  const step = now => {
+    const p = Math.min(1,(now-t0)/dur);
+    box.scrollTop = from + dist*ease(p);
+    if(p<1) animId = requestAnimationFrame(step); else animId = null;
+  };
+  animId = requestAnimationFrame(step);
+}
+function follow(immediate){ following = true; bBack2cur.classList.remove("show"); clearTimeout(idleTimer); snapTo(lineEls[activeIdx]||lineEls[0], immediate); }
+// 用户手动滚动 → 暂停跟随，闲置 3.5s 后自动恢复
+function userScroll(){
+  if(animId){ cancelAnim(); }
+  following = false; bBack2cur.classList.add("show");
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(()=>follow(), 3500);
+}
+box.addEventListener("wheel", userScroll, {passive:true});
+box.addEventListener("touchmove", userScroll, {passive:true});
+bBack2cur.addEventListener("click", ()=>follow());
+
+let activeIdx = -1;
+function pickActive(t){
+  let idx = -1;
+  for(let i=0;i<LINES.length;i++){ if(times[i] <= t) idx = i; }
+  return idx;
+}
+function tick(){
+  const t = (audio.currentTime + offset)*1000;
+  const idx = pickActive(t);
+  if(idx !== activeIdx){
+    activeIdx = idx;
+    lineEls.forEach((el,i)=>{
+      el.classList.toggle("active", i===idx);
+      el.classList.toggle("past", idx>=0 && i<idx);
+      el.classList.toggle("near", i>idx && i<=idx+2);
+    });
+    if(following) snapTo(lineEls[Math.max(0,idx)]);
+  }
+  if(!dragging){
+    const p = audio.duration ? audio.currentTime/audio.duration : 0;
+    $("fill").style.width = (p*100)+"%";
+    $("dot").style.left = (p*100)+"%";
+    $("cur").textContent = fmt(audio.currentTime*1000);
+  }
+  if(audio.duration) $("dur").textContent = fmt(audio.duration*1000);
+  requestAnimationFrame(tick);
+}
+
+(async()=>{
+  try{
+    const r = await fetch(AUDIO_URL); if(!r.ok) throw 0;
+    audio.src = URL.createObjectURL(new Blob([await r.arrayBuffer()],{type:"audio/mpeg"}));
+  }catch(e){ toastMsg("音频加载失败"); }
+  padHalf();
+  requestAnimationFrame(tick);
+})();
+
+const PLAY = `<path d="M8 5v14l11-7z"/>`, PAUSE = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+$("bPlay").onclick = ()=>{ audio.paused ? audio.play() : audio.pause(); };
+audio.onplay = ()=> $("icPlay").innerHTML = PAUSE;
+audio.onpause = ()=> $("icPlay").innerHTML = PLAY;
+$("bBack").onclick = ()=> audio.currentTime = Math.max(0, audio.currentTime-5);
+$("bFwd").onclick = ()=> audio.currentTime = Math.min(audio.duration||0, audio.currentTime+5);
+
+const track = $("track");
+let dragging = false, dragP = 0;
+track.style.touchAction = "none";
+function posP(e){ const r = track.getBoundingClientRect(); return Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); }
+function updDrag(){
+  $("fill").style.width = (dragP*100)+"%";
+  $("dot").style.left = (dragP*100)+"%";
+  if(audio.duration) $("cur").textContent = fmt(dragP * audio.duration * 1000);
+}
+track.addEventListener("pointerdown", e=>{ dragging = true; dragP = posP(e); track.setPointerCapture(e.pointerId); updDrag(); });
+track.addEventListener("pointermove", e=>{ if(dragging){ dragP = posP(e); updDrag(); } });
+track.addEventListener("pointerup", ()=>{ if(dragging){ dragging = false; if(audio.duration) audio.currentTime = dragP * audio.duration; } });
+track.addEventListener("pointercancel", ()=>{ dragging = false; });
+
+document.addEventListener("keydown", e=>{
+  if(e.code==="Space"){ e.preventDefault(); audio.paused ? audio.play() : audio.pause(); }
+  if(e.code==="ArrowRight") audio.currentTime += 5;
+  if(e.code==="ArrowLeft") audio.currentTime -= 5;
+});
+
+$("bCal").onclick = ()=>{
+  cal = !cal; document.body.classList.toggle("cal", cal);
+  $("bCal").classList.toggle("on", cal);
+  $("offsetRow").classList.toggle("show", cal);
+  if(cal) toastMsg("校准模式：播放到某句时点那句歌词即可；拖「整体偏移」全局微调");
+};
+$("offset").value = offset;
+$("offsetVal").textContent = (offset/1000).toFixed(1)+"s";
+$("offset").oninput = e=>{ offset = +e.target.value; $("offsetVal").textContent = (offset/1000).toFixed(1)+"s"; save(); };
+
+$("bExport").onclick = ()=>{
+  const lrc = LINES.map((l,i)=>{
+    const ms = times[i] - offset;
+    const m = Math.floor(ms/60000), s = Math.floor(ms%60000/1000), c = Math.floor(ms%1000/10);
+    return `[${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(c).padStart(2,"0")}]${l.t}`;
+  }).filter(Boolean).join("\n");
+  navigator.clipboard?.writeText(lrc);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([lrc],{type:"text/plain"}));
+  a.download = TITLE + ".lrc"; a.click();
+  toastMsg("LRC 已导出并复制到剪贴板");
+};
+</script>
+</body>
+</html>

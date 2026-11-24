@@ -3,13 +3,13 @@
 <head data-page-node-id="RJVNi6SQZRtRez7Mvra6pb">
 <meta charset="UTF-8" data-page-node-id="N3oOJUDzcm6TkeGpUYl784">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="nZj9GQUqnwEtxGbTljkkDg">
-<meta name="description" content="AIGC 视觉编导与叙事创作者作品集：电商TVC、电商套图、AI 短片 / 短剧预告。" data-page-node-id="RhmODmjYC5AGxExfdSUFvH">
+<meta name="description" content="AIGC 视觉编导与叙事创作者作品集：电商TVC、AI电商、电商套图、AI 短片 / 短剧预告。" data-page-node-id="RhmODmjYC5AGxExfdSUFvH">
 <title>许多 · AIGC 视觉设计师 · 作品集</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23100e0b'/%3E%3Ctext x='32' y='45' font-size='38' font-family='Georgia,serif' fill='%23e8a13a' text-anchor='middle'%3E%E8%AE%B8%3C/text%3E%3C/svg%3E" data-page-node-id="kktQpLliJcGHm4MHj2B91A">
 <meta name="theme-color" content="#100e0b" data-page-node-id="qfUTdh2RE4kjlYIiFSlnZW">
 <meta property="og:type" content="website" data-page-node-id="HJNWcIuTu8IG5RpQUaDnK0">
 <meta property="og:title" content="许多 · AIGC 视觉设计师 · 作品集" data-page-node-id="U5SG2GmEl0NnhHnP4S36kP">
-<meta property="og:description" content="AIGC 视觉编导与叙事创作者作品集：电商TVC、电商套图、AI 短片 / 短剧预告。" data-page-node-id="MMKX4bGDpCEXP2UCumc7Zu">
+<meta property="og:description" content="AIGC 视觉编导与叙事创作者作品集：电商TVC、AI电商、电商套图、AI 短片 / 短剧预告。" data-page-node-id="MMKX4bGDpCEXP2UCumc7Zu">
 <meta property="og:image" content="https://558369ea0fad4eb58a86b706caa122fc.app.workbuddy.link/assets/yunyou-xiaohe/yunyou-cover-card.jpg" data-page-node-id="UGvEI0Q3cbzRp8Gm9CyeJ7">
 <link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="9xMrK756WHTDciVCAGErVu">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="RMPfyOCIKIY6GhZuNj81KD">
@@ -110,8 +110,8 @@ a{color:inherit;text-decoration:none}
 
 /* ===== 作品分类筛选（胶囊分类条 + 计数说明行） ===== */
 .filterwrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin:0 0 34px}
-.filterpill-box{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;
-  padding:8px 12px;border-radius:100px;background:rgba(255,255,255,.035);border:1px solid var(--rule)}
+.filterpill-box{display:inline-grid;grid-template-columns:repeat(3,auto);justify-content:center;align-items:center;gap:6px 4px;
+  padding:10px 12px;border-radius:24px;background:rgba(255,255,255,.035);border:1px solid var(--rule)}
 .fpill{font-family:var(--mono);font-size:13px;letter-spacing:.05em;color:var(--muted);
   background:transparent;border:1px solid transparent;padding:9px 18px;border-radius:100px;cursor:pointer;
   transition:.22s;white-space:nowrap}
@@ -121,7 +121,7 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 4px 18px rgba(232,161,58,.35)}
 .fnote{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--faint);text-align:center;padding:0 16px}
 .fnote b{color:var(--paper);font-weight:500}
-@media(max-width:560px){.filterwrap{gap:12px;margin-bottom:28px}.filterpill-box{gap:2px;padding:7px 9px;max-width:100%}.fpill{padding:9px 13px;font-size:12.5px}.fnote{font-size:11px}}
+@media(max-width:560px){.filterwrap{gap:12px;margin-bottom:28px}.filterpill-box{gap:4px 2px;padding:8px 8px;max-width:100%}.fpill{padding:9px 10px;font-size:12px}.fnote{font-size:11px}}
 
 /* ===== WORKS / 作品卡片网格（参考图式，但保留本站基因） ===== */
 .gallery{padding:14px 0 78px}
@@ -319,6 +319,21 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 .qr-modal .qr-close{position:absolute;top:22px;right:26px;font-size:28px;color:var(--muted);cursor:pointer;line-height:1}
 @media(max-width:760px){.qr-large .qr-card{width:170px;height:170px}}
 
+/* VIDEO MODAL / 视频弹窗播放（原地播放，不跳二级页） */
+.v-modal{position:fixed;inset:0;z-index:210;display:flex;align-items:center;justify-content:center;
+  background:rgba(10,9,7,.94);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .28s ease;padding:24px}
+.v-modal.active{opacity:1;pointer-events:auto}
+.v-modal-inner{width:min(94vw,1040px);transform:translateY(14px) scale(.98);transition:transform .32s cubic-bezier(.2,.7,.2,1)}
+.v-modal.active .v-modal-inner{transform:none}
+.v-modal-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:14px}
+.v-modal-title{font-family:var(--serif);font-size:clamp(17px,2.4vw,22px);color:var(--paper);font-weight:700;letter-spacing:.01em}
+.v-modal-cat{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--accent);white-space:nowrap}
+.v-modal video{width:100%;max-height:78vh;display:block;background:#000;border:1px solid var(--rule-strong);border-radius:8px;box-shadow:0 30px 90px rgba(0,0,0,.6)}
+.v-modal-close{position:absolute;top:max(20px,3vh);right:max(20px,3vw);font-size:32px;color:var(--muted);cursor:pointer;line-height:1;z-index:2;transition:color .2s}
+.v-modal-close:hover{color:var(--accent)}
+.v-modal-hint{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.08em;margin-top:12px;text-align:center}
+@media(max-width:760px){.v-modal{padding:16px}.v-modal-head{flex-direction:column;gap:4px}.v-modal video{max-height:70vh}}
+
 .contact-row{display:flex;flex-direction:column;align-items:center;gap:18px;
   border-top:1px solid var(--rule);padding-top:28px;text-align:center}
 .contact-label{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
@@ -379,13 +394,11 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 <div class="filterwrap" id="filterbar" data-page-node-id="0aeVMWEaUdIMnrlTPPUlzr">
   <div class="filterpill-box" data-page-node-id="6Tj6gnbmucSN8NpOkhnjyE">
     <button class="fpill active" data-filter="ecom" data-page-node-id="rJcQTG8HkV3qC7XcH5A8XZ">电商套图</button>
-    <button class="fpill" data-filter="commercial" data-page-node-id="9W4aiXWGixz0hTU66KhAC9">电商TVC</button>
-    <button class="fpill" data-filter="feed">AI信息流</button>
-    <button class="fpill" data-filter="digital">AI数字人</button>
+    <button class="fpill" data-filter="commercial">电商TVC</button>
+    <button class="fpill" data-filter="aishop">AI电商</button>
     <button class="fpill" data-filter="film" data-page-node-id="B8mCHW7aLcyw9vHNmGLSfe">短片短剧</button>
-    <button class="fpill" data-filter="ip" data-page-node-id="Wt5XKcLuuTaBfidb1ZCQzA">原创IP</button>
-    <button class="fpill" data-filter="music">AI音乐</button>
-    <button class="fpill" data-filter="workflow">AI 工作流</button>
+    <button class="fpill" data-filter="ip" data-page-node-id="Wt5XKcLuuTaBfidb1ZCQzA">原创IP+音乐</button>
+    <button class="fpill" data-filter="workflow">ComfyUI 工作流</button>
   </div>
   <div class="fnote" id="fnote"></div>
 </div>
@@ -460,7 +473,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case7" data-cat="commercial" href="case-haiyanzhi.html" style="text-decoration:none;color:inherit;display:block" data-page-node-id="Dt7xNSGOIKgugPaAD2fYwl">
         <div class="thumb" data-bg="assets/haiyanzhi-cover.jpg" style="background-color:#0a0810" data-page-node-id="e5W7GBkYINF7dggflPu9b6">
-          <span class="ctag" data-page-node-id="A8Kn4RGt9yTqBPFcPIPMIH">商业广告</span>
+          <span class="ctag" data-page-node-id="A8Kn4RGt9yTqBPFcPIPMIH">电商TVC</span>
           <span class="fplay" data-page-node-id="i49IdQquSVeANEPI3GgCEd">▶ 播放 TVC (0:20)</span>
         </div>
         <div class="cmeta" data-page-node-id="9hZcFfKF7AZok5k0wRX6RJ">
@@ -490,7 +503,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case11" data-cat="commercial" href="case-coffee-tvc.html" style="text-decoration:none;color:inherit;display:block" data-page-node-id="z9HYmaMC4kRE7tJOAzwyhZ">
         <div class="thumb" data-bg="assets/coffee-tvc/coffee-cover-card.jpg" style="background-color:#1a1714" data-page-node-id="zhMaIXNPrkcuWMrwv0V8C5">
-          <span class="ctag" data-page-node-id="UhBcUhVrzoBT8quDLAxzfS">TVC · 商业广告</span>
+          <span class="ctag" data-page-node-id="UhBcUhVrzoBT8quDLAxzfS">电商TVC</span>
           <span class="fplay" data-page-node-id="Zfy52cBWUyyRKy8ADw3PQi">▶ 查看 TVC</span>
         </div>
         <div class="cmeta" data-page-node-id="NDRckAHiMs2giswYjdlBDJ">
@@ -500,7 +513,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case12" data-cat="commercial" href="case-mojing-tvc.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/mojing-tvc/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">TVC · 商业广告</span>
+          <span class="ctag">电商TVC</span>
           <span class="fplay">▶ 查看 TVC</span>
         </div>
         <div class="cmeta">
@@ -510,7 +523,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case15" data-cat="commercial" href="case-candle-tvc.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/candle-tvc/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">TVC · 商业广告</span>
+          <span class="ctag">电商TVC</span>
           <span class="fplay">▶ 查看 TVC</span>
         </div>
         <div class="cmeta">
@@ -538,9 +551,9 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case16" data-cat="digital" href="case-digital-human.html" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case16" data-cat="aishop" href="case-digital-human.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/digital-human/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">数字人 · 商业广告</span>
+          <span class="ctag">AI电商 · 数字人</span>
           <span class="fplay">▶ 播放短片 (0:15)</span>
         </div>
         <div class="cmeta">
@@ -548,9 +561,9 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case17" data-cat="digital" href="case-shampoo-tvc.html" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case17" data-cat="aishop" href="case-shampoo-tvc.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/shampoo-tvc/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">海外 · AI数字人</span>
+          <span class="ctag">AI电商 · 数字人</span>
           <span class="fplay">▶ 播放广告 (0:30)</span>
         </div>
         <div class="cmeta">
@@ -578,7 +591,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case19" data-cat="music" href="https://x2288-boop.github.io/portfolio/lyric-player/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case19" data-cat="ip" href="https://x2288-boop.github.io/portfolio/lyric-player/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/ai-music/cover-card.jpg" style="background-color:#1a1714">
           <span class="ctag">AI 音乐 · 外链</span>
           <span class="fplay">↗ 打开播放器</span>
@@ -637,7 +650,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case20" data-cat="music" href="https://x2288-boop.github.io/portfolio/lyric-player-4/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case20" data-cat="ip" href="https://x2288-boop.github.io/portfolio/lyric-player-4/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/ai-music/cover-jiubianqian.jpg" style="background-color:#1a1714">
           <span class="ctag">AI 音乐 · 外链</span>
           <span class="fplay">↗ 打开播放器</span>
@@ -713,9 +726,9 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case21" data-cat="feed" href="case-feed-ecom.html" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case21" data-cat="aishop" href="case-feed-ecom.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/feed-ecom/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">AI 信息流</span>
+          <span class="ctag">AI电商 · 信息流</span>
           <span class="fplay">▶ 观看成片</span>
         </div>
         <div class="cmeta">
@@ -723,9 +736,9 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case22" data-cat="feed" href="case-feed-candle.html" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case22" data-cat="aishop" href="case-feed-candle.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/feed-candle/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">AI 信息流</span>
+          <span class="ctag">AI电商 · 信息流</span>
           <span class="fplay">▶ 观看成片</span>
         </div>
         <div class="cmeta">
@@ -733,9 +746,9 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
         </div>
       </a>
 
-      <a class="card reveal" id="case23" data-cat="feed" href="case-feed-cream.html" style="text-decoration:none;color:inherit;display:block">
+      <a class="card reveal" id="case23" data-cat="aishop" href="case-feed-cream.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/feed-cream/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">AI 信息流</span>
+          <span class="ctag">AI电商 · 信息流</span>
           <span class="fplay">▶ 观看成片</span>
         </div>
         <div class="cmeta">
@@ -851,13 +864,11 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
   const fnote=document.getElementById('fnote');
   const CATMETA={
     commercial:{label:'电商TVC',desc:'品牌 TVC 广告片与种草成片，覆盖产品营销与海外投放'},
-    feed:{label:'AI信息流',desc:'电商信息流短视频，AIGC 批量生成的种草与投放素材'},
-    digital:{label:'AI数字人',desc:'AI 数字人出镜成片，真人感讲解与产品种草'},
+    aishop:{label:'AI电商',desc:'AI 数字人出镜成片与电商信息流短视频，覆盖真人感讲解与投放素材'},
     ecom:{label:'电商套图',desc:'主图、Banner、详情页与海报，覆盖多品类卖货素材'},
     film:{label:'短片短剧',desc:'叙事动画与短剧成片，从分镜到后期全流程'},
-    ip:{label:'原创IP',desc:'角色三视图与世界观场景，延展表情动作与应用'},
-    workflow:{label:'AI 工作流',desc:'ComfyUI 节点流程与多角度输出方案'},
-    music:{label:'AI音乐',desc:'AI 生成的音乐与歌词可视化播放器，在线试听'}
+    ip:{label:'原创IP+音乐',desc:'角色三视图与世界观场景，以及 AI 音乐与歌词可视化播放器，在线试听'},
+    workflow:{label:'ComfyUI 工作流',desc:'ComfyUI 节点流程与多角度输出方案'}
   };
   function apply(f){
     pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
@@ -867,7 +878,7 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
       c.style.display=show?'':'none';
       if(show){c.classList.add('in');visible++;}          /* 筛选后立即可见，避免被滚动揭示卡住 */
     });
-    if(grid){grid.classList.toggle('few',visible<=2 && f!=='music' && f!=='feed');grid.classList.toggle('grid2',f==='commercial'||f==='digital'||f==='music'||f==='feed');}
+    if(grid){grid.classList.toggle('few',visible<=2 && f!=='ip');grid.classList.toggle('grid2',f==='aishop'||f==='commercial'||f==='ip');}
     const meta=CATMETA[f]||{label:f,desc:''};
     if(fnote)fnote.innerHTML='<b>'+meta.label+'</b> · '+meta.desc+'：共 '+visible+' 件作品';
   }
@@ -886,11 +897,13 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
   document.addEventListener('click',function(e){
     if(!(e.target&&e.target.closest))return;
     const a=e.target.closest('a[href^="case-"]');
+    /* 视频作品走弹窗播放，不跳二级页，不记录跨页状态 */
+    if(a&&window.__VIDEO_CARDS__&&window.__VIDEO_CARDS__.has(a.id))return;
     if(a){
       try{
         sessionStorage.setItem(KEY,String(window.scrollY));
         const act=document.querySelector('#filterbar .fpill.active');
-        sessionStorage.setItem(FKEY,act?act.dataset.filter:'commercial');
+        sessionStorage.setItem(FKEY,act?act.dataset.filter:'aishop');
         sessionStorage.setItem(RKEY,'1');
       }catch(err){}
     }
@@ -906,8 +919,8 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
           || (document.referrer && /\/case-/.test(document.referrer));
     }catch(err){}
     if(!from) return;
-    let y=0,f='commercial';
-    try{ y=parseInt(sessionStorage.getItem(KEY)||'0',10)||0; f=sessionStorage.getItem(FKEY)||'commercial'; }catch(err){}
+    let y=0,f='aishop';
+    try{ y=parseInt(sessionStorage.getItem(KEY)||'0',10)||0; f=sessionStorage.getItem(FKEY)||'aishop'; }catch(err){}
     /* 先还原筛选，保证布局与记录的滚动位置一致 */
     try{
       if(window.pfApply){ window.pfApply(f); }
@@ -918,7 +931,7 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
         let visible=0;
         pills.forEach(p=>p.classList.toggle('active',p.dataset.filter===f));
         cards.forEach(c=>{const show=(c.dataset.cat===f);c.style.display=show?'':'none';if(show){c.classList.add('in');visible++;}});
-        if(grid){grid.classList.toggle('few',visible<=2 && f!=='music' && f!=='feed');grid.classList.toggle('grid2',f==='commercial'||f==='digital'||f==='music'||f==='feed');}
+        if(grid){grid.classList.toggle('few',visible<=2 && f!=='ip');grid.classList.toggle('grid2',f==='aishop'||f==='commercial'||f==='ip');}
       }
     }catch(err){}
     /* 瞬时定位（避开平滑滚动动画），并在图片加载导致高度变化后再次校正 */
@@ -945,6 +958,66 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
   qr.addEventListener('click',open);
   modal.addEventListener('click',close);
   modal.querySelector('.qr-close').addEventListener('click',close);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+})();
+
+/* 视频作品：点击卡片不再跳二级页，弹窗原地播放 */
+(function(){
+  /* 卡片 id → 视频源 / 标题 / 角标。要恢复某作品跳转二级页，删掉对应一行即可 */
+  const VIDEOS={
+    case5:{src:'assets/werewolf-trailer.mp4',title:'《Rejected by the Alpha King》预告片',cat:'短片 · 短剧'},
+    case6:{src:'assets/yunyou-xiaohe/yunyou-showreel.mp4',title:'云游小河旅游小精灵',cat:'原创 IP'},
+    case7:{src:'assets/haiyanzhi-tvc.mp4',title:'海之言 · TVC 广告片',cat:'电商TVC'},
+    case11:{src:'assets/coffee-tvc/coffee-tvc.mp4',title:'咖啡机 · TVC 广告片',cat:'电商TVC'},
+    case12:{src:'assets/mojing-tvc/mojing-tvc.mp4',title:'墨镜 · TVC 广告片',cat:'电商TVC'},
+    case15:{src:'assets/candle-tvc/candle-tvc.mp4',title:'香薰蜡烛 · TVC 广告片',cat:'电商TVC'},
+    case13:{src:'assets/qingxian-tianbiao/qingxian-tianbiao.mp4',title:'《请先填表》动画短片',cat:'短片 · 短剧'},
+    case14:{src:'assets/shumao-tegong/shumao-tegong.mp4',title:'《鼠猫特工》动画短片',cat:'动画短片 · 叙事'},
+    case16:{src:'assets/digital-human/digital-human.mp4',title:'桌面小风扇 · AI 数字人种草短片',cat:'AI电商 · 数字人'},
+    case17:{src:'assets/shampoo-tvc/shampoo-tvc.mp4',title:'洗发水 · 海外 AI 数字人',cat:'AI电商 · 数字人'},
+    case21:{src:'assets/feed-ecom/feed-ecom.mp4',title:'桌面制冷小风扇 · 信息流视频',cat:'AI电商 · 信息流'},
+    case22:{src:'assets/feed-candle/feed-candle.mp4',title:'香薰蜡烛 · 信息流视频',cat:'AI电商 · 信息流'},
+    case23:{src:'assets/feed-cream/feed-cream.mp4',title:'LUMENE 面霜 · 信息流视频',cat:'AI电商 · 信息流'}
+  };
+  const modal=document.createElement('div');
+  modal.className='v-modal';
+  modal.innerHTML='<span class="v-modal-close">&times;</span>'+
+    '<div class="v-modal-inner">'+
+      '<div class="v-modal-head"><span class="v-modal-title"></span><span class="v-modal-cat"></span></div>'+
+      '<video controls playsinline webkit-playsinline preload="none"></video>'+
+      '<div class="v-modal-hint">按 ESC 或点击空白处关闭 · 关闭后自动停止播放</div>'+
+    '</div>';
+  document.body.appendChild(modal);
+  window.__VIDEO_CARDS__=new Set(Object.keys(VIDEOS));
+  const video=modal.querySelector('video');
+  const titleEl=modal.querySelector('.v-modal-title');
+  const catEl=modal.querySelector('.v-modal-cat');
+  let currentCard=null;
+  function close(){
+    if(!modal.classList.contains('active'))return;
+    modal.classList.remove('active');
+    video.pause();video.removeAttribute('src');video.load();
+    currentCard=null;
+  }
+  function open(card){
+    const info=VIDEOS[card.id];
+    if(!info)return;
+    currentCard=card;
+    titleEl.textContent=info.title;
+    catEl.textContent=info.cat;
+    video.src=info.src;
+    modal.classList.add('active');
+    const p=video.play();if(p&&p.catch)p.catch(()=>{});
+  }
+  document.querySelectorAll('.works-grid .card').forEach(card=>{
+    if(!VIDEOS[card.id])return;
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
+    card.addEventListener('click',e=>{e.preventDefault();open(card);});
+    card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(card);}});
+  });
+  modal.addEventListener('click',e=>{if(e.target===modal||e.target.classList.contains('v-modal-inner')||e.target.classList.contains('v-modal-hint'))close();});
+  modal.querySelector('.v-modal-close').addEventListener('click',close);
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
 })();
 </script>

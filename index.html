@@ -3,13 +3,13 @@
 <head data-page-node-id="RJVNi6SQZRtRez7Mvra6pb">
 <meta charset="UTF-8" data-page-node-id="N3oOJUDzcm6TkeGpUYl784">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="nZj9GQUqnwEtxGbTljkkDg">
-<meta name="description" content="AIGC 视觉编导与叙事创作者作品集：电商TVC、AI电商、电商套图、AI 短片 / 短剧预告。" data-page-node-id="RhmODmjYC5AGxExfdSUFvH">
+<meta name="description" content="AIGC 视觉编导与叙事创作者作品集：电商TVC、信息流与数字人、电商套图、AI 短片 / 短剧预告。" data-page-node-id="RhmODmjYC5AGxExfdSUFvH">
 <title>许多 · AIGC 视觉设计师 · 作品集</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23100e0b'/%3E%3Ctext x='32' y='45' font-size='38' font-family='Georgia,serif' fill='%23e8a13a' text-anchor='middle'%3E%E8%AE%B8%3C/text%3E%3C/svg%3E" data-page-node-id="kktQpLliJcGHm4MHj2B91A">
 <meta name="theme-color" content="#100e0b" data-page-node-id="qfUTdh2RE4kjlYIiFSlnZW">
 <meta property="og:type" content="website" data-page-node-id="HJNWcIuTu8IG5RpQUaDnK0">
 <meta property="og:title" content="许多 · AIGC 视觉设计师 · 作品集" data-page-node-id="U5SG2GmEl0NnhHnP4S36kP">
-<meta property="og:description" content="AIGC 视觉编导与叙事创作者作品集：电商TVC、AI电商、电商套图、AI 短片 / 短剧预告。" data-page-node-id="MMKX4bGDpCEXP2UCumc7Zu">
+<meta property="og:description" content="AIGC 视觉编导与叙事创作者作品集：电商TVC、信息流与数字人、电商套图、AI 短片 / 短剧预告。" data-page-node-id="MMKX4bGDpCEXP2UCumc7Zu">
 <meta property="og:image" content="https://558369ea0fad4eb58a86b706caa122fc.app.workbuddy.link/assets/yunyou-xiaohe/yunyou-cover-card.jpg" data-page-node-id="UGvEI0Q3cbzRp8Gm9CyeJ7">
 <link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="9xMrK756WHTDciVCAGErVu">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="RMPfyOCIKIY6GhZuNj81KD">
@@ -320,9 +320,10 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 @media(max-width:760px){.qr-large .qr-card{width:170px;height:170px}}
 
 /* VIDEO MODAL / 视频弹窗播放（原地播放，不跳二级页） */
-.v-modal{position:fixed;inset:0;z-index:210;display:flex;align-items:center;justify-content:center;
-  background:rgba(10,9,7,.94);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .28s ease;padding:24px}
-.v-modal.active{opacity:1;pointer-events:auto}
+.v-modal{position:fixed;inset:0;z-index:210;display:none;align-items:center;justify-content:center;
+  background:rgba(10,9,7,.94);backdrop-filter:blur(10px);padding:24px}
+.v-modal.active{display:flex;animation:vmFade .28s ease}
+@keyframes vmFade{from{opacity:0}to{opacity:1}}
 .v-modal-inner{width:min(94vw,1040px);transform:translateY(14px) scale(.98);transition:transform .32s cubic-bezier(.2,.7,.2,1)}
 .v-modal.active .v-modal-inner{transform:none}
 .v-modal-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:14px}
@@ -395,7 +396,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
   <div class="filterpill-box" data-page-node-id="6Tj6gnbmucSN8NpOkhnjyE">
     <button class="fpill active" data-filter="ecom" data-page-node-id="rJcQTG8HkV3qC7XcH5A8XZ">电商套图</button>
     <button class="fpill" data-filter="commercial">电商TVC</button>
-    <button class="fpill" data-filter="aishop">AI电商</button>
+    <button class="fpill" data-filter="aishop">信息流与数字人</button>
     <button class="fpill" data-filter="film" data-page-node-id="B8mCHW7aLcyw9vHNmGLSfe">短片短剧</button>
     <button class="fpill" data-filter="ip" data-page-node-id="Wt5XKcLuuTaBfidb1ZCQzA">原创IP+音乐</button>
     <button class="fpill" data-filter="workflow">ComfyUI 工作流</button>
@@ -553,7 +554,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case16" data-cat="aishop" href="case-digital-human.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/digital-human/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">AI电商 · 数字人</span>
+          <span class="ctag">数字人</span>
           <span class="fplay">▶ 播放短片 (0:15)</span>
         </div>
         <div class="cmeta">
@@ -563,7 +564,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case17" data-cat="aishop" href="case-shampoo-tvc.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/shampoo-tvc/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">AI电商 · 数字人</span>
+          <span class="ctag">数字人</span>
           <span class="fplay">▶ 播放广告 (0:30)</span>
         </div>
         <div class="cmeta">
@@ -728,7 +729,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case21" data-cat="aishop" href="case-feed-ecom.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/feed-ecom/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">AI电商 · 信息流</span>
+          <span class="ctag">信息流</span>
           <span class="fplay">▶ 观看成片</span>
         </div>
         <div class="cmeta">
@@ -738,7 +739,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case22" data-cat="aishop" href="case-feed-candle.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/feed-candle/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">AI电商 · 信息流</span>
+          <span class="ctag">信息流</span>
           <span class="fplay">▶ 观看成片</span>
         </div>
         <div class="cmeta">
@@ -748,7 +749,7 @@ body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opa
 
       <a class="card reveal" id="case23" data-cat="aishop" href="case-feed-cream.html" style="text-decoration:none;color:inherit;display:block">
         <div class="thumb" data-bg="assets/feed-cream/cover-card.jpg" style="background-color:#1a1714">
-          <span class="ctag">AI电商 · 信息流</span>
+          <span class="ctag">信息流</span>
           <span class="fplay">▶ 观看成片</span>
         </div>
         <div class="cmeta">
@@ -864,7 +865,7 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
   const fnote=document.getElementById('fnote');
   const CATMETA={
     commercial:{label:'电商TVC',desc:'品牌 TVC 广告片与种草成片，覆盖产品营销与海外投放'},
-    aishop:{label:'AI电商',desc:'AI 数字人出镜成片与电商信息流短视频，覆盖真人感讲解与投放素材'},
+    aishop:{label:'信息流与数字人',desc:'AI 数字人出镜成片与电商信息流短视频，覆盖真人感讲解与投放素材'},
     ecom:{label:'电商套图',desc:'主图、Banner、详情页与海报，覆盖多品类卖货素材'},
     film:{label:'短片短剧',desc:'叙事动画与短剧成片，从分镜到后期全流程'},
     ip:{label:'原创IP+音乐',desc:'角色三视图与世界观场景，以及 AI 音乐与歌词可视化播放器，在线试听'},
@@ -973,18 +974,18 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
     case15:{src:'assets/candle-tvc/candle-tvc.mp4',title:'香薰蜡烛 · TVC 广告片',cat:'电商TVC'},
     case13:{src:'assets/qingxian-tianbiao/qingxian-tianbiao.mp4',title:'《请先填表》动画短片',cat:'短片 · 短剧'},
     case14:{src:'assets/shumao-tegong/shumao-tegong.mp4',title:'《鼠猫特工》动画短片',cat:'动画短片 · 叙事'},
-    case16:{src:'assets/digital-human/digital-human.mp4',title:'桌面小风扇 · AI 数字人种草短片',cat:'AI电商 · 数字人'},
-    case17:{src:'assets/shampoo-tvc/shampoo-tvc.mp4',title:'洗发水 · 海外 AI 数字人',cat:'AI电商 · 数字人'},
-    case21:{src:'assets/feed-ecom/feed-ecom.mp4',title:'桌面制冷小风扇 · 信息流视频',cat:'AI电商 · 信息流'},
-    case22:{src:'assets/feed-candle/feed-candle.mp4',title:'香薰蜡烛 · 信息流视频',cat:'AI电商 · 信息流'},
-    case23:{src:'assets/feed-cream/feed-cream.mp4',title:'LUMENE 面霜 · 信息流视频',cat:'AI电商 · 信息流'}
+    case16:{src:'assets/digital-human/digital-human.mp4',title:'桌面小风扇 · AI 数字人种草短片',cat:'数字人'},
+    case17:{src:'assets/shampoo-tvc/shampoo-tvc.mp4',title:'洗发水 · 海外 AI 数字人',cat:'数字人'},
+    case21:{src:'assets/feed-ecom/feed-ecom.mp4',title:'桌面制冷小风扇 · 信息流视频',cat:'信息流'},
+    case22:{src:'assets/feed-candle/feed-candle.mp4',title:'香薰蜡烛 · 信息流视频',cat:'信息流'},
+    case23:{src:'assets/feed-cream/feed-cream.mp4',title:'LUMENE 面霜 · 信息流视频',cat:'信息流'}
   };
   const modal=document.createElement('div');
   modal.className='v-modal';
   modal.innerHTML='<span class="v-modal-close">&times;</span>'+
     '<div class="v-modal-inner">'+
       '<div class="v-modal-head"><span class="v-modal-title"></span><span class="v-modal-cat"></span></div>'+
-      '<video controls playsinline webkit-playsinline preload="none"></video>'+
+      '<video playsinline webkit-playsinline preload="none"></video>'+
       '<div class="v-modal-hint">按 ESC 或点击空白处关闭 · 关闭后自动停止播放</div>'+
     '</div>';
   document.body.appendChild(modal);
@@ -996,7 +997,7 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
   function close(){
     if(!modal.classList.contains('active'))return;
     modal.classList.remove('active');
-    video.pause();video.removeAttribute('src');video.load();
+    video.pause();video.removeAttribute('controls');video.removeAttribute('src');video.load();
     currentCard=null;
   }
   function open(card){
@@ -1006,6 +1007,7 @@ const toContact=()=>{const el=document.getElementById('contact');if(el)el.scroll
     titleEl.textContent=info.title;
     catEl.textContent=info.cat;
     video.src=info.src;
+    video.setAttribute('controls','');
     modal.classList.add('active');
     const p=video.play();if(p&&p.catch)p.catch(()=>{});
   }
